@@ -1,0 +1,18 @@
+---
+title: "Untitled"
+author: "Carilli"
+date: "9/6/2019"
+output: 
+  html_document:
+    highlight: tango
+    theme: cerulean
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      comment = NA,
+                      message = FALSE,
+                      options(scipen = 999,
+                              digits = 3))
+```
+

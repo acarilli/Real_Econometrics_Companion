@@ -1,0 +1,149 @@
+# Time Series: Dealing with Stickiness over Time {#chp13}
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA, message = FALSE, warning = FALSE,
+                      options(digits = 3, scipen = 999))
+```
+
+In this chapter we will learn to work with time--series data in R.
+
+## Time Series Objects in R
+
+Working with time-series data in R is simplified if the data are structured as a *time-series object*.  There are a host of functions and packages dedicated to time-series data. A time-series object is an R structure that contains the observations, the start and end date of the series, and information about the frequency or periodicity.
+
+We will use the [Bike Sharing Dataset](https://archive.ics.uci.edu/ml/machine-learning-databases/00275/)^[Fanaee-T, Hadi, and Gama, Joao, 'Event labeling combining ensemble detectors and background knowledge', Progress in Artificial Intelligence (2013): pp. 1-15, Springer Berlin Heidelberg] from the UCI Machine Learning Repository. 
+  
+  - The data set has 731 observations on 17 variables
+	- instant: record index
+	- dteday : date
+	- season : season (1:spring, 2:summer, 3:fall, 4:winter)
+	- yr : year (0: 2011, 1:2012)
+	- mnth : month ( 1 to 12)
+	- hr : hour (0 to 23)
+	- holiday : weather day is holiday or not (extracted from http://dchr.dc.gov/page/holiday-schedule)
+	- weekday : day of the week
+	- workingday : if day is neither weekend nor holiday is 1, otherwise is 0.
+	+ weathersit : 
+		- 1: Clear, Few clouds, Partly cloudy, Partly cloudy
+		- 2: Mist + Cloudy, Mist + Broken clouds, Mist + Few clouds, Mist
+		- 3: Light Snow, Light Rain + Thunderstorm + Scattered clouds, Light Rain + Scattered clouds
+		- 4: Heavy Rain + Ice Pallets + Thunderstorm + Mist, Snow + Fog
+	- temp : Normalized temperature in Celsius. The values are divided to 41 (max)
+	- atemp: Normalized feeling temperature in Celsius. The values are divided to 50 (max)
+	- hum: Normalized humidity. The values are divided to 100 (max)
+	- windspeed: Normalized wind speed. The values are divided to 67 (max)
+	- casual: count of casual users
+	- registered: count of registered users
+	- cnt: count of total rental bikes including both casual and registered
+	
+```{r}
+library(tidyverse)
+library(broom)
+library(xts)
+library(magrittr)
+bike_share <- read_csv("Data/day.csv")
+head(bike_share)
+```
+
+We can convert `bike_share` to a time-series object using the `xts` package. A time-series object requires an index to identify each observation by its date. We create the index with `seq(as.date("YYYY-MM-DD"), by = "period", length.out = n)`, our start date is 2011-01-01, by "days", with the number of observations as the length.  After we create the date index, we will use `dplyr:select` to choose the variables (we don't need *dteday*, *yr*, or *mnth*). As always, we will make use of the pipe operator to complete the code. 
+
+```{r}
+dates <- seq(as.Date("2011-01-01"), by = "days", length.out = 731)
+bike_ts <- 
+bike_share %>% 
+  select(instant, season, holiday, weekday, workingday, weathersit, temp, atemp, hum, windspeed, casual, registered, cnt) %>% 
+  xts(dates) 
+bike_ts %>% 
+  head()
+```
+
+We see that the data now have a date index indicating to which date each observations belongs.
+
+## Detecting Autocorrelation
+
+Let's estimate the total number of riders as a function of time, $cnt=\beta_0+\beta_1instant+\epsilon$, and test the residuals for first order auto correlation using the auxiliary regression approach.
+
+```{r}
+bike_ts %$%
+  lm(cnt ~ instant) 
+# retrieve the residuals as e
+e <- 
+  bike_ts %$%
+  lm(cnt ~ instant)$residuals
+# auxiliary regression
+lm(e ~ lag(e,1)) %>% 
+  tidy()
+```
+
+The *t-statistic* on $\hat\rho_{t-1}$ is 30.50 so we can reject the null hypothesis of no autocorrelation in the error term.
+
+## Correcting Autocorrelation
+
+### Newey-West
+
+The `sandwich` package contains a function to estimate Newey-West standard errors.^[Unfortunately the pipe operator does not play nice with `NeweyWest`.]  The output of the function call is the corrected variance-covariance matrix.  We still need to calculate *t-statistics* based on the corrected variance-covariances.  We will use the `lmtest` package to perform this test.  `coeftest(lm_object, vcov = variance-covariance_matrix)`.  
+
+```{r}
+# estimate the model (the lm_object)
+bike_lm <- lm(cnt ~ instant, bike_ts)
+bike_lm %>% 
+  tidy()
+# determine the number of lags for the Newey-West correction
+lags <- length(bike_ts$instant)^(.25)
+nw_vcov <- sandwich::NeweyWest(bike_lm, lag = lags, prewhite = F, adjust = T)
+# model with corrected errors
+lmtest::coeftest(bike_lm, vcov. = nw_vcov)
+```
+
+### Cochrane-Orcutt 
+
+The `orcutt` package allows us to use the Cochrane-Orcutt method to $\rho$ difference the data to produce corrected standard errors using `cochrane.orcutt(lm_oject)`
+
+```{r}
+bike_lm %>%
+  orcutt::cochrane.orcutt() %>% 
+  tidy()
+```
+
+## Dynamic Models
+
+Using a time-series object makes running dynamic models as easy as calling the argument `lag(variable_name, number_of_lags)`.  Suppose we'd like to estimate the a lagged version of the model we have been using with the form $cnt_t=\beta_0+\beta_1instant_t+\beta_2temp_{t-1}+\epsilon$.  We want to see if yesterday's weather affects today's rentals.
+
+```{r}
+bike_lm_dyn <- lm(cnt ~ instant + lag(temp, 1), bike_ts)
+bike_lm_dyn %>% 
+ tidy
+```
+
+## Dickey-Fuller Test
+
+The `tseries` package includes an augmented Dickey-Fuller test, `adf.test(time_series)`.
+
+```{r}
+bike_ts$cnt %>% 
+  tseries::adf.test()
+```
+
+We conclude that *cnt* is non-stationary.  
+
+## First Differencing
+
+A simple solution to non-stationarity is to use first differences of values, i.e., $\Delta y_t=y_t-y_{t-1}$.  `diff(x, ...)` makes this easy with a time-series object.  Let's test $\Delta y_t$ for stationarity.
+
+```{r}
+bike_ts$cnt %>% 
+  diff() %>% 
+  tseries::na.remove() %>% # first differencing introduces NA's into the data
+  tseries::adf.test()
+```
+
+We can reject the null-hypothesis of non-stationarity.  So let's estimate the model $\Delta cnt_t=\beta_0+\beta_1\Delta temp_t+\eta_t$
+
+```{r}
+lm(diff(cnt) ~ diff(temp), bike_ts) %>% 
+  tidy()
+# Compare to same equation in the levels.
+lm(cnt ~ temp, bike_ts) %>% 
+  tidy()
+```
+

@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 4 Stats in the Wild: Good Data Practices | R Companion to Real Econometrics</title>
+  <meta name="description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 4 Stats in the Wild: Good Data Practices | R Companion to Real Econometrics" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 4 Stats in the Wild: Good Data Practices | R Companion to Real Econometrics" />
+  
+  <meta name="twitter:description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  
+
+<meta name="author" content="Tony Carilli" />
+
+
+<meta name="date" content="2019-09-23" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="chp1.html"/>
+<link rel="next" href="cph3.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">R Companion to *Real Econometrics*</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a><ul>
+<li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#install-r-and-rstudio"><i class="fa fa-check"></i><b>2.1</b> Install R and RStudio</a></li>
+<li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#using-rstudio"><i class="fa fa-check"></i><b>2.2</b> Using RStudio</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="intro.html"><a href="intro.html#source-pane"><i class="fa fa-check"></i><b>2.2.1</b> Source Pane</a></li>
+<li class="chapter" data-level="2.2.2" data-path="intro.html"><a href="intro.html#environmenthistory-pane"><i class="fa fa-check"></i><b>2.2.2</b> Environment/History Pane</a></li>
+<li class="chapter" data-level="2.2.3" data-path="intro.html"><a href="intro.html#console-pane"><i class="fa fa-check"></i><b>2.2.3</b> Console Pane</a></li>
+<li class="chapter" data-level="2.2.4" data-path="intro.html"><a href="intro.html#filesplotspackageshelp-pane"><i class="fa fa-check"></i><b>2.2.4</b> Files/Plots/Packages/Help Pane</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="intro.html"><a href="intro.html#r-markdown"><i class="fa fa-check"></i><b>2.3</b> R Markdown</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="chp1.html"><a href="chp1.html"><i class="fa fa-check"></i><b>3</b> The Quest for Causality</a><ul>
+<li class="chapter" data-level="3.1" data-path="chp1.html"><a href="chp1.html#introduction"><i class="fa fa-check"></i><b>3.1</b> Introduction</a><ul>
+<li class="chapter" data-level="3.1.1" data-path="chp1.html"><a href="chp1.html#table-1.1"><i class="fa fa-check"></i><b>3.1.1</b> Table 1.1</a></li>
+<li class="chapter" data-level="3.1.2" data-path="chp1.html"><a href="chp1.html#figure-1.2"><i class="fa fa-check"></i><b>3.1.2</b> Figure 1.2</a></li>
+<li class="chapter" data-level="3.1.3" data-path="chp1.html"><a href="chp1.html#figure-1.3"><i class="fa fa-check"></i><b>3.1.3</b> Figure 1.3</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="chp2.html"><a href="chp2.html"><i class="fa fa-check"></i><b>4</b> Stats in the Wild: Good Data Practices</a><ul>
+<li class="chapter" data-level="4.1" data-path="chp2.html"><a href="chp2.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
+<li class="chapter" data-level="4.2" data-path="chp2.html"><a href="chp2.html#table-and-figure-reproduction"><i class="fa fa-check"></i><b>4.2</b> Table and Figure Reproduction</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="chp2.html"><a href="chp2.html#table-2.1"><i class="fa fa-check"></i><b>4.2.1</b> Table 2.1</a></li>
+<li class="chapter" data-level="4.2.2" data-path="chp2.html"><a href="chp2.html#table-2.2"><i class="fa fa-check"></i><b>4.2.2</b> Table 2.2</a></li>
+<li class="chapter" data-level="4.2.3" data-path="chp2.html"><a href="chp2.html#table-2.5"><i class="fa fa-check"></i><b>4.2.3</b> Table 2.5</a></li>
+<li class="chapter" data-level="4.2.4" data-path="chp2.html"><a href="chp2.html#figure-2.3"><i class="fa fa-check"></i><b>4.2.4</b> Figure 2.3</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="chp2.html"><a href="chp2.html#computing-center"><i class="fa fa-check"></i><b>4.3</b> Computing Center</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="chp2.html"><a href="chp2.html#reading-data"><i class="fa fa-check"></i><b>4.3.1</b> Reading Data</a></li>
+<li class="chapter" data-level="4.3.2" data-path="chp2.html"><a href="chp2.html#manually-entering-data"><i class="fa fa-check"></i><b>4.3.2</b> Manually Entering Data</a></li>
+<li class="chapter" data-level="4.3.3" data-path="chp2.html"><a href="chp2.html#simple-statistics"><i class="fa fa-check"></i><b>4.3.3</b> Simple Statistics</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="cph3.html"><a href="cph3.html"><i class="fa fa-check"></i><b>5</b> Bivariate OLS: The Foundation of Econometric Analysis</a><ul>
+<li class="chapter" data-level="5.1" data-path="cph3.html"><a href="cph3.html#estimating-a-simple-regression"><i class="fa fa-check"></i><b>5.1</b> Estimating a simple regression</a></li>
+<li class="chapter" data-level="5.2" data-path="cph3.html"><a href="cph3.html#scatter-plot-with-regression-line"><i class="fa fa-check"></i><b>5.2</b> scatter Plot with Regression Line</a></li>
+<li class="chapter" data-level="5.3" data-path="cph3.html"><a href="cph3.html#subsetting-data-for-regressions"><i class="fa fa-check"></i><b>5.3</b> Subsetting Data for Regressions</a></li>
+<li class="chapter" data-level="5.4" data-path="cph3.html"><a href="cph3.html#heteroscesdasticity-consistent-standard-errors."><i class="fa fa-check"></i><b>5.4</b> Heteroscesdasticity-consistent standard errors.</a></li>
+<li class="chapter" data-level="5.5" data-path="cph3.html"><a href="cph3.html#generating-random-numbers"><i class="fa fa-check"></i><b>5.5</b> Generating Random Numbers</a></li>
+<li class="chapter" data-level="5.6" data-path="cph3.html"><a href="cph3.html#simulations"><i class="fa fa-check"></i><b>5.6</b> Simulations</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="chp4.html"><a href="chp4.html"><i class="fa fa-check"></i><b>6</b> Hypothesis Testing and Interval Estimation; Answering Research Questions</a><ul>
+<li class="chapter" data-level="6.1" data-path="chp4.html"><a href="chp4.html#computing-corner"><i class="fa fa-check"></i><b>6.1</b> Computing Corner</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="chp4.html"><a href="chp4.html#probability-distributions-in-r"><i class="fa fa-check"></i><b>6.1.1</b> Probability Distributions in R</a></li>
+<li class="chapter" data-level="6.1.2" data-path="chp4.html"><a href="chp4.html#critical-values-in-r"><i class="fa fa-check"></i><b>6.1.2</b> Critical Values in R</a></li>
+<li class="chapter" data-level="6.1.3" data-path="chp4.html"><a href="chp4.html#confidence-intervals-for-ols-estimates"><i class="fa fa-check"></i><b>6.1.3</b> Confidence Intervals for OLS estimates</a></li>
+<li class="chapter" data-level="6.1.4" data-path="chp4.html"><a href="chp4.html#power-curves"><i class="fa fa-check"></i><b>6.1.4</b> Power Curves</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="chp5.html"><a href="chp5.html"><i class="fa fa-check"></i><b>7</b> Multivariate OLS: Where the Action Is</a><ul>
+<li class="chapter" data-level="7.1" data-path="chp5.html"><a href="chp5.html#computing-corner-1"><i class="fa fa-check"></i><b>7.1</b> Computing Corner</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="chp5.html"><a href="chp5.html#multiple-regression"><i class="fa fa-check"></i><b>7.1.1</b> Multiple Regression</a></li>
+<li class="chapter" data-level="7.1.2" data-path="chp5.html"><a href="chp5.html#multicollinearity"><i class="fa fa-check"></i><b>7.1.2</b> Multicollinearity</a></li>
+<li class="chapter" data-level="7.1.3" data-path="chp5.html"><a href="chp5.html#standardized-coefficients"><i class="fa fa-check"></i><b>7.1.3</b> Standardized Coefficients</a></li>
+<li class="chapter" data-level="7.1.4" data-path="chp5.html"><a href="chp5.html#f-tests"><i class="fa fa-check"></i><b>7.1.4</b> <em>F</em> tests</a></li>
+<li class="chapter" data-level="7.1.5" data-path="chp5.html"><a href="chp5.html#examples"><i class="fa fa-check"></i><b>7.1.5</b> Examples</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="chp6.html"><a href="chp6.html"><i class="fa fa-check"></i><b>8</b> Dummy Variables: Smarter than You Think</a><ul>
+<li class="chapter" data-level="8.1" data-path="chp6.html"><a href="chp6.html#dummy-variables-in-r"><i class="fa fa-check"></i><b>8.1</b> Dummy Variables in R</a><ul>
+<li class="chapter" data-level="8.1.1" data-path="chp6.html"><a href="chp6.html#factors"><i class="fa fa-check"></i><b>8.1.1</b> Factors</a></li>
+<li class="chapter" data-level="8.1.2" data-path="chp6.html"><a href="chp6.html#character-vectors-as-dummies"><i class="fa fa-check"></i><b>8.1.2</b> Character Vectors as Dummies</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="chp6.html"><a href="chp6.html#difference-in-means-test"><i class="fa fa-check"></i><b>8.2</b> Difference in Means Test</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="chp6.html"><a href="chp6.html#using-t.test"><i class="fa fa-check"></i><b>8.2.1</b> Using <code>t.test</code></a></li>
+<li class="chapter" data-level="8.2.2" data-path="chp6.html"><a href="chp6.html#using-lm-and-lm_robust"><i class="fa fa-check"></i><b>8.2.2</b> Using <code>lm</code> and <code>lm_robust</code></a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="chp6.html"><a href="chp6.html#integer-and-numerical-vectors-as-dummy-variables"><i class="fa fa-check"></i><b>8.3</b> Integer and Numerical Vectors as Dummy Variables</a></li>
+<li class="chapter" data-level="8.4" data-path="chp6.html"><a href="chp6.html#manipulating-factors"><i class="fa fa-check"></i><b>8.4</b> Manipulating Factors</a></li>
+<li class="chapter" data-level="8.5" data-path="chp6.html"><a href="chp6.html#dummy-interaction-variables"><i class="fa fa-check"></i><b>8.5</b> Dummy Interaction Variables</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="chp7.html"><a href="chp7.html"><i class="fa fa-check"></i><b>9</b> Specifying Models</a><ul>
+<li class="chapter" data-level="9.1" data-path="chp7.html"><a href="chp7.html#polynomial-models"><i class="fa fa-check"></i><b>9.1</b> Polynomial Models</a></li>
+<li class="chapter" data-level="9.2" data-path="chp7.html"><a href="chp7.html#logarithmic"><i class="fa fa-check"></i><b>9.2</b> Logarithmic</a><ul>
+<li class="chapter" data-level="9.2.1" data-path="chp7.html"><a href="chp7.html#constant-elasticity-log-log-or-double-log"><i class="fa fa-check"></i><b>9.2.1</b> Constant Elasticity (log-log or double log)</a></li>
+<li class="chapter" data-level="9.2.2" data-path="chp7.html"><a href="chp7.html#constant-growth-in-a-dependent-variable-log-lin-or-semilog"><i class="fa fa-check"></i><b>9.2.2</b> Constant Growth in a Dependent Variable (log-lin or semilog)</a></li>
+<li class="chapter" data-level="9.2.3" data-path="chp7.html"><a href="chp7.html#constant-change-in-dependent-variable-lin-log"><i class="fa fa-check"></i><b>9.2.3</b> Constant % Change in Dependent Variable (lin-log)</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="chp7.html"><a href="chp7.html#other-useful-functional-forms"><i class="fa fa-check"></i><b>9.3</b> Other Useful Functional Forms</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="chp8.html"><a href="chp8.html"><i class="fa fa-check"></i><b>10</b> Using Fixed Effects Models to Fight Endogeneity in Panel Data and Difference–in–Difference Models</a><ul>
+<li class="chapter" data-level="10.1" data-path="chp8.html"><a href="chp8.html#simpsons-paradox"><i class="fa fa-check"></i><b>10.1</b> Simpson’s Paradox</a></li>
+<li class="chapter" data-level="10.2" data-path="chp8.html"><a href="chp8.html#figures-8.1-8.3"><i class="fa fa-check"></i><b>10.2</b> Figures 8.1-8.3</a></li>
+<li class="chapter" data-level="10.3" data-path="chp8.html"><a href="chp8.html#one-way-fixed-effects-models"><i class="fa fa-check"></i><b>10.3</b> One-Way Fixed Effects Models</a><ul>
+<li class="chapter" data-level="10.3.1" data-path="chp8.html"><a href="chp8.html#lsdv-approach"><i class="fa fa-check"></i><b>10.3.1</b> LSDV Approach</a></li>
+<li class="chapter" data-level="10.3.2" data-path="chp8.html"><a href="chp8.html#f-test-for-significance-of-fixed-effects."><i class="fa fa-check"></i><b>10.3.2</b> <em>F</em>-test for significance of fixed effects.</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="chp8.html"><a href="chp8.html#de-meaned-approach"><i class="fa fa-check"></i><b>10.4</b> De-Meaned approach</a><ul>
+<li class="chapter" data-level="10.4.1" data-path="chp8.html"><a href="chp8.html#manually-de-mean"><i class="fa fa-check"></i><b>10.4.1</b> Manually De-Mean</a></li>
+<li class="chapter" data-level="10.4.2" data-path="chp8.html"><a href="chp8.html#using-the-plm-package"><i class="fa fa-check"></i><b>10.4.2</b> Using the <code>plm</code> package</a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="chp8.html"><a href="chp8.html#two-way-fixed-effects-models"><i class="fa fa-check"></i><b>10.5</b> Two-Way Fixed Effects Models</a><ul>
+<li class="chapter" data-level="10.5.1" data-path="chp8.html"><a href="chp8.html#time-as-a-factor"><i class="fa fa-check"></i><b>10.5.1</b> Time as a factor</a></li>
+<li class="chapter" data-level="10.5.2" data-path="chp8.html"><a href="chp8.html#effect-twoways"><i class="fa fa-check"></i><b>10.5.2</b> effect = “twoways”</a></li>
+</ul></li>
+<li class="chapter" data-level="10.6" data-path="chp8.html"><a href="chp8.html#difference-in-difference-models"><i class="fa fa-check"></i><b>10.6</b> Difference-in-Difference Models</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="chp9.html"><a href="chp9.html"><i class="fa fa-check"></i><b>11</b> Instrumental Variables: Using Exogenous Variation to Fight Endogeneity</a><ul>
+<li class="chapter" data-level="11.1" data-path="chp9.html"><a href="chp9.html#stage-least-squares"><i class="fa fa-check"></i><b>11.1</b> 2 Stage Least Squares</a></li>
+<li class="chapter" data-level="11.2" data-path="chp9.html"><a href="chp9.html#explanatory-power-of-the-instruments"><i class="fa fa-check"></i><b>11.2</b> Explanatory power of the instruments</a></li>
+<li class="chapter" data-level="11.3" data-path="chp9.html"><a href="chp9.html#estimating-simultaneous-equation-model"><i class="fa fa-check"></i><b>11.3</b> Estimating Simultaneous Equation Model</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="chp10.html"><a href="chp10.html"><i class="fa fa-check"></i><b>12</b> Experiments: Dealing with Real–World Challenges</a><ul>
+<li class="chapter" data-level="12.1" data-path="chp10.html"><a href="chp10.html#assess-balance"><i class="fa fa-check"></i><b>12.1</b> Assess Balance</a></li>
+<li class="chapter" data-level="12.2" data-path="chp10.html"><a href="chp10.html#estimate-itt-model"><i class="fa fa-check"></i><b>12.2</b> Estimate ITT Model</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="chp11.html"><a href="chp11.html"><i class="fa fa-check"></i><b>13</b> Regression Discontinuity: Looking for Jumps in Data</a><ul>
+<li class="chapter" data-level="13.1" data-path="chp11.html"><a href="chp11.html#same-slope"><i class="fa fa-check"></i><b>13.1</b> Same slope</a></li>
+<li class="chapter" data-level="13.2" data-path="chp11.html"><a href="chp11.html#varying-slopes"><i class="fa fa-check"></i><b>13.2</b> Varying Slopes</a></li>
+<li class="chapter" data-level="13.3" data-path="chp11.html"><a href="chp11.html#plot-rd-model"><i class="fa fa-check"></i><b>13.3</b> Plot RD Model</a></li>
+<li class="chapter" data-level="13.4" data-path="chp11.html"><a href="chp11.html#rddtools-package"><i class="fa fa-check"></i><b>13.4</b> <code>rddtools</code> package</a><ul>
+<li class="chapter" data-level="13.4.1" data-path="chp11.html"><a href="chp11.html#same-slope-1"><i class="fa fa-check"></i><b>13.4.1</b> Same slope</a></li>
+<li class="chapter" data-level="13.4.2" data-path="chp11.html"><a href="chp11.html#varying-slopes-1"><i class="fa fa-check"></i><b>13.4.2</b> Varying Slopes</a></li>
+<li class="chapter" data-level="13.4.3" data-path="chp11.html"><a href="chp11.html#scatter-plot"><i class="fa fa-check"></i><b>13.4.3</b> Scatter Plot</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="chp12.html"><a href="chp12.html"><i class="fa fa-check"></i><b>14</b> Dummy Dependent Variables</a><ul>
+<li class="chapter" data-level="14.1" data-path="chp12.html"><a href="chp12.html#probit-estimation"><i class="fa fa-check"></i><b>14.1</b> Probit Estimation</a><ul>
+<li class="chapter" data-level="14.1.1" data-path="chp12.html"><a href="chp12.html#eda"><i class="fa fa-check"></i><b>14.1.1</b> EDA</a></li>
+<li class="chapter" data-level="14.1.2" data-path="chp12.html"><a href="chp12.html#estimate-the-model"><i class="fa fa-check"></i><b>14.1.2</b> Estimate the model</a></li>
+<li class="chapter" data-level="14.1.3" data-path="chp12.html"><a href="chp12.html#estimated-effects"><i class="fa fa-check"></i><b>14.1.3</b> Estimated Effects</a></li>
+</ul></li>
+<li class="chapter" data-level="14.2" data-path="chp12.html"><a href="chp12.html#logit-estimation"><i class="fa fa-check"></i><b>14.2</b> Logit Estimation</a><ul>
+<li class="chapter" data-level="14.2.1" data-path="chp12.html"><a href="chp12.html#discrete-differences"><i class="fa fa-check"></i><b>14.2.1</b> Discrete Differences</a></li>
+<li class="chapter" data-level="14.2.2" data-path="chp12.html"><a href="chp12.html#marginal-effects-1"><i class="fa fa-check"></i><b>14.2.2</b> Marginal Effects</a></li>
+</ul></li>
+<li class="chapter" data-level="14.3" data-path="chp12.html"><a href="chp12.html#testing-hypotheses"><i class="fa fa-check"></i><b>14.3</b> Testing Hypotheses</a></li>
+<li class="chapter" data-level="14.4" data-path="chp12.html"><a href="chp12.html#graphing-probit-and-logit-models"><i class="fa fa-check"></i><b>14.4</b> Graphing Probit and Logit Models</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="chp13.html"><a href="chp13.html"><i class="fa fa-check"></i><b>15</b> Time Series: Dealing with Stickiness over Time</a><ul>
+<li class="chapter" data-level="15.1" data-path="chp13.html"><a href="chp13.html#time-series-objects-in-r"><i class="fa fa-check"></i><b>15.1</b> Time Series Objects in R</a></li>
+<li class="chapter" data-level="15.2" data-path="chp13.html"><a href="chp13.html#detecting-autocorrelation"><i class="fa fa-check"></i><b>15.2</b> Detecting Autocorrelation</a></li>
+<li class="chapter" data-level="15.3" data-path="chp13.html"><a href="chp13.html#correcting-autocorrelation"><i class="fa fa-check"></i><b>15.3</b> Correcting Autocorrelation</a><ul>
+<li class="chapter" data-level="15.3.1" data-path="chp13.html"><a href="chp13.html#newey-west"><i class="fa fa-check"></i><b>15.3.1</b> Newey-West</a></li>
+<li class="chapter" data-level="15.3.2" data-path="chp13.html"><a href="chp13.html#cochrane-orcutt"><i class="fa fa-check"></i><b>15.3.2</b> Cochrane-Orcutt</a></li>
+</ul></li>
+<li class="chapter" data-level="15.4" data-path="chp13.html"><a href="chp13.html#dynamic-models"><i class="fa fa-check"></i><b>15.4</b> Dynamic Models</a></li>
+<li class="chapter" data-level="15.5" data-path="chp13.html"><a href="chp13.html#dickey-fuller-test"><i class="fa fa-check"></i><b>15.5</b> Dickey-Fuller Test</a></li>
+<li class="chapter" data-level="15.6" data-path="chp13.html"><a href="chp13.html#first-differencing"><i class="fa fa-check"></i><b>15.6</b> First Differencing</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="chp14.html"><a href="chp14.html"><i class="fa fa-check"></i><b>16</b> Advanced OLS</a><ul>
+<li class="chapter" data-level="16.1" data-path="chp14.html"><a href="chp14.html#derive-ols-estimator-matrix-form"><i class="fa fa-check"></i><b>16.1</b> Derive OLS estimator (Matrix Form)</a><ul>
+<li class="chapter" data-level="16.1.1" data-path="chp14.html"><a href="chp14.html#example"><i class="fa fa-check"></i><b>16.1.1</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="16.2" data-path="chp14.html"><a href="chp14.html#gaussmarkov-theorem"><i class="fa fa-check"></i><b>16.2</b> Gauss–Markov Theorem</a><ul>
+<li class="chapter" data-level="16.2.1" data-path="chp14.html"><a href="chp14.html#ols-estimator-is-linear"><i class="fa fa-check"></i><b>16.2.1</b> OLS estimator is linear</a></li>
+<li class="chapter" data-level="16.2.2" data-path="chp14.html"><a href="chp14.html#ols-estimator-is-unbiased"><i class="fa fa-check"></i><b>16.2.2</b> OLS estimator is unbiased</a></li>
+<li class="chapter" data-level="16.2.3" data-path="chp14.html"><a href="chp14.html#variance-covariance-is-a-minimum"><i class="fa fa-check"></i><b>16.2.3</b> Variance-Covariance is a minimum</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="chp14.html"><a href="chp14.html#probability-distributions-in-r-1"><i class="fa fa-check"></i><b>16.3</b> Probability Distributions in R</a><ul>
+<li class="chapter" data-level="16.3.1" data-path="chp14.html"><a href="chp14.html#obtaining-critical-statistics"><i class="fa fa-check"></i><b>16.3.1</b> Obtaining Critical Statistics</a></li>
+<li class="chapter" data-level="16.3.2" data-path="chp14.html"><a href="chp14.html#generating-random-numbers-1"><i class="fa fa-check"></i><b>16.3.2</b> Generating Random Numbers</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="chp15.html"><a href="chp15.html"><i class="fa fa-check"></i><b>17</b> Advanced Panel Data</a><ul>
+<li class="chapter" data-level="17.1" data-path="chp15.html"><a href="chp15.html#the-data"><i class="fa fa-check"></i><b>17.1</b> The Data</a></li>
+<li class="chapter" data-level="17.2" data-path="chp15.html"><a href="chp15.html#variation-within-units"><i class="fa fa-check"></i><b>17.2</b> Variation within Units</a></li>
+<li class="chapter" data-level="17.3" data-path="chp15.html"><a href="chp15.html#two-way-fixed-effects-model"><i class="fa fa-check"></i><b>17.3</b> Two-Way Fixed Effects Model</a></li>
+<li class="chapter" data-level="17.4" data-path="chp15.html"><a href="chp15.html#testing-for-autocorrelation"><i class="fa fa-check"></i><b>17.4</b> Testing for autocorrelation</a></li>
+<li class="chapter" data-level="17.5" data-path="chp15.html"><a href="chp15.html#estimating-hatrho"><i class="fa fa-check"></i><b>17.5</b> Estimating <span class="math inline">\(\hat\rho\)</span></a></li>
+<li class="chapter" data-level="17.6" data-path="chp15.html"><a href="chp15.html#estimate-a-rho-transformed-model"><i class="fa fa-check"></i><b>17.6</b> Estimate a <span class="math inline">\(\rho\)</span>-Transformed Model</a></li>
+<li class="chapter" data-level="17.7" data-path="chp15.html"><a href="chp15.html#lagged-dependent-variable-panel-data-model"><i class="fa fa-check"></i><b>17.7</b> Lagged Dependent Variable Panel Data Model</a></li>
+<li class="chapter" data-level="17.8" data-path="chp15.html"><a href="chp15.html#random-effects-model"><i class="fa fa-check"></i><b>17.8</b> Random Effects Model</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R Companion to <em>Real Econometrics</em></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="chp2" class="section level1">
+<h1><span class="header-section-number">Chapter 4</span> Stats in the Wild: Good Data Practices</h1>
+<div id="introduction-1" class="section level2">
+<h2><span class="header-section-number">4.1</span> Introduction</h2>
+<p>I will introduce some additional R commands and packages through reproducing Table 2.1, Table 2.2, Table 2.5, and Figure 2.3. In addition, we will go through the <em>Computing Corner</em>.</p>
+</div>
+<div id="table-and-figure-reproduction" class="section level2">
+<h2><span class="header-section-number">4.2</span> Table and Figure Reproduction</h2>
+<div id="table-2.1" class="section level3">
+<h3><span class="header-section-number">4.2.1</span> Table 2.1</h3>
+<p>Since we saved the data frame we created in Chapter 1 as donuts.RData, we will <code>load</code> the file into global environment. We are only interested in the summary statistics for Weight and Donuts. We can get a basic set of summary statistics by calling <code>summary</code> on the data frame. But, <code>stargazer</code> from
+the stargazer package. The stargazer produces well formatted tables in LaTex code, HTML code, and ASCII text.</p>
+<p>We will make use of the pipe operator from the <code>magrittr</code> package (also part of the <code>tidyverse</code>), as well. The pipe operator <code>%&gt;%</code> (ctr-shift-m shortcut in R Studio) allows for more intuitive reading of code especially when nesting commands inside of each other. Take a simple example of finding calling the <code>str</code> command on a data frame, <code>df</code>. Without the pipe operator <code>%&gt;%</code>, we would call the command like this <code>str(df)</code> and you might read this aloud alike this find the structure of df. With the pipe operator, call the command like this <code>df %&gt;% str()</code>. Read aloud it might be something like this “take the <code>df</code> data and find its structure.” The pipe operator really shines when functions are nested together, as we shall see below.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw">load</span>(<span class="st">&quot;donuts.RData&quot;</span>)</a>
+<a class="sourceLine" id="cb18-2" title="2"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb18-3" title="3"><span class="kw">library</span>(stargazer)</a>
+<a class="sourceLine" id="cb18-4" title="4">donuts <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb18-5" title="5"><span class="st">  </span><span class="kw">select</span>(<span class="st">&quot;Weight&quot;</span> =<span class="st"> </span>weight, <span class="st">&quot;Donuts&quot;</span> =<span class="st"> </span>donuts_per_week) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># choose and rename the columns</span></a>
+<a class="sourceLine" id="cb18-6" title="6"><span class="st">  </span>as.data.frame <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># stargazer doesn&#39;t play nice with tibbles</span></a>
+<a class="sourceLine" id="cb18-7" title="7"><span class="st">    </span><span class="kw">stargazer</span>(<span class="dt">type =</span> <span class="st">&quot;text&quot;</span>, <span class="co"># tell stargazer to produce an ASCII text version of the table</span></a>
+<a class="sourceLine" id="cb18-8" title="8">              <span class="dt">title =</span> <span class="st">&quot;Table 2.1&quot;</span>, </a>
+<a class="sourceLine" id="cb18-9" title="9">              <span class="dt">omit.summary.stat =</span> <span class="kw">c</span>(<span class="st">&quot;p25&quot;</span>, <span class="st">&quot;p75&quot;</span>)) <span class="co"># omit the default 1st and 3rd quartiles</span></a></code></pre></div>
+<pre><code>
+Table 2.1
+=====================================
+Statistic N   Mean   St. Dev. Min Max
+-------------------------------------
+Weight    13 172.000  76.200  70  310
+Donuts    13  5.450   6.750    0  20 
+-------------------------------------</code></pre>
+</div>
+<div id="table-2.2" class="section level3">
+<h3><span class="header-section-number">4.2.2</span> Table 2.2</h3>
+<p>To reproduce Table 2.2 we will need to add a variable named male which will take on the value 1 for each observation in the data that represents a male and a 0 otherwise.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="kw">load</span>(<span class="st">&quot;donuts.RData&quot;</span>)</a>
+<a class="sourceLine" id="cb20-2" title="2">donuts<span class="op">$</span>name <span class="co"># this syntax reads print the variable name from the donuts data frame.</span></a></code></pre></div>
+<pre><code> [1] &quot;Homer&quot;             &quot;Marge&quot;             &quot;Lisa&quot;             
+ [4] &quot;Bart&quot;              &quot;Comic Book Guy&quot;    &quot;Mr. Burns&quot;        
+ [7] &quot;Smithers&quot;          &quot;Chief Wiggum&quot;      &quot;Principle Skinner&quot;
+[10] &quot;Rev. Lovejoy&quot;      &quot;Ned Flanders&quot;      &quot;Patty&quot;            
+[13] &quot;Selma&quot;            </code></pre>
+<p>Making use of donuts$name we see that the observations 1, 4, 5, 6, 7, 8, 9, 10, 11 are male and observations 2, 3, 12, 13 are not. We add the variable male to the donuts data frame as follows:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1">donuts<span class="op">$</span>male &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>)</a></code></pre></div>
+<p>Call <code>table</code> to create a rudimentary version of Table 2.2</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1">donuts<span class="op">$</span>male <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb23-2" title="2"><span class="st">  </span><span class="kw">table</span>()</a></code></pre></div>
+<pre><code>.
+0 1 
+4 9 </code></pre>
+</div>
+<div id="table-2.5" class="section level3">
+<h3><span class="header-section-number">4.2.3</span> Table 2.5</h3>
+<p>To reproduce Table 2.5 we must first retrieve the data. We will retrieve the data directly from the agencies responsible for their collection. You can retrieve the data as a comma-separated values (<code>csv</code>) file. A <code>csv</code> file is a plain text file in which the data are stored in a tabular format with values separated by a comma.</p>
+<p>The crime data can be found on the U.S. Department of Justice Federal Bureau of Investigation Uniform Crime Reporting Statistics <a href="https://www.ucrdatatool.gov/">website</a>. The single parent, urban, and poverty data can found on the U.S. Census <a href="https://www.census.gov/">website</a>.</p>
+<p>An investigation of the CrimeOneYearofData.csv file shows that there is meta information contained in the file along with the data. We could open the csv file in Excel and edited to remove the information or we could read it directly into R using <code>read_csv</code> from the <code>readr</code> package with options to ignore the meta information. The readr package has many advantages over the base R read functions, see <code>vignette("readr")</code> for more information. All of the text’s data files are available in <code>csv</code> format, so we will make repeated use of <code>read-csv</code>. Investigation of the file with either Excel or text editor, shows the first nine rows are either blank or contain information about the data. Rows 63 to 183 contain footnotes and other additional information about the data. The names of the variables are in row ten of the csv file; so, we will skip the first nine rows using the option <code>skip</code>. We can choose the rows that contain the states and Washington, D.C., with the <code>n_max</code> option. Also, we need only the columns that contain the state names and the violent crime numbers. After reading in the data we will use <code>select</code> from the <code>dplyr</code> package.</p>
+<p>Similar to <code>ggplot</code> being based on the grammar of graphics, <code>dplyr</code> is a grammar of data manipulation. dplyr consists of a set of “verbs” to help solve common data manipulation problems. To learn more about dplyr read <code>vignette("dplyr")</code>, visit <a href="https://dplyr.tidyverse.org/">dplyr</a>, or for a good introduction visit the <a href="https://r4ds.had.co.nz/transform.html">data import chapter</a> in <em>R for Data Science</em>. We will make use of the pipe operator from the <code>magrittr</code> package (also part of the <code>tidyverse</code>), as well.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1"><span class="kw">library</span>(readr)</a>
+<a class="sourceLine" id="cb25-2" title="2">crime_one_year_of_data &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;Data/CrimeOneYearofData.csv&quot;</span>, <span class="co"># read the data from its location</span></a>
+<a class="sourceLine" id="cb25-3" title="3">                               <span class="dt">skip =</span> <span class="dv">9</span>, <span class="co"># start at row 10</span></a>
+<a class="sourceLine" id="cb25-4" title="4">                               <span class="dt">n_max =</span> <span class="dv">51</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># use only 51 records (ignores the US total row)</span></a>
+<a class="sourceLine" id="cb25-5" title="5"><span class="st">  </span><span class="kw">select</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)) <span class="co"># select only the first and third columns</span></a></code></pre></div>
+<p>Using <code>glimpse</code> from dplyr, we see that we have a tibble with 51 observations and 2 variables. <code>glimpse</code> is similar to <code>str</code>.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1">crime_one_year_of_data <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb26-2" title="2"><span class="st">  </span>glimpse</a></code></pre></div>
+<pre><code>Observations: 51
+Variables: 2
+$ State                &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;, &quot;Arkansas...
+$ `Violent Crime rate` &lt;dbl&gt; 450, 633, 426, 516, 473, 339, 301, 645, 1...</code></pre>
+<p>We can see that State is a character vector and Violent Crime Rate is a numeric vector. Looking at the names of the variables we can see they do not adhere to the stylistic guidelines discussed above. The State variable begins with a capital letter and the Violent Crime Variable has capital letters and spaces in its name (the spaces are why you see the tick mark “`” before and after the name). The state names are spelled out, but to reproduce Figure 2.3 we need to change those to two-letter abbreviations.</p>
+<p>To bring the names into stylistic guidelines we can use <code>clean_names</code> from the janitor package, <code>snake case</code> is the default conversion. Note, the versatility of the <code>%&gt;%</code> operator. If we did not use the <code>%&gt;%</code> operator, the code would have been written as <code>glimpse(crime_one_year_of_data &lt;- clean_names(crime_one_year_of_data))</code></p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1"><span class="kw">library</span>(janitor)</a>
+<a class="sourceLine" id="cb28-2" title="2">crime_one_year_of_data &lt;-<span class="st"> </span>crime_one_year_of_data <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb28-3" title="3"><span class="st">  </span><span class="kw">clean_names</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb28-4" title="4"><span class="st">  </span>glimpse</a></code></pre></div>
+<pre><code>Observations: 51
+Variables: 2
+$ state              &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;, &quot;Arkansas&quot;,...
+$ violent_crime_rate &lt;dbl&gt; 450, 633, 426, 516, 473, 339, 301, 645, 134...</code></pre>
+<p>We will read the other data in a similar fashion.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1"><span class="co"># Source: U.S. Census Bureau, 2009 American Community Survey, Table C23008</span></a>
+<a class="sourceLine" id="cb30-2" title="2">ACS_<span class="dv">09</span>_1YR_C23008_with_ann &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;Data/ACS_09_1YR_C23008_with_ann.csv&quot;</span>, </a>
+<a class="sourceLine" id="cb30-3" title="3">    <span class="dt">skip =</span> <span class="dv">1</span>,</a>
+<a class="sourceLine" id="cb30-4" title="4">    <span class="dt">n_max =</span> <span class="dv">51</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb30-5" title="5"><span class="st">  </span><span class="kw">clean_names</span>() </a>
+<a class="sourceLine" id="cb30-6" title="6"><span class="kw">names</span>(ACS_<span class="dv">09</span>_1YR_C23008_with_ann)[<span class="kw">names</span>(ACS_<span class="dv">09</span>_1YR_C23008_with_ann) <span class="op">==</span><span class="st"> &quot;geography&quot;</span>] &lt;-<span class="st"> &quot;state&quot;</span></a>
+<a class="sourceLine" id="cb30-7" title="7"><span class="co"># names(ACS_09_1YR_C23008_with_ann) looks at all the names </span></a>
+<a class="sourceLine" id="cb30-8" title="8"><span class="co"># [names(ACS_09_1YR_C23008_with_ann) == &quot;geography&quot;] extracts the column number of the name we want to change</span></a>
+<a class="sourceLine" id="cb30-9" title="9"><span class="co"># &lt;- &quot;state&quot; assigns the name state to that column number</span></a>
+<a class="sourceLine" id="cb30-10" title="10">ACS_<span class="dv">09</span>_1YR_C23008_with_ann <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">glimpse</span>()</a></code></pre></div>
+<pre><code>Observations: 51
+Variables: 8
+$ id                                            &lt;chr&gt; &quot;0400000US01&quot;, &quot;...
+$ id2                                           &lt;chr&gt; &quot;01&quot;, &quot;02&quot;, &quot;04&quot;...
+$ state                                         &lt;chr&gt; &quot;Alabama&quot;, &quot;Alas...
+$ estimate_total                                &lt;dbl&gt; 1059528, 174634,...
+$ estimate_under_6_years                        &lt;dbl&gt; 357122, 61489, 5...
+$ estimate_under_6_years_living_with_one_parent &lt;dbl&gt; 141977, 20676, 2...
+$ estimate_6_to_17_years                        &lt;dbl&gt; 702406, 113145, ...
+$ estimate_6_to_17_years_living_with_one_parent &lt;dbl&gt; 270077, 32250, 3...</code></pre>
+<p>To create the percentage of children with single parents, add those under 6 living with one parent to those between 6 and 17 living with one parent and divide by the estimated total. We create the new variable with the <code>mutate</code> verb from dplyr and <code>select</code> state and percent with single parents into a new data frame.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1">single_parents &lt;-<span class="st"> </span></a>
+<a class="sourceLine" id="cb32-2" title="2">ACS_<span class="dv">09</span>_1YR_C23008_with_ann <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb32-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">percent_single_parents =</span> </a>
+<a class="sourceLine" id="cb32-4" title="4">           (estimate_under_<span class="dv">6</span>_years_living_with_one_parent <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb32-5" title="5"><span class="st">              </span>estimate_<span class="dv">6</span>_to_<span class="dv">17</span>_years_living_with_one_parent) <span class="op">/</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb32-6" title="6"><span class="st">           </span>estimate_total) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb32-7" title="7"><span class="st">  </span><span class="kw">select</span>(state, percent_single_parents) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb32-8" title="8"><span class="st">  </span><span class="kw">glimpse</span>()</a></code></pre></div>
+<pre><code>Observations: 51
+Variables: 2
+$ state                  &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;, &quot;Arkans...
+$ percent_single_parents &lt;dbl&gt; 0.389, 0.303, 0.365, 0.378, 0.324, 0.28...</code></pre>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1"><span class="co"># Source: U.S. Census Bureau, 2009 American Community Survey, Table S1701</span></a>
+<a class="sourceLine" id="cb34-2" title="2">ACS_<span class="dv">09</span>_1YR_S1701_with_ann &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;Data/ACS_09_1YR_S1701_with_ann.csv&quot;</span>, </a>
+<a class="sourceLine" id="cb34-3" title="3">    <span class="dt">skip =</span> <span class="dv">1</span>,</a>
+<a class="sourceLine" id="cb34-4" title="4">    <span class="dt">n_max =</span> <span class="dv">51</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb34-5" title="5"><span class="st">  </span><span class="kw">clean_names</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb34-6" title="6"><span class="st">  </span><span class="kw">select</span>(<span class="st">&quot;state&quot;</span> =<span class="st"> </span>geography, <span class="co"># directly name the variables when selected</span></a>
+<a class="sourceLine" id="cb34-7" title="7">         <span class="st">&quot;percent_poverty&quot;</span> =<span class="st"> </span>percent_below_poverty_level_estimate_population_for_whom_poverty_status_is_determined) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb34-8" title="8"><span class="st">  </span><span class="kw">glimpse</span>()</a></code></pre></div>
+<pre><code>Observations: 51
+Variables: 2
+$ state           &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;, &quot;Arkansas&quot;, &quot;C...
+$ percent_poverty &lt;dbl&gt; 17.5, 9.0, 16.5, 18.8, 14.2, 12.9, 9.4, 10.8, ...</code></pre>
+<p>To create the percent urban in 2009, we need to interpolate using the 2000 and 2010 censuses. After reading each set of data we will combine them into one data frame using <code>right_join</code> from the dplyr package.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" title="1"><span class="co"># Source: U.S. Census Bureau, Table P002</span></a>
+<a class="sourceLine" id="cb36-2" title="2">DEC_<span class="dv">00</span>_SF1_P002_with_ann &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;Data/DEC_00_SF1_P002_with_ann.csv&quot;</span>, </a>
+<a class="sourceLine" id="cb36-3" title="3">    <span class="dt">skip =</span> <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb36-4" title="4"><span class="st">  </span><span class="kw">clean_names</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb36-5" title="5"><span class="st">  </span><span class="kw">select</span>(<span class="st">&quot;state&quot;</span> =<span class="st"> </span>geography, <span class="st">&quot;total_00&quot;</span> =<span class="st"> </span>total , <span class="st">&quot;urban_00&quot;</span> =<span class="st"> </span>urban) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb36-6" title="6"><span class="st">  </span><span class="kw">glimpse</span>()</a></code></pre></div>
+<pre><code>Observations: 51
+Variables: 3
+$ state    &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;, &quot;Arkansas&quot;, &quot;Californ...
+$ total_00 &lt;dbl&gt; 4447100, 626932, 5130632, 2673400, 33871648, 4301261,...
+$ urban_00 &lt;dbl&gt; 2465673, 411257, 4523535, 1404179, 31989663, 3633185,...</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" title="1"><span class="co"># Source: U.S. Census Bureau, Table H2</span></a>
+<a class="sourceLine" id="cb38-2" title="2">DEC_<span class="dv">10</span>_SF1_P2_with_ann &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;Data/DEC_10_SF1_P2_with_ann.csv&quot;</span>, </a>
+<a class="sourceLine" id="cb38-3" title="3">    <span class="dt">skip =</span> <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb38-4" title="4"><span class="st">  </span><span class="kw">clean_names</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb38-5" title="5"><span class="st">  </span><span class="kw">select</span>(<span class="st">&quot;state&quot;</span> =<span class="st"> </span>geography, <span class="st">&quot;total_10&quot;</span> =<span class="st"> </span>total , <span class="st">&quot;urban_10&quot;</span> =<span class="st"> </span>urban) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb38-6" title="6"><span class="st">  </span><span class="kw">glimpse</span>()</a></code></pre></div>
+<pre><code>Observations: 51
+Variables: 3
+$ state    &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;, &quot;Arkansas&quot;, &quot;Californ...
+$ total_10 &lt;chr&gt; &quot;4779736(r38235)&quot;, &quot;710231(r38823)&quot;, &quot;6392017&quot;, &quot;2915...
+$ urban_10 &lt;dbl&gt; 2821804, 468893, 5740659, 1637589, 35373606, 4332761,...</code></pre>
+<p>Note that total_10 from the 2010 census is a character vector. This means that there is at least one observation that includes characters. In fact, we can see at least 3 of the observations include parenthetical notes. <code>print</code> the variable to the screen to confirm each of the patterns is of the form “(some text)”.</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" title="1">DEC_<span class="dv">10</span>_SF1_P2_with_ann<span class="op">$</span>total_<span class="dv">10</span></a></code></pre></div>
+<pre><code> [1] &quot;4779736(r38235)&quot;  &quot;710231(r38823)&quot;   &quot;6392017&quot;         
+ [4] &quot;2915918(r39193)&quot;  &quot;37253956&quot;         &quot;5029196&quot;         
+ [7] &quot;3574097&quot;          &quot;897934&quot;           &quot;601723(r39494)&quot;  
+[10] &quot;18801310(r40184)&quot; &quot;9687653(r41102)&quot;  &quot;1360301&quot;         
+[13] &quot;1567582(r41542)&quot;  &quot;12830632&quot;         &quot;6483802&quot;         
+[16] &quot;3046355&quot;          &quot;2853118&quot;          &quot;4339367&quot;         
+[19] &quot;4533372&quot;          &quot;1328361&quot;          &quot;5773552(r42264)&quot; 
+[22] &quot;6547629&quot;          &quot;9883640(r45127)&quot;  &quot;5303925&quot;         
+[25] &quot;2967297&quot;          &quot;5988927&quot;          &quot;989415&quot;          
+[28] &quot;1826341&quot;          &quot;2700551&quot;          &quot;1316470&quot;         
+[31] &quot;8791894(r46246)&quot;  &quot;2059179(r46748)&quot;  &quot;19378102&quot;        
+[34] &quot;9535483&quot;          &quot;672591&quot;           &quot;11536504&quot;        
+[37] &quot;3751351&quot;          &quot;3831074&quot;          &quot;12702379&quot;        
+[40] &quot;1052567&quot;          &quot;4625364&quot;          &quot;814180(r48166)&quot;  
+[43] &quot;6346105&quot;          &quot;25145561(r48514)&quot; &quot;2763885&quot;         
+[46] &quot;625741&quot;           &quot;8001024&quot;          &quot;6724540&quot;         
+[49] &quot;1852994&quot;          &quot;5686986&quot;          &quot;563626&quot;          </code></pre>
+<p>We have confirmed that undesirable string has the same form in each position it exists. We must remove those comments and coerce the variable to numeric to proceed. We can determine how many instances of these comments occur using <code>str_detect</code> from the <code>stringr</code> package. <code>str_detect</code> will return a logical vector, so we need only sum the vector to count the number of times this occurs.</p>
+<p>When calling <code>sum</code> on a logical vector, TRUE is treated as 1 and FALSE as 0, so summing the vector “counts” the number of TRUE occurrences. A regular expression, <code>regex</code> or <code>regexp</code>, is a sequence of characters that define a search pattern, to learn more visit <a href="https://regexr.com/">regexr.com</a>. The pattern we are looking for here is given by “\(.+\)”. Since the parenthesis is a special character, it must be escaped with \, the . is a wild card, the + means 1 or more, so the .+ means find anything that appears 1 or more times. So the expression can be read as start with ( find anything which occurs one or more times and end with ).</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" title="1"><span class="kw">str_detect</span>(DEC_<span class="dv">10</span>_SF1_P2_with_ann<span class="op">$</span>total_<span class="dv">10</span>, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">(.+</span><span class="ch">\\</span><span class="st">)&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb42-2" title="2"><span class="st">  </span><span class="kw">sum</span>()</a></code></pre></div>
+<pre><code>[1] 13</code></pre>
+<p>The pattern occurs 13 times. We need to remove the string and coerce the character vector to a numeric vector. <code>str_replace_all</code> will remove all occurrences of the string. <code>as.numeric</code> will coerce the character vector to a numeric vector. We will make use of the “two-way” pipe operator <code>%&lt;&gt;%</code> in each function call. This operator takes the left hand side passes it to to the function and returns the result back to the original vector effectively overwriting it.</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" title="1"><span class="kw">library</span>(magrittr)</a>
+<a class="sourceLine" id="cb44-2" title="2"><span class="co"># the  %&lt;&gt;% operator is a &quot;two way&quot; pipe that sends the result back to the left hand side.</span></a>
+<a class="sourceLine" id="cb44-3" title="3">DEC_<span class="dv">10</span>_SF1_P2_with_ann<span class="op">$</span>total_<span class="dv">10</span> <span class="op">%&lt;&gt;%</span><span class="st"> </span><span class="kw">str_replace_all</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">(.+</span><span class="ch">\\</span><span class="st">)&quot;</span>, <span class="st">&quot;&quot;</span>) <span class="co"># &quot;&quot; replaces the string with blank</span></a>
+<a class="sourceLine" id="cb44-4" title="4">DEC_<span class="dv">10</span>_SF1_P2_with_ann<span class="op">$</span>total_<span class="dv">10</span> <span class="op">%&lt;&gt;%</span><span class="st"> </span><span class="kw">as.numeric</span>()</a>
+<a class="sourceLine" id="cb44-5" title="5">DEC_<span class="dv">10</span>_SF1_P2_with_ann <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">glimpse</span>()</a></code></pre></div>
+<pre><code>Observations: 51
+Variables: 3
+$ state    &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;, &quot;Arkansas&quot;, &quot;Californ...
+$ total_10 &lt;dbl&gt; 4779736, 710231, 6392017, 2915918, 37253956, 5029196,...
+$ urban_10 &lt;dbl&gt; 2821804, 468893, 5740659, 1637589, 35373606, 4332761,...</code></pre>
+<p>We see that total_10 is now a numeric vector.</p>
+<p>We can now combine the two data frames using <code>right_join</code> from the dplyr package. Since each data frame has the state variable, <code>right_join</code> will add the columns from the 2010 census to the end (right) of the 2000 census matching observations by state. We will assign the result to percent_urban.</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" title="1">urban &lt;-<span class="st"> </span>DEC_<span class="dv">00</span>_SF1_P002_with_ann <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb46-2" title="2"><span class="st">  </span><span class="kw">right_join</span>(DEC_<span class="dv">10</span>_SF1_P2_with_ann) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb46-3" title="3"><span class="st">  </span><span class="kw">glimpse</span>()</a></code></pre></div>
+<pre><code>Observations: 51
+Variables: 5
+$ state    &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;, &quot;Arkansas&quot;, &quot;Californ...
+$ total_00 &lt;dbl&gt; 4447100, 626932, 5130632, 2673400, 33871648, 4301261,...
+$ urban_00 &lt;dbl&gt; 2465673, 411257, 4523535, 1404179, 31989663, 3633185,...
+$ total_10 &lt;dbl&gt; 4779736, 710231, 6392017, 2915918, 37253956, 5029196,...
+$ urban_10 &lt;dbl&gt; 2821804, 468893, 5740659, 1637589, 35373606, 4332761,...</code></pre>
+<p>We can, now, interpolate the 2009 observations from the 2000 and 2010 observations. Since 2009 is nine tenths of the distance to 2010 from 2000, we will add 9/10 of the difference between the two observations to the 2000 observation.</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" title="1">urban <span class="op">%&lt;&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb48-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">percent_urban =</span> (.<span class="dv">9</span> <span class="op">*</span><span class="st"> </span>(urban_<span class="dv">10</span> <span class="op">-</span><span class="st"> </span>urban_<span class="dv">00</span>) <span class="op">+</span><span class="st"> </span>urban_<span class="dv">00</span>) <span class="op">/</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb48-3" title="3"><span class="st">           </span>(.<span class="dv">9</span> <span class="op">*</span><span class="st"> </span>(total_<span class="dv">10</span> <span class="op">-</span><span class="st"> </span>total_<span class="dv">00</span>) <span class="op">+</span><span class="st"> </span>total_<span class="dv">00</span>) <span class="op">*</span><span class="st"> </span><span class="dv">100</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb48-4" title="4"><span class="st">  </span><span class="kw">select</span>(state, percent_urban)</a></code></pre></div>
+<p>We now have 4 data frames containing the information we need to create Table 2.5 and Figure 2.3. We will create a one data frame by joining the four data frames using the dplyr package.</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" title="1">crime_df &lt;-<span class="st"> </span>crime_one_year_of_data <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb49-2" title="2"><span class="st">  </span><span class="kw">right_join</span>(single_parents) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb49-3" title="3"><span class="st">  </span><span class="kw">right_join</span>(urban) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb49-4" title="4"><span class="st">  </span><span class="kw">right_join</span>(ACS_<span class="dv">09</span>_1YR_S1701_with_ann) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb49-5" title="5"><span class="st">  </span><span class="kw">glimpse</span>()</a></code></pre></div>
+<pre><code>Observations: 51
+Variables: 5
+$ state                  &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;, &quot;Arkans...
+$ violent_crime_rate     &lt;dbl&gt; 450, 633, 426, 516, 473, 339, 301, 645,...
+$ percent_single_parents &lt;dbl&gt; 0.389, 0.303, 0.365, 0.378, 0.324, 0.28...
+$ percent_urban          &lt;dbl&gt; 58.7, 66.0, 89.7, 55.8, 94.9, 86.0, 88....
+$ percent_poverty        &lt;dbl&gt; 17.5, 9.0, 16.5, 18.8, 14.2, 12.9, 9.4,...</code></pre>
+<p>Figure 2.3 includes state abbreviations rather than state names. We will change the names into abbreviations with the help of a built in character vector. state.name is character vector of state names, excluding Washington DC, built into R. We can concatenate that vector with the character string “District of Columbia”, sort the new character vector alphabetically, convert the names to abbreviations with <code>state2abbr</code> from the <code>openintro</code> package, and assign the result to the state vector in the crime_one_year_of_data data frame.</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" title="1"><span class="kw">library</span>(openintro)</a>
+<a class="sourceLine" id="cb51-2" title="2">state_abb &lt;-<span class="st"> </span><span class="kw">c</span>(state.name, <span class="st">&quot;District of Columbia&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb51-3" title="3"><span class="st">  </span><span class="kw">sort</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb51-4" title="4"><span class="st">  </span><span class="kw">state2abbr</span>()</a>
+<a class="sourceLine" id="cb51-5" title="5">crime_df<span class="op">$</span>state &lt;-<span class="st"> </span>state_abb  </a>
+<a class="sourceLine" id="cb51-6" title="6">crime_df <span class="op">%&gt;%</span><span class="st"> </span>glimpse</a></code></pre></div>
+<pre><code>Observations: 51
+Variables: 5
+$ state                  &lt;chr&gt; &quot;AL&quot;, &quot;AK&quot;, &quot;AZ&quot;, &quot;AR&quot;, &quot;CA&quot;, &quot;CO&quot;, &quot;CT...
+$ violent_crime_rate     &lt;dbl&gt; 450, 633, 426, 516, 473, 339, 301, 645,...
+$ percent_single_parents &lt;dbl&gt; 0.389, 0.303, 0.365, 0.378, 0.324, 0.28...
+$ percent_urban          &lt;dbl&gt; 58.7, 66.0, 89.7, 55.8, 94.9, 86.0, 88....
+$ percent_poverty        &lt;dbl&gt; 17.5, 9.0, 16.5, 18.8, 14.2, 12.9, 9.4,...</code></pre>
+<p>We proceed as we did with Table 2.1 to reproduce Table 2.3.</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" title="1">crime_df <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb53-2" title="2"><span class="st">  </span><span class="kw">select</span>(<span class="st">&quot;Violent crime rate (per 100,00 people)&quot;</span> =<span class="st"> </span>violent_crime_rate,</a>
+<a class="sourceLine" id="cb53-3" title="3">         <span class="st">&quot;Percent single parents&quot;</span> =<span class="st"> </span>percent_single_parents,</a>
+<a class="sourceLine" id="cb53-4" title="4">         <span class="st">&quot;Percent urban&quot;</span> =<span class="st"> </span>percent_urban,</a>
+<a class="sourceLine" id="cb53-5" title="5">         <span class="st">&quot;Percent poverty&quot;</span> =<span class="st"> </span>percent_poverty) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb53-6" title="6"><span class="st">  </span><span class="kw">as.data.frame</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb53-7" title="7"><span class="st">  </span><span class="kw">stargazer</span>(<span class="dt">type =</span> <span class="st">&quot;text&quot;</span>, </a>
+<a class="sourceLine" id="cb53-8" title="8">            <span class="dt">title =</span> <span class="st">&quot;Table 2.3&quot;</span>,</a>
+<a class="sourceLine" id="cb53-9" title="9">            <span class="dt">omit.summary.stat =</span> <span class="kw">c</span>(<span class="st">&quot;p25&quot;</span>, <span class="st">&quot;p75&quot;</span>)) </a></code></pre></div>
+<pre><code>
+Table 2.3
+============================================================================
+Statistic                              N   Mean   St. Dev.   Min      Max   
+----------------------------------------------------------------------------
+Violent crime rate (per 100,00 people) 51 407.000 206.000  120.000 1,349.000
+Percent single parents                 51  0.332   0.064    0.185    0.608  
+Percent urban                          51 73.900   14.900  38.800   100.000 
+Percent poverty                        51 13.900   3.110    8.500   21.900  
+----------------------------------------------------------------------------</code></pre>
+</div>
+<div id="figure-2.3" class="section level3">
+<h3><span class="header-section-number">4.2.4</span> Figure 2.3</h3>
+<p>We will use <code>ggplot</code> from the <code>ggplot2</code> package to reproduce Figure 2.3. We will use the <code>plot_grd</code> from <code>cowplot</code> package to create a grid of the three individual plots after we create them individually.</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" title="1">plot_urban &lt;-<span class="st"> </span></a>
+<a class="sourceLine" id="cb55-2" title="2"><span class="st">  </span>crime_df <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb55-3" title="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> percent_urban, <span class="dt">y =</span> violent_crime_rate)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb55-4" title="4"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Percent urban</span><span class="ch">\n</span><span class="st">(0-to-100 scale)&quot;</span>, <span class="co"># \n creates a new line</span></a>
+<a class="sourceLine" id="cb55-5" title="5">       <span class="dt">y =</span> <span class="st">&quot;Violent</span><span class="ch">\n</span><span class="st">crime</span><span class="ch">\n</span><span class="st">rate</span><span class="ch">\n</span><span class="st">(per</span><span class="ch">\n</span><span class="st">100,000</span><span class="ch">\n</span><span class="st">people)&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb55-6" title="6"><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">label =</span> state), <span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb55-7" title="7"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">200</span>, <span class="dv">1200</span>, <span class="dv">200</span>)) <span class="op">+</span><span class="st"> </span><span class="co"># creates a sequence from 200 to 1200 by 200</span></a>
+<a class="sourceLine" id="cb55-8" title="8"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">40</span>, <span class="dv">100</span>, <span class="dv">10</span>)) <span class="op">+</span><span class="st"> </span><span class="co"># creates a sequence from 40 to 100 by 10</span></a>
+<a class="sourceLine" id="cb55-9" title="9"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title.y =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">0</span>), </a>
+<a class="sourceLine" id="cb55-10" title="10">        <span class="dt">panel.grid =</span> <span class="kw">element_blank</span>(), </a>
+<a class="sourceLine" id="cb55-11" title="11">        <span class="dt">panel.background =</span> <span class="kw">element_blank</span>(), </a>
+<a class="sourceLine" id="cb55-12" title="12">        <span class="dt">axis.line =</span> <span class="kw">element_line</span>())</a>
+<a class="sourceLine" id="cb55-13" title="13"></a>
+<a class="sourceLine" id="cb55-14" title="14">plot_single &lt;-<span class="st"> </span></a>
+<a class="sourceLine" id="cb55-15" title="15"><span class="st">  </span>crime_df <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb55-16" title="16"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> percent_single_parents, <span class="dt">y =</span> violent_crime_rate)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb55-17" title="17"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Percent single parent</span><span class="ch">\n</span><span class="st">(0-to-1 scale)&quot;</span>, <span class="co"># \n creates a new line</span></a>
+<a class="sourceLine" id="cb55-18" title="18">       <span class="dt">y =</span> <span class="st">&quot;&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb55-19" title="19"><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">label =</span> state), <span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb55-20" title="20"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">200</span>, <span class="dv">1200</span>, <span class="dv">200</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb55-21" title="21"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title.y =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">0</span>), </a>
+<a class="sourceLine" id="cb55-22" title="22">        <span class="dt">panel.grid =</span> <span class="kw">element_blank</span>(), </a>
+<a class="sourceLine" id="cb55-23" title="23">        <span class="dt">panel.background =</span> <span class="kw">element_blank</span>(), </a>
+<a class="sourceLine" id="cb55-24" title="24">        <span class="dt">axis.line =</span> <span class="kw">element_line</span>())</a>
+<a class="sourceLine" id="cb55-25" title="25"></a>
+<a class="sourceLine" id="cb55-26" title="26">plot_poverty &lt;-<span class="st"> </span></a>
+<a class="sourceLine" id="cb55-27" title="27"><span class="st">  </span>crime_df <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb55-28" title="28"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> percent_poverty, <span class="dt">y =</span> violent_crime_rate)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb55-29" title="29"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Percent poverty</span><span class="ch">\n</span><span class="st">(0-to-100 scale)&quot;</span>, <span class="co"># \n creates a new line</span></a>
+<a class="sourceLine" id="cb55-30" title="30">       <span class="dt">y =</span> <span class="st">&quot;&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb55-31" title="31"><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">label =</span> state), <span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb55-32" title="32"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">200</span>, <span class="dv">1200</span>, <span class="dv">200</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb55-33" title="33"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">8</span>, <span class="dv">22</span>, <span class="dv">2</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb55-34" title="34"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title.y =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">0</span>), </a>
+<a class="sourceLine" id="cb55-35" title="35">        <span class="dt">panel.grid =</span> <span class="kw">element_blank</span>(), </a>
+<a class="sourceLine" id="cb55-36" title="36">        <span class="dt">panel.background =</span> <span class="kw">element_blank</span>(), </a>
+<a class="sourceLine" id="cb55-37" title="37">        <span class="dt">axis.line =</span> <span class="kw">element_line</span>())</a>
+<a class="sourceLine" id="cb55-38" title="38"></a>
+<a class="sourceLine" id="cb55-39" title="39"><span class="kw">library</span>(cowplot)</a>
+<a class="sourceLine" id="cb55-40" title="40"><span class="kw">plot_grid</span>(plot_urban, plot_single, plot_poverty,  <span class="dt">ncol =</span> <span class="dv">3</span>)</a></code></pre></div>
+<p><img src="bailey_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p>FIGURE 2.3: Scatterplots of Violent Crime against Percent Urban, Single Parent, and Poverty</p>
+</div>
+</div>
+<div id="computing-center" class="section level2">
+<h2><span class="header-section-number">4.3</span> Computing Center</h2>
+<div id="reading-data" class="section level3">
+<h3><span class="header-section-number">4.3.1</span> Reading Data</h3>
+<p>There are packages available to read data formatted in a variety of ways into R. Data can also be imported using the Import Dataset icon in the Environment/History pane. When learning to import data, this method can be useful as it will create the command line necessary to import the data, which you can then paste into your R Script of R Markdown file.</p>
+</div>
+<div id="manually-entering-data" class="section level3">
+<h3><span class="header-section-number">4.3.2</span> Manually Entering Data</h3>
+<p>In Chapter 1 we saw that we can directly (manually) enter data into R as well. Below is the appropriate syntax for doing so.</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" title="1">name &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Homer&quot;</span>, <span class="st">&quot;Marge&quot;</span>, <span class="st">&quot;Lisa&quot;</span>, <span class="st">&quot;Bart&quot;</span>, <span class="st">&quot;Comic Book Guy&quot;</span>, <span class="st">&quot;Mr. Burns&quot;</span>, <span class="st">&quot;Smithers&quot;</span>, <span class="st">&quot;Chief Wiggum&quot;</span>, <span class="st">&quot;Principle Skinner&quot;</span>, <span class="st">&quot;Rev. Lovejoy&quot;</span>, <span class="st">&quot;Ned Flanders&quot;</span>, <span class="st">&quot;Patty&quot;</span>, <span class="st">&quot;Selma&quot;</span>)</a>
+<a class="sourceLine" id="cb56-2" title="2">donuts_per_week &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">14</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">20</span>, <span class="fl">0.75</span>, <span class="fl">0.25</span>, <span class="dv">16</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="fl">0.8</span>, <span class="dv">5</span>, <span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb56-3" title="3">weight &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">275</span>, <span class="dv">141</span>, <span class="dv">70</span>, <span class="dv">75</span>, <span class="dv">310</span>, <span class="dv">80</span>, <span class="dv">160</span>, <span class="dv">263</span>, <span class="dv">205</span>, <span class="dv">185</span>, <span class="dv">170</span>, <span class="dv">155</span>, <span class="dv">145</span>)</a></code></pre></div>
+<p>We can combine this into a single “file” called a data frame as follows:</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" title="1">Donuts &lt;-<span class="st"> </span><span class="kw">data.frame</span>(name, donuts_per_week, weight)</a>
+<a class="sourceLine" id="cb57-2" title="2">Donuts <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb57-3" title="3"><span class="st">  </span><span class="kw">str</span>()</a></code></pre></div>
+<pre><code>&#39;data.frame&#39;:   13 obs. of  3 variables:
+ $ name           : Factor w/ 13 levels &quot;Bart&quot;,&quot;Chief Wiggum&quot;,..: 4 6 5 1 3 7 13 2 10 11 ...
+ $ donuts_per_week: num  14 0 0 5 20 0.75 0.25 16 3 2 ...
+ $ weight         : num  275 141 70 75 310 80 160 263 205 185 ...</code></pre>
+<p>The character vector “name” is coerced to a Factor by default. Factors in R are store as a vector of integer values with a corresponding set of character values. We will see that Factors are very useful, however, in this case we want name to remain a character vector. If we add the option <code>stringsAsFactors = FALSE</code> to our call of <code>data.frame</code> we can prevent the coercion. Our we can call <code>tibble</code> as described in Chapter 1.</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb59-1" title="1">Donuts &lt;-<span class="st"> </span><span class="kw">data.frame</span>(name, donuts_per_week, weight, <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb59-2" title="2">Donuts <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">str</span>()</a></code></pre></div>
+<pre><code>&#39;data.frame&#39;:   13 obs. of  3 variables:
+ $ name           : chr  &quot;Homer&quot; &quot;Marge&quot; &quot;Lisa&quot; &quot;Bart&quot; ...
+ $ donuts_per_week: num  14 0 0 5 20 0.75 0.25 16 3 2 ...
+ $ weight         : num  275 141 70 75 310 80 160 263 205 185 ...</code></pre>
+<p>You can see in the Global Environment tab of the Environment/History pane that you have an object named Donuts that has 13 observations on 3 variables. In addition, you can see under values you have each variable as well.</p>
+</div>
+<div id="simple-statistics" class="section level3">
+<h3><span class="header-section-number">4.3.3</span> Simple Statistics</h3>
+<p>R has many built in calls to get basic statistics on data. For example, to get the mean of a variable call <code>mean()</code>. Be aware, that if there are missing values in the data the function call will return NA as it’s result. The donuts data frame contains to missing values “NA”, so it won’t be a problem. Some simple exploratory data analysis will let you know if you have any issues in the data. We saw one of those problems above when we had a variable that we thought was numeric, but was read in as a character vector. <code>summary</code> is a good place to start.</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" title="1">donuts <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb61-2" title="2"><span class="st">  </span><span class="kw">summary</span>()</a></code></pre></div>
+<pre><code> observation_number     name           donuts_per_week     weight   
+ Min.   : 1         Length:13          Min.   : 0.00   Min.   : 70  
+ 1st Qu.: 4         Class :character   1st Qu.: 0.75   1st Qu.:141  
+ Median : 7         Mode  :character   Median : 3.00   Median :160  
+ Mean   : 7                            Mean   : 5.45   Mean   :172  
+ 3rd Qu.:10                            3rd Qu.: 5.00   3rd Qu.:205  
+ Max.   :13                            Max.   :20.00   Max.   :310  
+      male      
+ Min.   :0.000  
+ 1st Qu.:0.000  
+ Median :1.000  
+ Mean   :0.692  
+ 3rd Qu.:1.000  
+ Max.   :1.000  </code></pre>
+<p>We confirmed that there are no missing values in our data. If there were, we can easily deal with them with a option in the function call (I include the option below.)</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" title="1">donuts<span class="op">$</span>weight <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb63-2" title="2"><span class="st">  </span><span class="kw">mean</span>(<span class="dt">na.rm =</span> <span class="ot">TRUE</span>)  </a></code></pre></div>
+<pre><code>[1] 172</code></pre>
+<p>Call <code>var</code> or <code>sd</code> to return the sample variance or sample standard deviation. Of course the standard deviation can also be calculated by calling <code>sqrt</code> on the result of the <code>var</code> call. There are multiple ways to retrieve the number of observations of a variable or data frame. The minimum and maximum values are returned by calling <code>min</code> and <code>max</code>. As described in the text, we can call <code>sum</code> on the result of the call <code>is.finite</code>. <code>nrow</code> will return the number of observations in a data frame, <code>NROW</code> will return the number of observations of a vector or single variable.</p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb65-1" title="1">donuts<span class="op">$</span>weight <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">var</span>()</a></code></pre></div>
+<pre><code>[1] 5800</code></pre>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb67-1" title="1">donuts<span class="op">$</span>weight <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">var</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sqrt</span>()</a></code></pre></div>
+<pre><code>[1] 76.2</code></pre>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb69-1" title="1">donuts<span class="op">$</span>weight <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sd</span>()</a></code></pre></div>
+<pre><code>[1] 76.2</code></pre>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb71-1" title="1">donuts<span class="op">$</span>weight <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">min</span>()</a></code></pre></div>
+<pre><code>[1] 70</code></pre>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb73-1" title="1">donuts<span class="op">$</span>weight <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">max</span>()</a></code></pre></div>
+<pre><code>[1] 310</code></pre>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb75-1" title="1">donuts<span class="op">$</span>weight <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">NROW</span>()</a></code></pre></div>
+<pre><code>[1] 13</code></pre>
+<p>To return a variety of descriptive statistics on a data frame or variable we can call <code>stargazer</code> from the stargazer package.</p>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb77-1" title="1">donuts <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb77-2" title="2"><span class="st">  </span>as.data.frame <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb77-3" title="3"><span class="st">  </span><span class="kw">stargazer</span>(<span class="dt">type =</span> <span class="st">&quot;text&quot;</span>)</a></code></pre></div>
+<pre><code>
+================================================================
+Statistic          N   Mean   St. Dev. Min Pctl(25) Pctl(75) Max
+----------------------------------------------------------------
+observation_number 13  7.000   3.890    1     4        10    13 
+donuts_per_week    13  5.450   6.750    0    0.8       5     20 
+weight             13 172.000  76.200  70    141      205    310
+male               13  0.692   0.480    0     0        1      1 
+----------------------------------------------------------------</code></pre>
+<p>Subsetting in R can be accomplished in a variety of ways. In Base R, use [] syntax. Use brackets can be used to call specific rows and columns from a matrix or data frame. To return the observation in the 12<sup>th</sup> row and 3rd column call <code>donuts[12,3]</code>. To return all of the observations in a specific row or column, leave the row or column number out of the call. To return all of the observations from the 3rd column call <code>donuts[,3]</code>. To return the observations for an individual record, say the 4<sup>th</sup> row, call <code>donuts[4,]</code>. To choose (subset) all of those records where, e.g,, donuts eaten per week is 0, call <code>donuts[donuts$donuts_per_week == 0,]</code>; to choose all those records where donuts donuts are not equal to 0, call <code>donuts[donuts$donuts_per_week != 0,]</code>. We can also subset using <code>filter</code> from <code>dplyr</code>. An advantage of subsetting with <code>dplyr</code> is that the resulting tibble can be piped into the another function call.</p>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb79-1" title="1">donuts[<span class="dv">12</span>,<span class="dv">3</span>]</a></code></pre></div>
+<pre><code># A tibble: 1 x 1
+  donuts_per_week
+            &lt;dbl&gt;
+1               5</code></pre>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb81-1" title="1">donuts[,<span class="dv">3</span>]</a></code></pre></div>
+<pre><code># A tibble: 13 x 1
+   donuts_per_week
+             &lt;dbl&gt;
+ 1           14   
+ 2            0   
+ 3            0   
+ 4            5   
+ 5           20   
+ 6            0.75
+ 7            0.25
+ 8           16   
+ 9            3   
+10            2   
+11            0.8 
+12            5   
+13            4   </code></pre>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb83-1" title="1">donuts[<span class="dv">4</span>,]</a></code></pre></div>
+<pre><code># A tibble: 1 x 5
+  observation_number name  donuts_per_week weight  male
+               &lt;int&gt; &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+1                  4 Bart                5     75     1</code></pre>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb85-1" title="1">donuts[donuts<span class="op">$</span>donuts_per_week <span class="op">==</span><span class="st"> </span><span class="dv">0</span>,]</a></code></pre></div>
+<pre><code># A tibble: 2 x 5
+  observation_number name  donuts_per_week weight  male
+               &lt;int&gt; &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+1                  2 Marge               0    141     0
+2                  3 Lisa                0     70     0</code></pre>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb87-1" title="1">donuts[donuts<span class="op">$</span>donuts_per_week <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>,]</a></code></pre></div>
+<pre><code># A tibble: 11 x 5
+   observation_number name              donuts_per_week weight  male
+                &lt;int&gt; &lt;chr&gt;                       &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+ 1                  1 Homer                       14       275     1
+ 2                  4 Bart                         5        75     1
+ 3                  5 Comic Book Guy              20       310     1
+ 4                  6 Mr. Burns                    0.75     80     1
+ 5                  7 Smithers                     0.25    160     1
+ 6                  8 Chief Wiggum                16       263     1
+ 7                  9 Principle Skinner            3       205     1
+ 8                 10 Rev. Lovejoy                 2       185     1
+ 9                 11 Ned Flanders                 0.8     170     1
+10                 12 Patty                        5       155     0
+11                 13 Selma                        4       145     0</code></pre>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb89-1" title="1">donuts <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb89-2" title="2"><span class="st">  </span><span class="kw">filter</span>(donuts_per_week <span class="op">==</span><span class="st"> </span><span class="dv">0</span>)</a></code></pre></div>
+<pre><code># A tibble: 2 x 5
+  observation_number name  donuts_per_week weight  male
+               &lt;int&gt; &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+1                  2 Marge               0    141     0
+2                  3 Lisa                0     70     0</code></pre>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb91-1" title="1">donuts <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb91-2" title="2"><span class="st">  </span><span class="kw">filter</span>(donuts_per_week <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>)</a></code></pre></div>
+<pre><code># A tibble: 11 x 5
+   observation_number name              donuts_per_week weight  male
+                &lt;int&gt; &lt;chr&gt;                       &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+ 1                  1 Homer                       14       275     1
+ 2                  4 Bart                         5        75     1
+ 3                  5 Comic Book Guy              20       310     1
+ 4                  6 Mr. Burns                    0.75     80     1
+ 5                  7 Smithers                     0.25    160     1
+ 6                  8 Chief Wiggum                16       263     1
+ 7                  9 Principle Skinner            3       205     1
+ 8                 10 Rev. Lovejoy                 2       185     1
+ 9                 11 Ned Flanders                 0.8     170     1
+10                 12 Patty                        5       155     0
+11                 13 Selma                        4       145     0</code></pre>
+<p>We can subset on more than one variable as well. Using Base R we can choose all those males who consumed some donuts per week by calling <code>donuts[donuts$donuts_per_week != 0 &amp; donuts$male == 1]</code>. We can choose all those observations where donut consumption per week is more than 15 or the person is female by using the or operator | in call <code>donuts[donuts$donuts_per_week &gt; 15 | donuts$male != 1,]</code>. <code>filter</code> can be used as well.</p>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb93-1" title="1">donuts[donuts<span class="op">$</span>donuts_per_week <span class="op">!=</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>donuts<span class="op">$</span>male <span class="op">==</span><span class="st"> </span><span class="dv">1</span>,]</a></code></pre></div>
+<pre><code># A tibble: 9 x 5
+  observation_number name              donuts_per_week weight  male
+               &lt;int&gt; &lt;chr&gt;                       &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+1                  1 Homer                       14       275     1
+2                  4 Bart                         5        75     1
+3                  5 Comic Book Guy              20       310     1
+4                  6 Mr. Burns                    0.75     80     1
+5                  7 Smithers                     0.25    160     1
+6                  8 Chief Wiggum                16       263     1
+7                  9 Principle Skinner            3       205     1
+8                 10 Rev. Lovejoy                 2       185     1
+9                 11 Ned Flanders                 0.8     170     1</code></pre>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb95-1" title="1">donuts <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb95-2" title="2"><span class="st">  </span><span class="kw">filter</span>(donuts_per_week <span class="op">!=</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>male <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)</a></code></pre></div>
+<pre><code># A tibble: 9 x 5
+  observation_number name              donuts_per_week weight  male
+               &lt;int&gt; &lt;chr&gt;                       &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+1                  1 Homer                       14       275     1
+2                  4 Bart                         5        75     1
+3                  5 Comic Book Guy              20       310     1
+4                  6 Mr. Burns                    0.75     80     1
+5                  7 Smithers                     0.25    160     1
+6                  8 Chief Wiggum                16       263     1
+7                  9 Principle Skinner            3       205     1
+8                 10 Rev. Lovejoy                 2       185     1
+9                 11 Ned Flanders                 0.8     170     1</code></pre>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb97-1" title="1"><span class="co"># a slightly more intuitive alternative is:</span></a>
+<a class="sourceLine" id="cb97-2" title="2">donuts <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb97-3" title="3"><span class="st">  </span><span class="kw">filter</span>(donuts_per_week <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb97-4" title="4"><span class="st">  </span><span class="kw">filter</span>(male <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)  </a></code></pre></div>
+<pre><code># A tibble: 9 x 5
+  observation_number name              donuts_per_week weight  male
+               &lt;int&gt; &lt;chr&gt;                       &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+1                  1 Homer                       14       275     1
+2                  4 Bart                         5        75     1
+3                  5 Comic Book Guy              20       310     1
+4                  6 Mr. Burns                    0.75     80     1
+5                  7 Smithers                     0.25    160     1
+6                  8 Chief Wiggum                16       263     1
+7                  9 Principle Skinner            3       205     1
+8                 10 Rev. Lovejoy                 2       185     1
+9                 11 Ned Flanders                 0.8     170     1</code></pre>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb99-1" title="1">donuts[donuts<span class="op">$</span>donuts_per_week <span class="op">&gt;</span><span class="st"> </span><span class="dv">15</span> <span class="op">|</span><span class="st"> </span>donuts<span class="op">$</span>male <span class="op">!=</span><span class="st"> </span><span class="dv">1</span>,]</a></code></pre></div>
+<pre><code># A tibble: 6 x 5
+  observation_number name           donuts_per_week weight  male
+               &lt;int&gt; &lt;chr&gt;                    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+1                  2 Marge                        0    141     0
+2                  3 Lisa                         0     70     0
+3                  5 Comic Book Guy              20    310     1
+4                  8 Chief Wiggum                16    263     1
+5                 12 Patty                        5    155     0
+6                 13 Selma                        4    145     0</code></pre>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb101-1" title="1">donuts <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb101-2" title="2"><span class="st">  </span><span class="kw">filter</span>(donuts_per_week <span class="op">&gt;</span><span class="st"> </span><span class="dv">15</span> <span class="op">|</span><span class="st"> </span>male <span class="op">!=</span><span class="st"> </span><span class="dv">1</span>)</a></code></pre></div>
+<pre><code># A tibble: 6 x 5
+  observation_number name           donuts_per_week weight  male
+               &lt;int&gt; &lt;chr&gt;                    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+1                  2 Marge                        0    141     0
+2                  3 Lisa                         0     70     0
+3                  5 Comic Book Guy              20    310     1
+4                  8 Chief Wiggum                16    263     1
+5                 12 Patty                        5    155     0
+6                 13 Selma                        4    145     0</code></pre>
+<p>We can modify Figure 2.2 to include only males by modifying our original code by piping the filtered results into <code>ggplot</code>.</p>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb103-1" title="1"><span class="kw">library</span>(ggrepel)</a>
+<a class="sourceLine" id="cb103-2" title="2">donuts <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb103-3" title="3"><span class="st">  </span><span class="kw">filter</span>(male <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb103-4" title="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> donuts_per_week, <span class="dt">y =</span> weight)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb103-5" title="5"><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">color =</span> <span class="st">&quot;gray80&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb103-6" title="6"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb103-7" title="7"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Donuts&quot;</span>, </a>
+<a class="sourceLine" id="cb103-8" title="8">       <span class="dt">y =</span> <span class="st">&quot;Weight</span><span class="ch">\n</span><span class="st">(in pounds)&quot;</span>, <span class="co"># \n creates a new line</span></a>
+<a class="sourceLine" id="cb103-9" title="9">       <span class="dt">caption =</span> <span class="st">&quot;Figure 2.2: Weight and Donuts in Springfield&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb103-10" title="10"><span class="st">  </span><span class="kw">geom_text_repel</span>(<span class="kw">aes</span>(<span class="dt">label =</span> name), <span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb103-11" title="11"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title.y =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">0</span>), </a>
+<a class="sourceLine" id="cb103-12" title="12">          <span class="dt">panel.grid =</span> <span class="kw">element_blank</span>(), </a>
+<a class="sourceLine" id="cb103-13" title="13">          <span class="dt">panel.background =</span> <span class="kw">element_blank</span>(), </a>
+<a class="sourceLine" id="cb103-14" title="14">          <span class="dt">axis.line =</span> <span class="kw">element_line</span>(), </a>
+<a class="sourceLine" id="cb103-15" title="15">          <span class="dt">plot.caption =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="dv">0</span>)) </a></code></pre></div>
+<p><img src="bailey_files/figure-html/figure2.2mod-1.png" width="672" /></p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="chp1.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="cph3.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["bailey.pdf", "bailey.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

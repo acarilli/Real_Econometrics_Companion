@@ -1,0 +1,44 @@
+# Experiments: Dealing with Real--World Challenges {#chp10}
+
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA, message = FALSE, warning = FALSE,
+                      options(digits = 3, scipen = 999))
+```
+
+We will learn to assess balance with R in this chapter. We need the following libraries
+
+```{r}
+library(tidyverse)
+library(broom)
+```
+
+## Assess Balance
+
+Let's use the `ProgramEffectiveness` data set from the `AER` package to assess balance.  The `ProgramEffectiveness` data set contains 32 observations on four variables^[`?AER::ProgramEffectiveness for more information`]. The data are used to examine whether a new method of teaching economics improved performance in later economics courses.  The variables are *grade* coded as a factor with levels "increase" and "decrease", *average* (grade point average), *testscore* (test score on economics test), and *participation* coded as a factor with levels "no" and "yes".  *participation* is the treatment in this case.  We assess the balance below:
+
+```{r}
+library(AER)
+data("ProgramEffectiveness")
+ProgramEffectiveness %$%
+  lm(average ~ participation) %>% 
+  tidy()
+ProgramEffectiveness %$%
+  lm(testscore ~ participation) %>% 
+  tidy()
+```
+
+For each variable, we can conclude that the treatment is balanced.  
+
+## Estimate ITT Model
+
+We estimate the ITT model below:
+
+```{r}
+ProgramEffectiveness %$%
+  lm(as.numeric(grade) ~ participation) %>% 
+  summary()
+```
+
+We can reject the null hypothesis of no effect and conclude that participation increased the test score on later tests.
+

@@ -1,0 +1,23 @@
+--- 
+title: "R Companion to *Real Econometrics*"
+author: "Tony Carilli"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+description: "This book looks at the R code necessary to complete the end of chapter exercises in Bailey's Real Econometrics"
+---
+
+# Prerequisites
+
+The intended audience for this book is anyone make using of *Real Econometrics: The Right Tools to Answer Important Questions* 2nd ed. by Michael Bailey who would like to learn the R code necessary to complete the end of chapter exercises.  We really heavily on the `tidyverse` a collection of packages that shares an underlying design philosophy, grammar, and data structures.  We also make use of a variety of packages (bundles of code) where it will make coding more straightfoward in terms of writing, understanding, and editing.   
+
+
+```{r include=FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+```

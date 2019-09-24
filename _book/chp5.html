@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 7 Multivariate OLS: Where the Action Is | R Companion to Real Econometrics</title>
+  <meta name="description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 7 Multivariate OLS: Where the Action Is | R Companion to Real Econometrics" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 7 Multivariate OLS: Where the Action Is | R Companion to Real Econometrics" />
+  
+  <meta name="twitter:description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  
+
+<meta name="author" content="Tony Carilli" />
+
+
+<meta name="date" content="2019-09-23" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="chp4.html"/>
+<link rel="next" href="chp6.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">R Companion to *Real Econometrics*</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a><ul>
+<li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#install-r-and-rstudio"><i class="fa fa-check"></i><b>2.1</b> Install R and RStudio</a></li>
+<li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#using-rstudio"><i class="fa fa-check"></i><b>2.2</b> Using RStudio</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="intro.html"><a href="intro.html#source-pane"><i class="fa fa-check"></i><b>2.2.1</b> Source Pane</a></li>
+<li class="chapter" data-level="2.2.2" data-path="intro.html"><a href="intro.html#environmenthistory-pane"><i class="fa fa-check"></i><b>2.2.2</b> Environment/History Pane</a></li>
+<li class="chapter" data-level="2.2.3" data-path="intro.html"><a href="intro.html#console-pane"><i class="fa fa-check"></i><b>2.2.3</b> Console Pane</a></li>
+<li class="chapter" data-level="2.2.4" data-path="intro.html"><a href="intro.html#filesplotspackageshelp-pane"><i class="fa fa-check"></i><b>2.2.4</b> Files/Plots/Packages/Help Pane</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="intro.html"><a href="intro.html#r-markdown"><i class="fa fa-check"></i><b>2.3</b> R Markdown</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="chp1.html"><a href="chp1.html"><i class="fa fa-check"></i><b>3</b> The Quest for Causality</a><ul>
+<li class="chapter" data-level="3.1" data-path="chp1.html"><a href="chp1.html#introduction"><i class="fa fa-check"></i><b>3.1</b> Introduction</a><ul>
+<li class="chapter" data-level="3.1.1" data-path="chp1.html"><a href="chp1.html#table-1.1"><i class="fa fa-check"></i><b>3.1.1</b> Table 1.1</a></li>
+<li class="chapter" data-level="3.1.2" data-path="chp1.html"><a href="chp1.html#figure-1.2"><i class="fa fa-check"></i><b>3.1.2</b> Figure 1.2</a></li>
+<li class="chapter" data-level="3.1.3" data-path="chp1.html"><a href="chp1.html#figure-1.3"><i class="fa fa-check"></i><b>3.1.3</b> Figure 1.3</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="chp2.html"><a href="chp2.html"><i class="fa fa-check"></i><b>4</b> Stats in the Wild: Good Data Practices</a><ul>
+<li class="chapter" data-level="4.1" data-path="chp2.html"><a href="chp2.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
+<li class="chapter" data-level="4.2" data-path="chp2.html"><a href="chp2.html#table-and-figure-reproduction"><i class="fa fa-check"></i><b>4.2</b> Table and Figure Reproduction</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="chp2.html"><a href="chp2.html#table-2.1"><i class="fa fa-check"></i><b>4.2.1</b> Table 2.1</a></li>
+<li class="chapter" data-level="4.2.2" data-path="chp2.html"><a href="chp2.html#table-2.2"><i class="fa fa-check"></i><b>4.2.2</b> Table 2.2</a></li>
+<li class="chapter" data-level="4.2.3" data-path="chp2.html"><a href="chp2.html#table-2.5"><i class="fa fa-check"></i><b>4.2.3</b> Table 2.5</a></li>
+<li class="chapter" data-level="4.2.4" data-path="chp2.html"><a href="chp2.html#figure-2.3"><i class="fa fa-check"></i><b>4.2.4</b> Figure 2.3</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="chp2.html"><a href="chp2.html#computing-center"><i class="fa fa-check"></i><b>4.3</b> Computing Center</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="chp2.html"><a href="chp2.html#reading-data"><i class="fa fa-check"></i><b>4.3.1</b> Reading Data</a></li>
+<li class="chapter" data-level="4.3.2" data-path="chp2.html"><a href="chp2.html#manually-entering-data"><i class="fa fa-check"></i><b>4.3.2</b> Manually Entering Data</a></li>
+<li class="chapter" data-level="4.3.3" data-path="chp2.html"><a href="chp2.html#simple-statistics"><i class="fa fa-check"></i><b>4.3.3</b> Simple Statistics</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="cph3.html"><a href="cph3.html"><i class="fa fa-check"></i><b>5</b> Bivariate OLS: The Foundation of Econometric Analysis</a><ul>
+<li class="chapter" data-level="5.1" data-path="cph3.html"><a href="cph3.html#estimating-a-simple-regression"><i class="fa fa-check"></i><b>5.1</b> Estimating a simple regression</a></li>
+<li class="chapter" data-level="5.2" data-path="cph3.html"><a href="cph3.html#scatter-plot-with-regression-line"><i class="fa fa-check"></i><b>5.2</b> scatter Plot with Regression Line</a></li>
+<li class="chapter" data-level="5.3" data-path="cph3.html"><a href="cph3.html#subsetting-data-for-regressions"><i class="fa fa-check"></i><b>5.3</b> Subsetting Data for Regressions</a></li>
+<li class="chapter" data-level="5.4" data-path="cph3.html"><a href="cph3.html#heteroscesdasticity-consistent-standard-errors."><i class="fa fa-check"></i><b>5.4</b> Heteroscesdasticity-consistent standard errors.</a></li>
+<li class="chapter" data-level="5.5" data-path="cph3.html"><a href="cph3.html#generating-random-numbers"><i class="fa fa-check"></i><b>5.5</b> Generating Random Numbers</a></li>
+<li class="chapter" data-level="5.6" data-path="cph3.html"><a href="cph3.html#simulations"><i class="fa fa-check"></i><b>5.6</b> Simulations</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="chp4.html"><a href="chp4.html"><i class="fa fa-check"></i><b>6</b> Hypothesis Testing and Interval Estimation; Answering Research Questions</a><ul>
+<li class="chapter" data-level="6.1" data-path="chp4.html"><a href="chp4.html#computing-corner"><i class="fa fa-check"></i><b>6.1</b> Computing Corner</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="chp4.html"><a href="chp4.html#probability-distributions-in-r"><i class="fa fa-check"></i><b>6.1.1</b> Probability Distributions in R</a></li>
+<li class="chapter" data-level="6.1.2" data-path="chp4.html"><a href="chp4.html#critical-values-in-r"><i class="fa fa-check"></i><b>6.1.2</b> Critical Values in R</a></li>
+<li class="chapter" data-level="6.1.3" data-path="chp4.html"><a href="chp4.html#confidence-intervals-for-ols-estimates"><i class="fa fa-check"></i><b>6.1.3</b> Confidence Intervals for OLS estimates</a></li>
+<li class="chapter" data-level="6.1.4" data-path="chp4.html"><a href="chp4.html#power-curves"><i class="fa fa-check"></i><b>6.1.4</b> Power Curves</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="chp5.html"><a href="chp5.html"><i class="fa fa-check"></i><b>7</b> Multivariate OLS: Where the Action Is</a><ul>
+<li class="chapter" data-level="7.1" data-path="chp5.html"><a href="chp5.html#computing-corner-1"><i class="fa fa-check"></i><b>7.1</b> Computing Corner</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="chp5.html"><a href="chp5.html#multiple-regression"><i class="fa fa-check"></i><b>7.1.1</b> Multiple Regression</a></li>
+<li class="chapter" data-level="7.1.2" data-path="chp5.html"><a href="chp5.html#multicollinearity"><i class="fa fa-check"></i><b>7.1.2</b> Multicollinearity</a></li>
+<li class="chapter" data-level="7.1.3" data-path="chp5.html"><a href="chp5.html#standardized-coefficients"><i class="fa fa-check"></i><b>7.1.3</b> Standardized Coefficients</a></li>
+<li class="chapter" data-level="7.1.4" data-path="chp5.html"><a href="chp5.html#f-tests"><i class="fa fa-check"></i><b>7.1.4</b> <em>F</em> tests</a></li>
+<li class="chapter" data-level="7.1.5" data-path="chp5.html"><a href="chp5.html#examples"><i class="fa fa-check"></i><b>7.1.5</b> Examples</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="chp6.html"><a href="chp6.html"><i class="fa fa-check"></i><b>8</b> Dummy Variables: Smarter than You Think</a><ul>
+<li class="chapter" data-level="8.1" data-path="chp6.html"><a href="chp6.html#dummy-variables-in-r"><i class="fa fa-check"></i><b>8.1</b> Dummy Variables in R</a><ul>
+<li class="chapter" data-level="8.1.1" data-path="chp6.html"><a href="chp6.html#factors"><i class="fa fa-check"></i><b>8.1.1</b> Factors</a></li>
+<li class="chapter" data-level="8.1.2" data-path="chp6.html"><a href="chp6.html#character-vectors-as-dummies"><i class="fa fa-check"></i><b>8.1.2</b> Character Vectors as Dummies</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="chp6.html"><a href="chp6.html#difference-in-means-test"><i class="fa fa-check"></i><b>8.2</b> Difference in Means Test</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="chp6.html"><a href="chp6.html#using-t.test"><i class="fa fa-check"></i><b>8.2.1</b> Using <code>t.test</code></a></li>
+<li class="chapter" data-level="8.2.2" data-path="chp6.html"><a href="chp6.html#using-lm-and-lm_robust"><i class="fa fa-check"></i><b>8.2.2</b> Using <code>lm</code> and <code>lm_robust</code></a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="chp6.html"><a href="chp6.html#integer-and-numerical-vectors-as-dummy-variables"><i class="fa fa-check"></i><b>8.3</b> Integer and Numerical Vectors as Dummy Variables</a></li>
+<li class="chapter" data-level="8.4" data-path="chp6.html"><a href="chp6.html#manipulating-factors"><i class="fa fa-check"></i><b>8.4</b> Manipulating Factors</a></li>
+<li class="chapter" data-level="8.5" data-path="chp6.html"><a href="chp6.html#dummy-interaction-variables"><i class="fa fa-check"></i><b>8.5</b> Dummy Interaction Variables</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="chp7.html"><a href="chp7.html"><i class="fa fa-check"></i><b>9</b> Specifying Models</a><ul>
+<li class="chapter" data-level="9.1" data-path="chp7.html"><a href="chp7.html#polynomial-models"><i class="fa fa-check"></i><b>9.1</b> Polynomial Models</a></li>
+<li class="chapter" data-level="9.2" data-path="chp7.html"><a href="chp7.html#logarithmic"><i class="fa fa-check"></i><b>9.2</b> Logarithmic</a><ul>
+<li class="chapter" data-level="9.2.1" data-path="chp7.html"><a href="chp7.html#constant-elasticity-log-log-or-double-log"><i class="fa fa-check"></i><b>9.2.1</b> Constant Elasticity (log-log or double log)</a></li>
+<li class="chapter" data-level="9.2.2" data-path="chp7.html"><a href="chp7.html#constant-growth-in-a-dependent-variable-log-lin-or-semilog"><i class="fa fa-check"></i><b>9.2.2</b> Constant Growth in a Dependent Variable (log-lin or semilog)</a></li>
+<li class="chapter" data-level="9.2.3" data-path="chp7.html"><a href="chp7.html#constant-change-in-dependent-variable-lin-log"><i class="fa fa-check"></i><b>9.2.3</b> Constant % Change in Dependent Variable (lin-log)</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="chp7.html"><a href="chp7.html#other-useful-functional-forms"><i class="fa fa-check"></i><b>9.3</b> Other Useful Functional Forms</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="chp8.html"><a href="chp8.html"><i class="fa fa-check"></i><b>10</b> Using Fixed Effects Models to Fight Endogeneity in Panel Data and Difference–in–Difference Models</a><ul>
+<li class="chapter" data-level="10.1" data-path="chp8.html"><a href="chp8.html#simpsons-paradox"><i class="fa fa-check"></i><b>10.1</b> Simpson’s Paradox</a></li>
+<li class="chapter" data-level="10.2" data-path="chp8.html"><a href="chp8.html#figures-8.1-8.3"><i class="fa fa-check"></i><b>10.2</b> Figures 8.1-8.3</a></li>
+<li class="chapter" data-level="10.3" data-path="chp8.html"><a href="chp8.html#one-way-fixed-effects-models"><i class="fa fa-check"></i><b>10.3</b> One-Way Fixed Effects Models</a><ul>
+<li class="chapter" data-level="10.3.1" data-path="chp8.html"><a href="chp8.html#lsdv-approach"><i class="fa fa-check"></i><b>10.3.1</b> LSDV Approach</a></li>
+<li class="chapter" data-level="10.3.2" data-path="chp8.html"><a href="chp8.html#f-test-for-significance-of-fixed-effects."><i class="fa fa-check"></i><b>10.3.2</b> <em>F</em>-test for significance of fixed effects.</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="chp8.html"><a href="chp8.html#de-meaned-approach"><i class="fa fa-check"></i><b>10.4</b> De-Meaned approach</a><ul>
+<li class="chapter" data-level="10.4.1" data-path="chp8.html"><a href="chp8.html#manually-de-mean"><i class="fa fa-check"></i><b>10.4.1</b> Manually De-Mean</a></li>
+<li class="chapter" data-level="10.4.2" data-path="chp8.html"><a href="chp8.html#using-the-plm-package"><i class="fa fa-check"></i><b>10.4.2</b> Using the <code>plm</code> package</a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="chp8.html"><a href="chp8.html#two-way-fixed-effects-models"><i class="fa fa-check"></i><b>10.5</b> Two-Way Fixed Effects Models</a><ul>
+<li class="chapter" data-level="10.5.1" data-path="chp8.html"><a href="chp8.html#time-as-a-factor"><i class="fa fa-check"></i><b>10.5.1</b> Time as a factor</a></li>
+<li class="chapter" data-level="10.5.2" data-path="chp8.html"><a href="chp8.html#effect-twoways"><i class="fa fa-check"></i><b>10.5.2</b> effect = “twoways”</a></li>
+</ul></li>
+<li class="chapter" data-level="10.6" data-path="chp8.html"><a href="chp8.html#difference-in-difference-models"><i class="fa fa-check"></i><b>10.6</b> Difference-in-Difference Models</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="chp9.html"><a href="chp9.html"><i class="fa fa-check"></i><b>11</b> Instrumental Variables: Using Exogenous Variation to Fight Endogeneity</a><ul>
+<li class="chapter" data-level="11.1" data-path="chp9.html"><a href="chp9.html#stage-least-squares"><i class="fa fa-check"></i><b>11.1</b> 2 Stage Least Squares</a></li>
+<li class="chapter" data-level="11.2" data-path="chp9.html"><a href="chp9.html#explanatory-power-of-the-instruments"><i class="fa fa-check"></i><b>11.2</b> Explanatory power of the instruments</a></li>
+<li class="chapter" data-level="11.3" data-path="chp9.html"><a href="chp9.html#estimating-simultaneous-equation-model"><i class="fa fa-check"></i><b>11.3</b> Estimating Simultaneous Equation Model</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="chp10.html"><a href="chp10.html"><i class="fa fa-check"></i><b>12</b> Experiments: Dealing with Real–World Challenges</a><ul>
+<li class="chapter" data-level="12.1" data-path="chp10.html"><a href="chp10.html#assess-balance"><i class="fa fa-check"></i><b>12.1</b> Assess Balance</a></li>
+<li class="chapter" data-level="12.2" data-path="chp10.html"><a href="chp10.html#estimate-itt-model"><i class="fa fa-check"></i><b>12.2</b> Estimate ITT Model</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="chp11.html"><a href="chp11.html"><i class="fa fa-check"></i><b>13</b> Regression Discontinuity: Looking for Jumps in Data</a><ul>
+<li class="chapter" data-level="13.1" data-path="chp11.html"><a href="chp11.html#same-slope"><i class="fa fa-check"></i><b>13.1</b> Same slope</a></li>
+<li class="chapter" data-level="13.2" data-path="chp11.html"><a href="chp11.html#varying-slopes"><i class="fa fa-check"></i><b>13.2</b> Varying Slopes</a></li>
+<li class="chapter" data-level="13.3" data-path="chp11.html"><a href="chp11.html#plot-rd-model"><i class="fa fa-check"></i><b>13.3</b> Plot RD Model</a></li>
+<li class="chapter" data-level="13.4" data-path="chp11.html"><a href="chp11.html#rddtools-package"><i class="fa fa-check"></i><b>13.4</b> <code>rddtools</code> package</a><ul>
+<li class="chapter" data-level="13.4.1" data-path="chp11.html"><a href="chp11.html#same-slope-1"><i class="fa fa-check"></i><b>13.4.1</b> Same slope</a></li>
+<li class="chapter" data-level="13.4.2" data-path="chp11.html"><a href="chp11.html#varying-slopes-1"><i class="fa fa-check"></i><b>13.4.2</b> Varying Slopes</a></li>
+<li class="chapter" data-level="13.4.3" data-path="chp11.html"><a href="chp11.html#scatter-plot"><i class="fa fa-check"></i><b>13.4.3</b> Scatter Plot</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="chp12.html"><a href="chp12.html"><i class="fa fa-check"></i><b>14</b> Dummy Dependent Variables</a><ul>
+<li class="chapter" data-level="14.1" data-path="chp12.html"><a href="chp12.html#probit-estimation"><i class="fa fa-check"></i><b>14.1</b> Probit Estimation</a><ul>
+<li class="chapter" data-level="14.1.1" data-path="chp12.html"><a href="chp12.html#eda"><i class="fa fa-check"></i><b>14.1.1</b> EDA</a></li>
+<li class="chapter" data-level="14.1.2" data-path="chp12.html"><a href="chp12.html#estimate-the-model"><i class="fa fa-check"></i><b>14.1.2</b> Estimate the model</a></li>
+<li class="chapter" data-level="14.1.3" data-path="chp12.html"><a href="chp12.html#estimated-effects"><i class="fa fa-check"></i><b>14.1.3</b> Estimated Effects</a></li>
+</ul></li>
+<li class="chapter" data-level="14.2" data-path="chp12.html"><a href="chp12.html#logit-estimation"><i class="fa fa-check"></i><b>14.2</b> Logit Estimation</a><ul>
+<li class="chapter" data-level="14.2.1" data-path="chp12.html"><a href="chp12.html#discrete-differences"><i class="fa fa-check"></i><b>14.2.1</b> Discrete Differences</a></li>
+<li class="chapter" data-level="14.2.2" data-path="chp12.html"><a href="chp12.html#marginal-effects-1"><i class="fa fa-check"></i><b>14.2.2</b> Marginal Effects</a></li>
+</ul></li>
+<li class="chapter" data-level="14.3" data-path="chp12.html"><a href="chp12.html#testing-hypotheses"><i class="fa fa-check"></i><b>14.3</b> Testing Hypotheses</a></li>
+<li class="chapter" data-level="14.4" data-path="chp12.html"><a href="chp12.html#graphing-probit-and-logit-models"><i class="fa fa-check"></i><b>14.4</b> Graphing Probit and Logit Models</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="chp13.html"><a href="chp13.html"><i class="fa fa-check"></i><b>15</b> Time Series: Dealing with Stickiness over Time</a><ul>
+<li class="chapter" data-level="15.1" data-path="chp13.html"><a href="chp13.html#time-series-objects-in-r"><i class="fa fa-check"></i><b>15.1</b> Time Series Objects in R</a></li>
+<li class="chapter" data-level="15.2" data-path="chp13.html"><a href="chp13.html#detecting-autocorrelation"><i class="fa fa-check"></i><b>15.2</b> Detecting Autocorrelation</a></li>
+<li class="chapter" data-level="15.3" data-path="chp13.html"><a href="chp13.html#correcting-autocorrelation"><i class="fa fa-check"></i><b>15.3</b> Correcting Autocorrelation</a><ul>
+<li class="chapter" data-level="15.3.1" data-path="chp13.html"><a href="chp13.html#newey-west"><i class="fa fa-check"></i><b>15.3.1</b> Newey-West</a></li>
+<li class="chapter" data-level="15.3.2" data-path="chp13.html"><a href="chp13.html#cochrane-orcutt"><i class="fa fa-check"></i><b>15.3.2</b> Cochrane-Orcutt</a></li>
+</ul></li>
+<li class="chapter" data-level="15.4" data-path="chp13.html"><a href="chp13.html#dynamic-models"><i class="fa fa-check"></i><b>15.4</b> Dynamic Models</a></li>
+<li class="chapter" data-level="15.5" data-path="chp13.html"><a href="chp13.html#dickey-fuller-test"><i class="fa fa-check"></i><b>15.5</b> Dickey-Fuller Test</a></li>
+<li class="chapter" data-level="15.6" data-path="chp13.html"><a href="chp13.html#first-differencing"><i class="fa fa-check"></i><b>15.6</b> First Differencing</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="chp14.html"><a href="chp14.html"><i class="fa fa-check"></i><b>16</b> Advanced OLS</a><ul>
+<li class="chapter" data-level="16.1" data-path="chp14.html"><a href="chp14.html#derive-ols-estimator-matrix-form"><i class="fa fa-check"></i><b>16.1</b> Derive OLS estimator (Matrix Form)</a><ul>
+<li class="chapter" data-level="16.1.1" data-path="chp14.html"><a href="chp14.html#example"><i class="fa fa-check"></i><b>16.1.1</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="16.2" data-path="chp14.html"><a href="chp14.html#gaussmarkov-theorem"><i class="fa fa-check"></i><b>16.2</b> Gauss–Markov Theorem</a><ul>
+<li class="chapter" data-level="16.2.1" data-path="chp14.html"><a href="chp14.html#ols-estimator-is-linear"><i class="fa fa-check"></i><b>16.2.1</b> OLS estimator is linear</a></li>
+<li class="chapter" data-level="16.2.2" data-path="chp14.html"><a href="chp14.html#ols-estimator-is-unbiased"><i class="fa fa-check"></i><b>16.2.2</b> OLS estimator is unbiased</a></li>
+<li class="chapter" data-level="16.2.3" data-path="chp14.html"><a href="chp14.html#variance-covariance-is-a-minimum"><i class="fa fa-check"></i><b>16.2.3</b> Variance-Covariance is a minimum</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="chp14.html"><a href="chp14.html#probability-distributions-in-r-1"><i class="fa fa-check"></i><b>16.3</b> Probability Distributions in R</a><ul>
+<li class="chapter" data-level="16.3.1" data-path="chp14.html"><a href="chp14.html#obtaining-critical-statistics"><i class="fa fa-check"></i><b>16.3.1</b> Obtaining Critical Statistics</a></li>
+<li class="chapter" data-level="16.3.2" data-path="chp14.html"><a href="chp14.html#generating-random-numbers-1"><i class="fa fa-check"></i><b>16.3.2</b> Generating Random Numbers</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="chp15.html"><a href="chp15.html"><i class="fa fa-check"></i><b>17</b> Advanced Panel Data</a><ul>
+<li class="chapter" data-level="17.1" data-path="chp15.html"><a href="chp15.html#the-data"><i class="fa fa-check"></i><b>17.1</b> The Data</a></li>
+<li class="chapter" data-level="17.2" data-path="chp15.html"><a href="chp15.html#variation-within-units"><i class="fa fa-check"></i><b>17.2</b> Variation within Units</a></li>
+<li class="chapter" data-level="17.3" data-path="chp15.html"><a href="chp15.html#two-way-fixed-effects-model"><i class="fa fa-check"></i><b>17.3</b> Two-Way Fixed Effects Model</a></li>
+<li class="chapter" data-level="17.4" data-path="chp15.html"><a href="chp15.html#testing-for-autocorrelation"><i class="fa fa-check"></i><b>17.4</b> Testing for autocorrelation</a></li>
+<li class="chapter" data-level="17.5" data-path="chp15.html"><a href="chp15.html#estimating-hatrho"><i class="fa fa-check"></i><b>17.5</b> Estimating <span class="math inline">\(\hat\rho\)</span></a></li>
+<li class="chapter" data-level="17.6" data-path="chp15.html"><a href="chp15.html#estimate-a-rho-transformed-model"><i class="fa fa-check"></i><b>17.6</b> Estimate a <span class="math inline">\(\rho\)</span>-Transformed Model</a></li>
+<li class="chapter" data-level="17.7" data-path="chp15.html"><a href="chp15.html#lagged-dependent-variable-panel-data-model"><i class="fa fa-check"></i><b>17.7</b> Lagged Dependent Variable Panel Data Model</a></li>
+<li class="chapter" data-level="17.8" data-path="chp15.html"><a href="chp15.html#random-effects-model"><i class="fa fa-check"></i><b>17.8</b> Random Effects Model</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R Companion to <em>Real Econometrics</em></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="chp5" class="section level1">
+<h1><span class="header-section-number">Chapter 7</span> Multivariate OLS: Where the Action Is</h1>
+<div id="computing-corner-1" class="section level2">
+<h2><span class="header-section-number">7.1</span> Computing Corner</h2>
+<p>Packages needed for this chapter.</p>
+<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb141-1" title="1"><span class="kw">library</span>(magrittr)</a>
+<a class="sourceLine" id="cb141-2" title="2"><span class="kw">library</span>(car)</a>
+<a class="sourceLine" id="cb141-3" title="3"><span class="kw">library</span>(broom)</a>
+<a class="sourceLine" id="cb141-4" title="4"><span class="kw">library</span>(estimatr)</a>
+<a class="sourceLine" id="cb141-5" title="5"><span class="kw">library</span>(lm.beta)</a></code></pre></div>
+<p>In this chapter you will learn the basics of estimating multivariate OLS models.</p>
+<div id="multiple-regression" class="section level3">
+<h3><span class="header-section-number">7.1.1</span> Multiple Regression</h3>
+<p>To estitmate a multiple regression (a regression with more than one independent variable) use the same function <code>lm</code> but change the formula argument to include the additional variables. In a simple regression, the formula argument was of the form <code>y ~ x</code>. In a multiple regression, the formula argument takes the form <code>y ~ x1 + x2</code>. To include additional variables, extend the argument in a similar manner <code>y ~ x1 + x2 + x3 + ...</code>. The remaining arguments are the same as in the simple regression. You can assign the results to an object just as with a simple regression. The output will be the list of 12, but the objects in the list will change to reflect the additional variable(s).</p>
+<p>To make use of the results, you can use any of the functions described in Chapter 3 of this manual. You can also make use of any of the subsetting commands as well.</p>
+<p>Estimate a regression with robust standard errors with <code>lm_robust</code> with the modified function argument.</p>
+</div>
+<div id="multicollinearity" class="section level3">
+<h3><span class="header-section-number">7.1.2</span> Multicollinearity</h3>
+<p>You can directly estimate the VIF’s with the <code>vif()</code> function from the car package. To esitmate the VIF’s call <code>ols %&gt;% vif()</code> where ols is the object you created with the <code>lm</code> call.</p>
+</div>
+<div id="standardized-coefficients" class="section level3">
+<h3><span class="header-section-number">7.1.3</span> Standardized Coefficients</h3>
+<p>Estimate standardized regression coefficients with <code>lm.beta()</code> from the lm.beta package. <code>ols %&gt;% lm.beta()</code>.</p>
+</div>
+<div id="f-tests" class="section level3">
+<h3><span class="header-section-number">7.1.4</span> <em>F</em> tests</h3>
+<p><em>F</em> tests in econometrics are generally about the joint significance of multiple variables. Suppose, we estimate the regression on <span class="math inline">\(i=1,2,\ldots n\)</span> observations. <span class="math display">\[y_i=\beta_0+\beta_1x_{1,i}+\beta_2x_{2,i}+\cdots+\beta_mx_{i,m}+\beta_{m+1}x_{m+1,i}+\cdots+\beta_kx_{i,k} + \epsilon_i\]</span></p>
+<p>To test the joint significance of the <span class="math inline">\(\beta_1,\ldots,\beta_m\)</span> in the model we would use an <em>F</em> test to perform the following hypothesis test: <span class="math display">\[H_0: \beta_1=\beta_2=\cdots=\beta_m=0\]</span> <span class="math display">\[H_1:\text{@ least one }\beta_j\ne0\]</span></p>
+<p>An <em>F</em> test essentially compares the difference in the residual sum of squares under the null and alternative hypotheses. If this difference in large enough relative to the unrestricted standard error, we have evidence to reject the null hypothesis in favor of the alternative hypothesis. The mechanics of the test are as follows:</p>
+<ol style="list-style-type: decimal">
+<li><p>Estimate the model that does not hold under the null hypothesis, that is, the model above and call it the unsrestricted model and retrieve the residual sum of squares. Retrieve the residual sum of squares, <span class="math inline">\(rss_u\)</span>. The residuals from unrestricted model will have <span class="math inline">\(n-k-1\)</span> degrees of freedom. The unrestricted model, U, is: <span class="math display">\[\text{U: }y_i=\beta_0+\beta_1x_{1,i}+\beta_2x_{2,i}+\cdots+\beta_mx_{i,m}+\beta_{m+1}x_{m+1,i}+\cdots+\beta_kx_{i,k} + \epsilon_i\]</span></p></li>
+<li><p>Estimate the model that holds under the null hypothesis Restrict the model so that the null hypothesis holds. That restricted model, R, is <span class="math display">\[\text{R: }y_i=\beta_0+\beta_{m+1}x_{m+1,i}+\beta_{m+2}x_{m+2,i}+\cdots+\beta_kx_{k,i} + \eta_i\]</span>. Retrieve the residual sum of squares <span class="math inline">\(rss_r\)</span> The residual from restricted model will have <span class="math inline">\(n-m-1\)</span> degrees of freedom.</p></li>
+<li><p>Calculate the difference in the residual sum of squares <span class="math inline">\(rss_r - rss_u\)</span> and divide by its degrees of of freedom <span class="math inline">\(q = (n-m-1)-(n-k-1) = k-m\)</span>. So, q is the number of restrictions. A simple way to calculate the number of restrictions is to count the number of equal signs, <span class="math inline">\(=\)</span>, in the null hypothesis.</p></li>
+<li><p>Calculate <span class="math inline">\(rss_u/(n-k-1)\)</span></p></li>
+<li><p>Divide the result from 3 by the result from 4. This will give you an <em>F</em> statistic with k-m and n-k-1 degrees of freedom.</p></li>
+</ol>
+<p><span class="math display">\[F_c=\frac{\frac{rss_r-rss_u}{q}}{\frac{rss_u}{n-k-1}}\]</span></p>
+<p>The <em>F</em>-test (Wald test) can be used for any number of restrictions on the unrestricted model. For example, suppose we would like to know if a production function with a Cobb-Douglas form has constant returns to scale. The Cobb-Douglas function for output as a function of labor and capital takes the form <span class="math display">\[q=al^\alpha k^\beta\epsilon\]</span>. If constant returns to scale hold, <span class="math inline">\(\alpha+\beta=1\)</span>. So we test the following hypothesis: <span class="math display">\[H_0:\alpha+\beta=1\]</span> <span class="math display">\[H_1:\alpha+\beta\ne1\]</span></p>
+<p>To test this hypothesis form the unrestricted and restricted forms of the model, estimate the models, retrieve the sum of squared residuals, and calculate the <em>F</em> statistic. In the form presented above, the Cobb-Douglas model is not linear in the parameters so it can’t be estimated with OLS. We can make it linear in the parameters by taking the logarithm of both sides. <span class="math display">\[\ln(q)=\ln(al^\alpha k^\beta\epsilon)\]</span> <span class="math display">\[\text{U: }\ln(q)=\gamma+\alpha \ln(l)+\beta\ln(k)+\eta\]</span>.</p>
+<p>Form the restricted model by emposing the null hypothesis on the paramaters. From the null hypothesis, <span class="math inline">\(\beta=1-\alpha\)</span>. Substituting for <span class="math inline">\(\beta\)</span> in the restricted model yields the restricted model. <span class="math display">\[\text{R: }\ln(q)-\ln(k)=\gamma+\alpha[\ln(l)-\ln(k)]+\eta\]</span></p>
+<p>The <em>F</em>-stat is: <span class="math display">\[F_c=\frac{rss_r-rss_u}{\frac{rss_u}{n-k-1}}\]</span></p>
+<p>The degrees of freedom are <span class="math inline">\(q=1\)</span> (the number of equal signs in the null hypothesis) and <span class="math inline">\(n-k-1\)</span>.</p>
+<div id="f-test-for-overall-significance." class="section level4">
+<h4><span class="header-section-number">7.1.4.1</span> <em>F</em>-test for overall significance.</h4>
+<p>Estimate the model <span class="math inline">\(y_i=\beta_0+\beta_1x_{1,i}+\beta_2x_{2,i}+\cdots+\beta_kx_{k,i}+\epsilon_i\)</span>. Test the hypothesis <span class="math display">\[H_0: \beta_1=\beta_2=\cdots=\beta_k=0\]</span> <span class="math display">\[H_1:\text{@ least one }\beta_j\ne0\]</span></p>
+<p>If we reject the null hypothesis, we can say that we have explained some varation in <span class="math inline">\(y\)</span> with variation in at least one of the <span class="math inline">\(x&#39;s\)</span>. In other words, we have a model that is significant. If we fail to reject the null hypothesis, our model has no explanatory power. There is no need to calculate the <em>F</em>-statistic to perform this test because it is reported as a matter of course in the base R call <code>summary</code> or in <code>glance</code> from the broom package. The degrees of freedom are <span class="math inline">\(q=k\)</span> (the number of coefficients estimated - 1) and <span class="math inline">\(n-k-1\)</span>.</p>
+<p><code>summary</code> will report the F-statistic, its degrees of freedom (numerator and denominator), and the p-value. <code>glance</code> reports the <em>F</em> as “statistic”, the p-value as “p.value”, <span class="math inline">\(k+1\)</span> as “df”, and <span class="math inline">\(n-k-1\)</span> as “df.residual”. Note that this test is also a test for the significance of <span class="math inline">\(R^2\)</span>.</p>
+</div>
+<div id="f-test-of-linear-restrictions" class="section level4">
+<h4><span class="header-section-number">7.1.4.2</span> <em>F</em>-test of linear restrictions</h4>
+<p>The test we performed above are tests of linear restrictions of the parameters. These hypotheses can be tested directly using <code>linearHypothesis</code> from the car package. Performing a test of linear restrictions using <code>linearHypothesis</code> requires two arguments: model and hypothesis.matrix.</p>
+<p>Let the unrestricted model be <span class="math display">\[y=\beta_0+\beta_1x_1+\beta_2x_2+\beta_3x_3+\epsilon\]</span> Estimate the model as <code>ols_u &lt;- df %$% lm(y ~ x1 + x2 + x3)</code>, where df is the data frame containing the data.</p>
+<p>Let’s test the hypothesis <span class="math inline">\(\beta_2=\beta_3=0\)</span> versus at that one of the <span class="math inline">\(\beta&#39;s\ne0\)</span> using <code>linearHypothesis(model = ols_u, hypothesis.matrix = c("x2 = 0", "x3 = 0")</code>. The result will be an <em>F</em>-test on the restrictions. The <em>F</em>-statistic, its degrees of freedom, and p-value will be returned.</p>
+<p>Let’s test the linear restriction for the Cobb-Douglas model above. Estimate the model as <code>ols_u &lt;- df %$% lm(log(q) ~ log(l) + log(k))</code>. To test the hypothesis <span class="math inline">\(\alpha=\beta\)</span> pipe ols_u into <code>linearHypothesis</code> with the argument <span class="math inline">\(c(log(l) = log(k))\)</span>: <code>ols_u %&gt;% linearHypothesis(c("log(l) = log(k)"))</code>. Again, the <em>F</em>-statistic, its degrees of freedom, and p-value will be returned.</p>
+</div>
+</div>
+<div id="examples" class="section level3">
+<h3><span class="header-section-number">7.1.5</span> Examples</h3>
+<p>The Motor Trend Car Road Test (mtcars) data set is part of the datasets in base R. The data were extracted from the 1974 Motor Trend US magazine, and comprises fuel consumption and 10 aspects of automobile design and performance for 32 automobiles (1973-74 models). See <code>?mtcars</code> for more information on the data. <code>data(mtcars)</code> will load the data into your global environment as mtcars. We will perform each of the <em>F</em>-tests described above: overall significance, joint signficance of a subset of variables, and equality of two coefficients.</p>
+<div id="multiple-regression-1" class="section level4">
+<h4><span class="header-section-number">7.1.5.1</span> Multiple Regression</h4>
+<p>Suppose we want to estimate the mpg as a function of the number of cylinders, the displacement, and the gross horsepower, then our (unrestricted) model is <span class="math display">\[mpg=\beta_0+\beta_1cyl+\beta_2disp+\beta_3hp+\epsilon\]</span>.</p>
+<p>Let’s estimate the unrestricted model using the expose pipe <code>%$%</code> both with and without robust errors.</p>
+<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb142-1" title="1"><span class="co"># estimate model without reobust standard errors</span></a>
+<a class="sourceLine" id="cb142-2" title="2">ols &lt;-<span class="st"> </span>mtcars <span class="op">%$%</span><span class="st"> </span><span class="kw">lm</span>(mpg <span class="op">~</span><span class="st"> </span>cyl <span class="op">+</span><span class="st"> </span>disp <span class="op">+</span><span class="st"> </span>hp)</a>
+<a class="sourceLine" id="cb142-3" title="3">ols <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tidy</span>()</a></code></pre></div>
+<pre><code># A tibble: 4 x 5
+  term        estimate std.error statistic  p.value
+  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1 (Intercept)  34.2       2.59       13.2  1.54e-13
+2 cyl          -1.23      0.797      -1.54 1.35e- 1
+3 disp         -0.0188    0.0104     -1.81 8.09e- 2
+4 hp           -0.0147    0.0147     -1.00 3.25e- 1</code></pre>
+<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb144-1" title="1"><span class="co"># estimate model with robust standard erros</span></a>
+<a class="sourceLine" id="cb144-2" title="2">ols_robust &lt;-<span class="st"> </span>mtcars <span class="op">%$%</span><span class="st"> </span><span class="kw">lm_robust</span>(mpg <span class="op">~</span><span class="st"> </span>cyl <span class="op">+</span><span class="st"> </span>disp <span class="op">+</span><span class="st"> </span>hp)</a>
+<a class="sourceLine" id="cb144-3" title="3">ols_robust <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">tidy</span>()</a></code></pre></div>
+<pre><code>         term estimate std.error statistic           p.value conf.low
+1 (Intercept)  34.1849    2.4700     13.84 0.000000000000048  29.1253
+2         cyl  -1.2274    0.5967     -2.06 0.049121075438813  -2.4498
+3        disp  -0.0188    0.0083     -2.27 0.031138440490781  -0.0358
+4          hp  -0.0147    0.0109     -1.34 0.190818678697032  -0.0371
+  conf.high df outcome
+1  39.24451 28     mpg
+2  -0.00506 28     mpg
+3  -0.00183 28     mpg
+4   0.00775 28     mpg</code></pre>
+</div>
+<div id="multicollinearity-1" class="section level4">
+<h4><span class="header-section-number">7.1.5.2</span> Multicollinearity</h4>
+<p>Using the model above <span class="math display">\[mpg=\beta_0+\beta_1cyl+\beta_2disp+\beta_3hp+\epsilon\]</span>.</p>
+<p>We can calcualte the VIF’s as follows:</p>
+<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb146-1" title="1">ols <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">vif</span>()</a></code></pre></div>
+<pre><code> cyl disp   hp 
+6.73 5.52 3.35 </code></pre>
+<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb148-1" title="1">ols_robust <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">vif</span>()</a></code></pre></div>
+<pre><code> cyl disp   hp 
+3.67 2.90 2.71 </code></pre>
+</div>
+<div id="standardize-regression-coefficients" class="section level4">
+<h4><span class="header-section-number">7.1.5.3</span> Standardize Regression Coefficients</h4>
+<p>Using the model <span class="math display">\[mpg=\beta_0+\beta_1cyl+\beta_2disp+\beta_3hp+\epsilon\]</span>, estimate standardized regression coefficients as follows:</p>
+<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb150-1" title="1">ols <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">lm.beta</span>()</a></code></pre></div>
+<pre><code>
+Call:
+lm(formula = mpg ~ cyl + disp + hp)
+
+Standardized Coefficients::
+(Intercept)         cyl        disp          hp 
+      0.000      -0.364      -0.387      -0.167 </code></pre>
+</div>
+<div id="f-test-for-overall-significance" class="section level4">
+<h4><span class="header-section-number">7.1.5.4</span> <em>F</em>-test for Overall significance</h4>
+<p>Suppose we want to estimate the mpg as a function of the number of cylinders, the displacement, and the gross horsepower, then our (unrestricted) model is <span class="math display">\[mpg=\beta_0+\beta_1cyl+\beta_2disp+\beta_3hp+\epsilon\]</span>.</p>
+<p>Let’s estimate the unrestricted model using the expose pipe <code>%$%</code></p>
+<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb152-1" title="1">ols_u &lt;-<span class="st"> </span>mtcars <span class="op">%$%</span><span class="st"> </span><span class="kw">lm</span>(mpg <span class="op">~</span><span class="st"> </span>cyl <span class="op">+</span><span class="st"> </span>disp <span class="op">+</span><span class="st"> </span>hp)</a></code></pre></div>
+<p>The test for overall significance is: <span class="math display">\[H_0:\beta_1=\beta_2=\beta_3=0\]</span> <span class="math display">\[H_1: \text{@ least one }\beta_j\ne0\]</span></p>
+<p>Recall that <em>the</em> <em>F</em>-test is reported as a matter of course in <code>summary</code> from base R and <code>glance</code> from the broom package.</p>
+<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb153-1" title="1">ols_u <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summary</span>()</a></code></pre></div>
+<pre><code>
+Call:
+lm(formula = mpg ~ cyl + disp + hp)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-4.089 -2.085 -0.774  1.397  6.918 
+
+Coefficients:
+            Estimate Std. Error t value         Pr(&gt;|t|)    
+(Intercept)  34.1849     2.5908   13.19 0.00000000000015 ***
+cyl          -1.2274     0.7973   -1.54            0.135    
+disp         -0.0188     0.0104   -1.81            0.081 .  
+hp           -0.0147     0.0147   -1.00            0.325    
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 3.06 on 28 degrees of freedom
+Multiple R-squared:  0.768, Adjusted R-squared:  0.743 
+F-statistic: 30.9 on 3 and 28 DF,  p-value: 0.00000000505</code></pre>
+<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb155-1" title="1">ols_u <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">glance</span>()</a></code></pre></div>
+<pre><code># A tibble: 1 x 11
+  r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC
+      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1     0.768         0.743  3.06      30.9 5.05e-9     4  -79.0  168.  175.
+# ... with 2 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
+<p>So we see that <span class="math inline">\(F=30.877\)</span>, <span class="math inline">\(q=3\)</span>, and <span class="math inline">\(df2=28\)</span>. The critical <em>F</em> with <span class="math inline">\(\alpha=.05\)</span> is <span class="math inline">\(2.947\)</span>. Since the calculated <em>F</em>-stat is greater than the critical <em>F</em>-stat, we reject <span class="math inline">\(H_0\)</span> in favor of <span class="math inline">\(H_1\)</span>. That is, the explanatory power of the model is statistical significant.</p>
+</div>
+<div id="f-test-of-joint-significance" class="section level4">
+<h4><span class="header-section-number">7.1.5.5</span> <em>F</em>-test of Joint Significance</h4>
+<p>Suppose we’d like to add the weight (wt), number of gears (gear), and number of carburetors (carb) together increase the explanatory power of the model at the <span class="math inline">\(\alpha=.05\)</span>, level of significance. Our unrestricted model becomes: <span class="math display">\[mpg=\beta_0+\beta_1cyl+\beta_2disp+\beta_3hp+\beta_4wt+\beta_5gear+\beta_6carb+\eta\]</span>.</p>
+<p>The null and alternative hypotheses are: <span class="math display">\[H_0:\beta_4=\beta_5=\beta_6=0\]</span> <span class="math display">\[H_1:\text{@ least one }\beta_j\ne0\]</span></p>
+</div>
+<div id="perform-the-test-manually" class="section level4">
+<h4><span class="header-section-number">7.1.5.6</span> Perform the test “manually”</h4>
+<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb157-1" title="1"><span class="co"># estimate the unrestricted model</span></a>
+<a class="sourceLine" id="cb157-2" title="2">ols_u &lt;-<span class="st"> </span>mtcars <span class="op">%$%</span><span class="st"> </span><span class="kw">lm</span>(mpg <span class="op">~</span><span class="st"> </span>cyl <span class="op">+</span><span class="st"> </span>disp <span class="op">+</span><span class="st"> </span>disp <span class="op">+</span><span class="st"> </span>hp <span class="op">+</span><span class="st"> </span>wt <span class="op">+</span><span class="st"> </span>gear <span class="op">+</span><span class="st"> </span>carb)</a>
+<a class="sourceLine" id="cb157-3" title="3"><span class="co"># generate the residual sum of squares</span></a>
+<a class="sourceLine" id="cb157-4" title="4">rss_u &lt;-<span class="st"> </span>ols_u<span class="op">$</span>residuals<span class="op">^</span><span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb157-5" title="5"><span class="st">  </span><span class="kw">sum</span>()</a>
+<a class="sourceLine" id="cb157-6" title="6"><span class="co"># retrive the degrees of freedom for the unrestricted model</span></a>
+<a class="sourceLine" id="cb157-7" title="7">df_u &lt;-<span class="st"> </span>ols_u<span class="op">$</span>df.residual</a>
+<a class="sourceLine" id="cb157-8" title="8"><span class="co"># estimate the restricted model</span></a>
+<a class="sourceLine" id="cb157-9" title="9">ols_r &lt;-<span class="st"> </span>mtcars <span class="op">%$%</span><span class="st"> </span><span class="kw">lm</span>(mpg <span class="op">~</span><span class="st"> </span>cyl <span class="op">+</span><span class="st"> </span>disp <span class="op">+</span><span class="st"> </span>disp <span class="op">+</span><span class="st"> </span>hp)</a>
+<a class="sourceLine" id="cb157-10" title="10"><span class="co"># generate the residual sum of squares</span></a>
+<a class="sourceLine" id="cb157-11" title="11">rss_r &lt;-<span class="st"> </span>ols_r<span class="op">$</span>residuals<span class="op">^</span><span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb157-12" title="12"><span class="st">  </span><span class="kw">sum</span>()</a>
+<a class="sourceLine" id="cb157-13" title="13"><span class="co"># retrive the degrees of freedom for the restricted model</span></a>
+<a class="sourceLine" id="cb157-14" title="14">df_r &lt;-<span class="st"> </span>ols_r<span class="op">$</span>df.residual</a>
+<a class="sourceLine" id="cb157-15" title="15"><span class="co"># calculate the number of restrictions</span></a>
+<a class="sourceLine" id="cb157-16" title="16">q &lt;-<span class="st"> </span>df_r <span class="op">-</span><span class="st"> </span>df_u</a>
+<a class="sourceLine" id="cb157-17" title="17"><span class="co"># calculate F</span></a>
+<a class="sourceLine" id="cb157-18" title="18">(F_stat &lt;-<span class="st"> </span>((rss_r<span class="op">-</span>rss_u)<span class="op">/</span>q)<span class="op">/</span>(rss_u<span class="op">/</span>df_u)) <span class="co"># () around the call prints the result to the screen</span></a></code></pre></div>
+<pre><code>[1] 4.8</code></pre>
+<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb159-1" title="1"><span class="co"># retrieve the critical F</span></a>
+<a class="sourceLine" id="cb159-2" title="2">(F_crit &lt;-<span class="st"> </span><span class="kw">qf</span>(.<span class="dv">95</span>, q, df_u))</a></code></pre></div>
+<pre><code>[1] 2.99</code></pre>
+<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb161-1" title="1"><span class="co"># p-value </span></a>
+<a class="sourceLine" id="cb161-2" title="2">(F_stat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pf</span>(q, df_u, <span class="dt">lower.tail =</span> F))</a></code></pre></div>
+<pre><code>[1] 0.00897</code></pre>
+<p>Since 4.796 is greater than 2.991 we can reject <span class="math inline">\(H_0\)</span> in favor of <span class="math inline">\(H_1\)</span> and conclude that wt, am, and carb add signficant explanatory power to the model. We can also see that the p-vallue for our calculated <em>F</em>-statistic is 0.009. Since this is less than <span class="math inline">\(\alpha=.05\)</span> we reject <span class="math inline">\(H_0\)</span>.</p>
+</div>
+<div id="perform-the-test-with-linearhypothesis" class="section level4">
+<h4><span class="header-section-number">7.1.5.7</span> Perform the test with <code>linearHypothesis</code></h4>
+<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb163-1" title="1"><span class="kw">linearHypothesis</span>(ols_u, <span class="kw">c</span>(<span class="st">&quot;wt&quot;</span>, <span class="st">&quot;gear&quot;</span>, <span class="st">&quot;carb&quot;</span>))</a></code></pre></div>
+<pre><code>Linear hypothesis test
+
+Hypothesis:
+wt = 0
+gear = 0
+carb = 0
+
+Model 1: restricted model
+Model 2: mpg ~ cyl + disp + disp + hp + wt + gear + carb
+
+  Res.Df RSS Df Sum of Sq   F Pr(&gt;F)   
+1     28 261                           
+2     25 166  3      95.5 4.8  0.009 **
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Of course, we have the same result.</p>
+</div>
+<div id="test-of-linear-restrictions" class="section level4">
+<h4><span class="header-section-number">7.1.5.8</span> Test of Linear Restrictions</h4>
+<p>Let the model be <span class="math display">\[\ln(mpg)=\beta_0+\beta_1\ln(cyl)+\beta_2\ln(wt)+\epsilon\]</span>. Suppose we’d like to test <span class="math display">\[H_0:\beta_1+\beta_2=-1\]</span> against <span class="math display">\[H_0:\beta_1+\beta_2\ne-1\]</span></p>
+<div id="perform-the-test-manually-1" class="section level5">
+<h5><span class="header-section-number">7.1.5.8.1</span> Perform the Test “Manually”</h5>
+<p>Form the restricted model under <span class="math inline">\(H_0\)</span>. If <span class="math inline">\(H_0\)</span> holds, <span class="math inline">\(\beta_2=-1-\beta_1\)</span>. Substituting into the unrestricted model yields the restricted model: <span class="math display">\[\text{R: }\ln(mpg)+\ln(wt)=\beta_0+\beta_1(\ln(cyl)-\ln(wt))+\eta\]</span></p>
+<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb165-1" title="1"><span class="co"># estimate the unrestricted model</span></a>
+<a class="sourceLine" id="cb165-2" title="2">ols_u &lt;-<span class="st"> </span>mtcars <span class="op">%$%</span><span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(mpg) <span class="op">~</span><span class="st"> </span><span class="kw">log</span>(cyl) <span class="op">+</span><span class="st"> </span><span class="kw">log</span>(wt))</a>
+<a class="sourceLine" id="cb165-3" title="3"><span class="co"># generate the residual sum of squares</span></a>
+<a class="sourceLine" id="cb165-4" title="4">rss_u &lt;-<span class="st"> </span>ols_u<span class="op">$</span>residuals<span class="op">^</span><span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb165-5" title="5"><span class="st">  </span><span class="kw">sum</span>()</a>
+<a class="sourceLine" id="cb165-6" title="6"><span class="co"># retrive the degrees of freedom for the unrestricted model</span></a>
+<a class="sourceLine" id="cb165-7" title="7">df_u &lt;-<span class="st"> </span>ols_u<span class="op">$</span>df.residual</a>
+<a class="sourceLine" id="cb165-8" title="8"><span class="co"># estimate the restricted model</span></a>
+<a class="sourceLine" id="cb165-9" title="9">ols_r &lt;-<span class="st"> </span>mtcars <span class="op">%$%</span><span class="st"> </span><span class="kw">lm</span>(<span class="kw">I</span>(<span class="kw">log</span>(mpg)<span class="op">+</span><span class="kw">log</span>(wt)) <span class="op">~</span><span class="st"> </span><span class="kw">I</span>(<span class="kw">log</span>(cyl) <span class="op">-</span><span class="st"> </span><span class="kw">log</span>(wt)))</a>
+<a class="sourceLine" id="cb165-10" title="10"><span class="co"># generate the residual sum of squares</span></a>
+<a class="sourceLine" id="cb165-11" title="11">rss_r &lt;-<span class="st"> </span>ols_r<span class="op">$</span>residuals<span class="op">^</span><span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb165-12" title="12"><span class="st">  </span><span class="kw">sum</span>()</a>
+<a class="sourceLine" id="cb165-13" title="13"><span class="co"># retrive the degrees of freedom for the restricted model</span></a>
+<a class="sourceLine" id="cb165-14" title="14">df_r &lt;-<span class="st"> </span>ols_r<span class="op">$</span>df.residual</a>
+<a class="sourceLine" id="cb165-15" title="15"><span class="co"># calculate the number of restrictions</span></a>
+<a class="sourceLine" id="cb165-16" title="16">q &lt;-<span class="st"> </span>df_r <span class="op">-</span><span class="st"> </span>df_u</a>
+<a class="sourceLine" id="cb165-17" title="17"><span class="co"># calculate F</span></a>
+<a class="sourceLine" id="cb165-18" title="18">(F_stat &lt;-<span class="st"> </span>((rss_r<span class="op">-</span>rss_u)<span class="op">/</span>q)<span class="op">/</span>(rss_u<span class="op">/</span>df_u)) <span class="co"># () around the call prints the result to the screen</span></a></code></pre></div>
+<pre><code>[1] 1.29</code></pre>
+<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb167-1" title="1"><span class="co"># retrieve the critical F</span></a>
+<a class="sourceLine" id="cb167-2" title="2">(F_crit &lt;-<span class="st"> </span><span class="kw">qf</span>(.<span class="dv">95</span>, q, df_u))</a></code></pre></div>
+<pre><code>[1] 4.18</code></pre>
+<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb169-1" title="1"><span class="co"># p-value </span></a>
+<a class="sourceLine" id="cb169-2" title="2">(F_stat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pf</span>(q, df_u, <span class="dt">lower.tail =</span> F))</a></code></pre></div>
+<pre><code>[1] 0.266</code></pre>
+<p>Since 1.289 is less than 4.183 we can failt to reject <span class="math inline">\(H_0\)</span> and conclude that we have no evidence to suggest that <span class="math inline">\(\beta_1+\beta_2\ne1\)</span>. We can also see that the p-vallue for our calculated <em>F</em>-statistic is 0.266. Since this is greater than <span class="math inline">\(\alpha=.05\)</span> we fail to reject <span class="math inline">\(H_0\)</span>.</p>
+</div>
+</div>
+<div id="perform-the-test-with-linearhypothesis-1" class="section level4">
+<h4><span class="header-section-number">7.1.5.9</span> Perform the test with <code>linearHypothesis</code></h4>
+<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb171-1" title="1">ols_u <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">linearHypothesis</span>(<span class="kw">c</span>(<span class="st">&quot;log(cyl) + log(wt) = -1&quot;</span>))</a></code></pre></div>
+<pre><code>Linear hypothesis test
+
+Hypothesis:
+log(cyl)  + log(wt) = - 1
+
+Model 1: restricted model
+Model 2: log(mpg) ~ log(cyl) + log(wt)
+
+  Res.Df   RSS Df Sum of Sq    F Pr(&gt;F)
+1     30 0.419                         
+2     29 0.401  1    0.0178 1.29   0.27</code></pre>
+
+</div>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="chp4.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="chp6.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["bailey.pdf", "bailey.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

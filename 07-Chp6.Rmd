@@ -1,0 +1,236 @@
+# Dummy Variables: Smarter than You Think {#chp6}
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA, message = FALSE, warning = FALSE,
+                      options(digits = 3, scipen = 999))
+```
+
+In this chapter we will learn how R handles dummy variables.  
+
+We will need the following libraries. 
+
+```{r}
+library(tidyverse)
+library(magrittr)
+library(broom)
+library(estimatr)
+library(forcats)
+```
+
+## Dummy Variables in R
+
+R uses factor vectors to to represent dummy or categorical data.  Factors can be ordered or unordered.  Factor vectors are built on top of integer vectors and include a unique label for each integer.
+
+### Factors
+
+R uses factors to handle categorical variables. Categorical variables have fixed and known set of possible values.  The package [forcats](https://forcats.tidyverse.org/) as part of the tidyverse offers a suite of tools for that solve common problems with factors.  See the [vignette on forcats](https://forcats.tidyverse.org/articles/forcats.html) for more information on the forcats package to learn more about using factors in R.
+
+### Character Vectors as Dummies
+
+Character vectors are one of the six atomic vector types in R.  *Atomic* means that the vector contains only data of a single type, in this case all of the observations are characters.  Categorical data or dummy variables though they are typically coded as numeric are character vectors.  For example, a dummy varialbe for sex may contain male and female, but be coded as 0 and 1 and named female. If you use a character vector as an argument in `lm`, R will treat the vector as a set of dummy variables.  The number of dummy variables will be the number of characteristics (unique observations) minus 1.  
+
+The student admissions at UC Berkeley data set has aggregate data on graduate school applicants for the six largest departments, `?UCBAdmissions` for more information.  There are four variables in the data set, Admit (whether the cadidate was admitted or rejected), Gender (the gender of the candidate: Male or Female), Dept (department to which the candidate applied coded as A, B, C, D, E, F), and n (the number of applicants).  n is a numeric vector.  Admit, Gender, and Dept, are character vectors.  Since the data are store as a table, to read them into R as a data frame call `as_tibble` from the dplyr package with the argument UCBAdmissions.
+
+```{r}
+UCB_Admissions <- UCBAdmissions %>% 
+  as_tibble() %>%  
+  glimpse() 
+```
+
+Suppose we wisht to estimate the difference in difference model $n_i = \beta_0+\beta_1Admit_i+\epsilon_i$. If we use Admit as an argument in `lm`, R will correctly treat Admit as single dummy variable with two categories.
+
+```{r}
+UCB_Admissions %$%
+  lm(n ~ Admit)
+```
+
+R has coded Rejected as 1 and Admitted as 0.  The regression indicates that mean of admitted is 146.25 while the mean number rejected is 230.92.  We can confirm that directly as well.
+
+```{r}
+# Using dplyr verbs
+UCB_Admissions %>% 
+  filter(Admit == "Admitted") %>% 
+  summary(mean) 
+UCB_Admissions %>% 
+  filter(Admit == "Rejected") %>% 
+  summary(mean)
+# Directly selecting observations based on other values
+UCB_Admissions %$% 
+  mean(n[Admit == "Admitted"])
+UCB_Admissions %$% 
+  mean(n[Admit == "Rejected"])
+```
+
+Similarly, if we want to calculate the mean number of applicants by department, R will treat Dept as 5 dummy variables.
+
+```{r}
+UCB_Admissions %$%
+  lm(n ~ Dept) 
+```
+
+The mean number of applicants in Department A is 233.25.  To find the mean number of applicants for each department add the appropriate coefficient to 233.25.
+
+We can confirm these results as we did above.
+
+## Difference in Means Test
+
+Using the UCB Admissions data, let's conduct a difference of means test for number of applications by Gender. We will test the following hypothesis: $$H_0: \mu_{Male}=\mu_{Female}\\ H_1: \mu_{Male}\ne\mu_{Female}$$ at the $\alpha=.05$ level of significance.  We can use `t.test` in two different ways, `lm`, or `lm_robust`.  First, we will test the hypothesis with `t.test` assuming, in turn, equal and unequal variances.
+
+### Using `t.test`
+
+```{r}
+# Assume equal variances
+# Use t.test default method
+UCB_Admissions %$%
+  t.test(n[Gender == "Female"], n[Gender == "Male"], var.equal = TRUE)
+# Use t.test for class 'formula`
+UCB_Admissions %$%
+  t.test(n ~ Gender, var.equal = TRUE)
+
+# Assume unequal variances
+# unequal variances is the default
+UCB_Admissions %$%
+  t.test(n[Gender == "Female"], n[Gender == "Male"])
+# Use t.test for class 'formula`
+UCB_Admissions %$%
+  t.test(n ~ Gender)
+
+```
+
+### Using `lm` and `lm_robust`
+
+```{r}
+# Assume equal variances
+UCB_Admissions %$%
+  lm(n ~ Gender) %>% 
+  tidy()
+# Assume unequal variances
+UCB_Admissions %$%
+  lm_robust(n ~ Gender) %>% 
+  tidy()
+```
+
+
+## Integer and Numerical Vectors as Dummy Variables
+
+ `lm` treated the character vectors as factors.  For most of what we will do, that is enough. If the categorical (dummy) variable is coded as a numeric vector or integer vector, we my have coerce the variable to a factor for `lm` to interpret it correctly.  If the variable is coded as 0 and 1, we can use it as it is.  For example, conisder the the mtcars data.  
+ 
+```{r}
+data(mtcars)
+mtcars %>% glimpse()
+```
+
+The type of transmission, am, takes on two values 1 if the transmission is automatic and 0 if it is manual.  Suppose we'd like to know if the mpg is different for the two types of transmissions.  We can test the hypothesis $$H_0:\mu_a=\mu_m$$ $$H_1:\mu_a\ne\mu_m$$d at the $\alpha=.05$ level of significance.
+
+```{r}
+mtcars %$%
+  lm_robust(mpg ~ am) %>% 
+  tidy()
+```
+
+If, however, the categorical variable is not coded as 0 and 1, we will have to coerce it to a factor.  The forcats package simplifies this process.  Suppose we'd like to know if the average mpg is different for 4, 6, and 8 cylinder cars.  $$H_0:\mu_4=\mu_6=\mu_8$$ $$H_1:\text{@ least one }\mu\text{ is not equal}$$If we estimate a model of mpg on cyl, the coefficient on cyl will give us the marginal effect on mpg of adding a cylinder.  A signficant coefficient in this model will not answer our question.  To do that, we must coerce cyl into a categorical variable with `as.factor`. 
+
+```{r}
+mtcars %$%
+  lm(mpg ~ as.factor(cyl)) %>% 
+  summary()
+```
+
+The *F-stat* for overall significance of the model is significant at the $\alpha = .05$ level of significance so we reject the null hypothesis in favor of the alternative and conclude that at least one average mpg is different.  
+
+The base case is cars with 4 cylinders with an average mpg of 26.7 mpg.  6 cylinder cars average a statistically significant 6.9 mpg less than 4 cylinder cars.  8 cylinder cars average a statistically siginficant 11.6 mpg less than 4 cylider cars.  These averages are statistically signficantly different.
+
+Had we estimated the model without coercing cylinders into a factor our results would have been
+
+```{r}
+mtcars %$% 
+  lm(mpg ~ cyl) %>% 
+  tidy()
+```
+
+$\hat\beta_1=-2.88$ tells us that for each additional cylinder fuel mileage will fall by 2.88 mpg.  
+
+## Manipulating Factors
+
+The forcats package provides a set of tools for the simple manipulation of factors like renaming factors, re-ordering factors, combining factors, etc.  Using the mtcars data, lets coerce the number of cylinders to a factor and look at ways to manipulate in ways to aid in understanding.  The compound pipe operator `%<>%` is used to update a value by first piping into one or more expressions and then assigning the result.
+
+```{r}
+data(mtcars)
+### Coerce cyl to a factor
+mtcars$cyl %<>% 
+  as.character() %>% # forcats will not coerce integer or numeric vectors to factors
+  as_factor()
+mtcars$cyl %>% str()
+```
+
+cyl is now a factor with 3 levels, 6, 4, 8.  Suppose we estimate the model $mpg = \beta_0 + \beta_1mpg+\epsilon$.
+
+```{r}
+mtcars %$% 
+  lm(mpg ~ cyl) %>% 
+  tidy()
+```
+
+This model indicates that cars with 6 cylinder engines average 19.74 mpg, cars with 4 cylinders average 6.9 mpg more than cars with 6 cylinders, and cars with 8 cylinders average 4.64 mpg less than cars with 6 cylinders. Suppose, instead, you'd prefere 4 cylinder cars to be the base case.  We can reorder the factor with `fct_relevel` from the forcats package.  `fct_revel` changes the order of a factor by hand.  
+
+
+For some factors the order doesn't or won't matter, for others there is "natural" ordering suggested by the data, for others you may have an ordering that you prefer.  `fct_relevel()` from the forcats package handles that task.  If we call `fct_relevel` within `lm` the releveling will be *ad hoc*.  
+
+
+```{r}
+mtcars %$%
+  lm(mpg ~ fct_relevel(cyl, levels = c("4", "6", "8"))) %>% 
+  tidy()
+```
+
+We can permantly relevel cylinders
+
+```{r}
+# relevel the factor
+mtcars$cyl  <- 
+  fct_relevel(mtcars$cyl, levels = c("4", "6", "8"))
+# alternatively 
+mtcars$cyl <- 
+  fct_relevel(mtcars$cyl, "6", after = 1) # move 6 to the second position
+# re-estimate the model
+mtcars %$%
+  lm(mpg ~ cyl) %>% 
+  tidy()
+```
+
+See [Reorder factor levels by hand](https://forcats.tidyverse.org/reference/fct_relevel.html) for a more ways to relevel factors.
+
+The transmission variable (am) is a numeric vector coded as 0 and 1.  Suppose we'd like to coerce it to a factor coded with the levels named "automatic" and "manual" rather than 0 and 1.  
+
+```{r}
+mtcars$am %<>% 
+  factor(levels = c(0,1), labels = c("automatic", "manual"))
+```
+
+If we re-estimate the model $mpg = \beta_0+\beta_1am$ we see the results are the same, but the variable is labeled more clearly.
+
+```{r}
+mtcars %$%
+  lm_robust(mpg ~ am) %>% 
+  tidy()
+```
+
+
+## Dummy Interaction Variables
+
+Dummy interactions $x_iD_i$ can be created in `lm` as an argument.  Let's esitmate the the model $mpg= \beta_0+\beta_1am+\beta_2hp+\beta_3hp*am+\epsilon$.  
+
+```{r}
+mtcars %$%
+  lm(mpg ~ hp*am) 
+```
+
+Notice that R assumed that you wanted to calculate $\hat\beta_1$, $\hat\beta_2$, and $\hat\beta_3$. By including `hp*am` as an argument in `lm` R estimated the continuous coefficients for the continuous variable, the dummy variable, and the interactions.  If, on the other hand, you wanted just the interaction term, i.e., $mpg=\alpha_0+\alpha_1hp*am+\eta$, use the "AsIs" function `I()` as follows:
+
+```{r}
+data(mtcars)
+mtcars %$%
+  lm(mpg ~ I(hp*am))
+```
+
+`I()` is used to inhibit the interpretation of operators in formulas, so they are used as arithmetic operators.

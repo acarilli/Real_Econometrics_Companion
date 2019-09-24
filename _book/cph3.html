@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 5 Bivariate OLS: The Foundation of Econometric Analysis | R Companion to Real Econometrics</title>
+  <meta name="description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 5 Bivariate OLS: The Foundation of Econometric Analysis | R Companion to Real Econometrics" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 5 Bivariate OLS: The Foundation of Econometric Analysis | R Companion to Real Econometrics" />
+  
+  <meta name="twitter:description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  
+
+<meta name="author" content="Tony Carilli" />
+
+
+<meta name="date" content="2019-09-23" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="chp2.html"/>
+<link rel="next" href="chp4.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">R Companion to *Real Econometrics*</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a><ul>
+<li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#install-r-and-rstudio"><i class="fa fa-check"></i><b>2.1</b> Install R and RStudio</a></li>
+<li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#using-rstudio"><i class="fa fa-check"></i><b>2.2</b> Using RStudio</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="intro.html"><a href="intro.html#source-pane"><i class="fa fa-check"></i><b>2.2.1</b> Source Pane</a></li>
+<li class="chapter" data-level="2.2.2" data-path="intro.html"><a href="intro.html#environmenthistory-pane"><i class="fa fa-check"></i><b>2.2.2</b> Environment/History Pane</a></li>
+<li class="chapter" data-level="2.2.3" data-path="intro.html"><a href="intro.html#console-pane"><i class="fa fa-check"></i><b>2.2.3</b> Console Pane</a></li>
+<li class="chapter" data-level="2.2.4" data-path="intro.html"><a href="intro.html#filesplotspackageshelp-pane"><i class="fa fa-check"></i><b>2.2.4</b> Files/Plots/Packages/Help Pane</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="intro.html"><a href="intro.html#r-markdown"><i class="fa fa-check"></i><b>2.3</b> R Markdown</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="chp1.html"><a href="chp1.html"><i class="fa fa-check"></i><b>3</b> The Quest for Causality</a><ul>
+<li class="chapter" data-level="3.1" data-path="chp1.html"><a href="chp1.html#introduction"><i class="fa fa-check"></i><b>3.1</b> Introduction</a><ul>
+<li class="chapter" data-level="3.1.1" data-path="chp1.html"><a href="chp1.html#table-1.1"><i class="fa fa-check"></i><b>3.1.1</b> Table 1.1</a></li>
+<li class="chapter" data-level="3.1.2" data-path="chp1.html"><a href="chp1.html#figure-1.2"><i class="fa fa-check"></i><b>3.1.2</b> Figure 1.2</a></li>
+<li class="chapter" data-level="3.1.3" data-path="chp1.html"><a href="chp1.html#figure-1.3"><i class="fa fa-check"></i><b>3.1.3</b> Figure 1.3</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="chp2.html"><a href="chp2.html"><i class="fa fa-check"></i><b>4</b> Stats in the Wild: Good Data Practices</a><ul>
+<li class="chapter" data-level="4.1" data-path="chp2.html"><a href="chp2.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
+<li class="chapter" data-level="4.2" data-path="chp2.html"><a href="chp2.html#table-and-figure-reproduction"><i class="fa fa-check"></i><b>4.2</b> Table and Figure Reproduction</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="chp2.html"><a href="chp2.html#table-2.1"><i class="fa fa-check"></i><b>4.2.1</b> Table 2.1</a></li>
+<li class="chapter" data-level="4.2.2" data-path="chp2.html"><a href="chp2.html#table-2.2"><i class="fa fa-check"></i><b>4.2.2</b> Table 2.2</a></li>
+<li class="chapter" data-level="4.2.3" data-path="chp2.html"><a href="chp2.html#table-2.5"><i class="fa fa-check"></i><b>4.2.3</b> Table 2.5</a></li>
+<li class="chapter" data-level="4.2.4" data-path="chp2.html"><a href="chp2.html#figure-2.3"><i class="fa fa-check"></i><b>4.2.4</b> Figure 2.3</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="chp2.html"><a href="chp2.html#computing-center"><i class="fa fa-check"></i><b>4.3</b> Computing Center</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="chp2.html"><a href="chp2.html#reading-data"><i class="fa fa-check"></i><b>4.3.1</b> Reading Data</a></li>
+<li class="chapter" data-level="4.3.2" data-path="chp2.html"><a href="chp2.html#manually-entering-data"><i class="fa fa-check"></i><b>4.3.2</b> Manually Entering Data</a></li>
+<li class="chapter" data-level="4.3.3" data-path="chp2.html"><a href="chp2.html#simple-statistics"><i class="fa fa-check"></i><b>4.3.3</b> Simple Statistics</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="cph3.html"><a href="cph3.html"><i class="fa fa-check"></i><b>5</b> Bivariate OLS: The Foundation of Econometric Analysis</a><ul>
+<li class="chapter" data-level="5.1" data-path="cph3.html"><a href="cph3.html#estimating-a-simple-regression"><i class="fa fa-check"></i><b>5.1</b> Estimating a simple regression</a></li>
+<li class="chapter" data-level="5.2" data-path="cph3.html"><a href="cph3.html#scatter-plot-with-regression-line"><i class="fa fa-check"></i><b>5.2</b> scatter Plot with Regression Line</a></li>
+<li class="chapter" data-level="5.3" data-path="cph3.html"><a href="cph3.html#subsetting-data-for-regressions"><i class="fa fa-check"></i><b>5.3</b> Subsetting Data for Regressions</a></li>
+<li class="chapter" data-level="5.4" data-path="cph3.html"><a href="cph3.html#heteroscesdasticity-consistent-standard-errors."><i class="fa fa-check"></i><b>5.4</b> Heteroscesdasticity-consistent standard errors.</a></li>
+<li class="chapter" data-level="5.5" data-path="cph3.html"><a href="cph3.html#generating-random-numbers"><i class="fa fa-check"></i><b>5.5</b> Generating Random Numbers</a></li>
+<li class="chapter" data-level="5.6" data-path="cph3.html"><a href="cph3.html#simulations"><i class="fa fa-check"></i><b>5.6</b> Simulations</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="chp4.html"><a href="chp4.html"><i class="fa fa-check"></i><b>6</b> Hypothesis Testing and Interval Estimation; Answering Research Questions</a><ul>
+<li class="chapter" data-level="6.1" data-path="chp4.html"><a href="chp4.html#computing-corner"><i class="fa fa-check"></i><b>6.1</b> Computing Corner</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="chp4.html"><a href="chp4.html#probability-distributions-in-r"><i class="fa fa-check"></i><b>6.1.1</b> Probability Distributions in R</a></li>
+<li class="chapter" data-level="6.1.2" data-path="chp4.html"><a href="chp4.html#critical-values-in-r"><i class="fa fa-check"></i><b>6.1.2</b> Critical Values in R</a></li>
+<li class="chapter" data-level="6.1.3" data-path="chp4.html"><a href="chp4.html#confidence-intervals-for-ols-estimates"><i class="fa fa-check"></i><b>6.1.3</b> Confidence Intervals for OLS estimates</a></li>
+<li class="chapter" data-level="6.1.4" data-path="chp4.html"><a href="chp4.html#power-curves"><i class="fa fa-check"></i><b>6.1.4</b> Power Curves</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="chp5.html"><a href="chp5.html"><i class="fa fa-check"></i><b>7</b> Multivariate OLS: Where the Action Is</a><ul>
+<li class="chapter" data-level="7.1" data-path="chp5.html"><a href="chp5.html#computing-corner-1"><i class="fa fa-check"></i><b>7.1</b> Computing Corner</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="chp5.html"><a href="chp5.html#multiple-regression"><i class="fa fa-check"></i><b>7.1.1</b> Multiple Regression</a></li>
+<li class="chapter" data-level="7.1.2" data-path="chp5.html"><a href="chp5.html#multicollinearity"><i class="fa fa-check"></i><b>7.1.2</b> Multicollinearity</a></li>
+<li class="chapter" data-level="7.1.3" data-path="chp5.html"><a href="chp5.html#standardized-coefficients"><i class="fa fa-check"></i><b>7.1.3</b> Standardized Coefficients</a></li>
+<li class="chapter" data-level="7.1.4" data-path="chp5.html"><a href="chp5.html#f-tests"><i class="fa fa-check"></i><b>7.1.4</b> <em>F</em> tests</a></li>
+<li class="chapter" data-level="7.1.5" data-path="chp5.html"><a href="chp5.html#examples"><i class="fa fa-check"></i><b>7.1.5</b> Examples</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="chp6.html"><a href="chp6.html"><i class="fa fa-check"></i><b>8</b> Dummy Variables: Smarter than You Think</a><ul>
+<li class="chapter" data-level="8.1" data-path="chp6.html"><a href="chp6.html#dummy-variables-in-r"><i class="fa fa-check"></i><b>8.1</b> Dummy Variables in R</a><ul>
+<li class="chapter" data-level="8.1.1" data-path="chp6.html"><a href="chp6.html#factors"><i class="fa fa-check"></i><b>8.1.1</b> Factors</a></li>
+<li class="chapter" data-level="8.1.2" data-path="chp6.html"><a href="chp6.html#character-vectors-as-dummies"><i class="fa fa-check"></i><b>8.1.2</b> Character Vectors as Dummies</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="chp6.html"><a href="chp6.html#difference-in-means-test"><i class="fa fa-check"></i><b>8.2</b> Difference in Means Test</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="chp6.html"><a href="chp6.html#using-t.test"><i class="fa fa-check"></i><b>8.2.1</b> Using <code>t.test</code></a></li>
+<li class="chapter" data-level="8.2.2" data-path="chp6.html"><a href="chp6.html#using-lm-and-lm_robust"><i class="fa fa-check"></i><b>8.2.2</b> Using <code>lm</code> and <code>lm_robust</code></a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="chp6.html"><a href="chp6.html#integer-and-numerical-vectors-as-dummy-variables"><i class="fa fa-check"></i><b>8.3</b> Integer and Numerical Vectors as Dummy Variables</a></li>
+<li class="chapter" data-level="8.4" data-path="chp6.html"><a href="chp6.html#manipulating-factors"><i class="fa fa-check"></i><b>8.4</b> Manipulating Factors</a></li>
+<li class="chapter" data-level="8.5" data-path="chp6.html"><a href="chp6.html#dummy-interaction-variables"><i class="fa fa-check"></i><b>8.5</b> Dummy Interaction Variables</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="chp7.html"><a href="chp7.html"><i class="fa fa-check"></i><b>9</b> Specifying Models</a><ul>
+<li class="chapter" data-level="9.1" data-path="chp7.html"><a href="chp7.html#polynomial-models"><i class="fa fa-check"></i><b>9.1</b> Polynomial Models</a></li>
+<li class="chapter" data-level="9.2" data-path="chp7.html"><a href="chp7.html#logarithmic"><i class="fa fa-check"></i><b>9.2</b> Logarithmic</a><ul>
+<li class="chapter" data-level="9.2.1" data-path="chp7.html"><a href="chp7.html#constant-elasticity-log-log-or-double-log"><i class="fa fa-check"></i><b>9.2.1</b> Constant Elasticity (log-log or double log)</a></li>
+<li class="chapter" data-level="9.2.2" data-path="chp7.html"><a href="chp7.html#constant-growth-in-a-dependent-variable-log-lin-or-semilog"><i class="fa fa-check"></i><b>9.2.2</b> Constant Growth in a Dependent Variable (log-lin or semilog)</a></li>
+<li class="chapter" data-level="9.2.3" data-path="chp7.html"><a href="chp7.html#constant-change-in-dependent-variable-lin-log"><i class="fa fa-check"></i><b>9.2.3</b> Constant % Change in Dependent Variable (lin-log)</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="chp7.html"><a href="chp7.html#other-useful-functional-forms"><i class="fa fa-check"></i><b>9.3</b> Other Useful Functional Forms</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="chp8.html"><a href="chp8.html"><i class="fa fa-check"></i><b>10</b> Using Fixed Effects Models to Fight Endogeneity in Panel Data and Difference–in–Difference Models</a><ul>
+<li class="chapter" data-level="10.1" data-path="chp8.html"><a href="chp8.html#simpsons-paradox"><i class="fa fa-check"></i><b>10.1</b> Simpson’s Paradox</a></li>
+<li class="chapter" data-level="10.2" data-path="chp8.html"><a href="chp8.html#figures-8.1-8.3"><i class="fa fa-check"></i><b>10.2</b> Figures 8.1-8.3</a></li>
+<li class="chapter" data-level="10.3" data-path="chp8.html"><a href="chp8.html#one-way-fixed-effects-models"><i class="fa fa-check"></i><b>10.3</b> One-Way Fixed Effects Models</a><ul>
+<li class="chapter" data-level="10.3.1" data-path="chp8.html"><a href="chp8.html#lsdv-approach"><i class="fa fa-check"></i><b>10.3.1</b> LSDV Approach</a></li>
+<li class="chapter" data-level="10.3.2" data-path="chp8.html"><a href="chp8.html#f-test-for-significance-of-fixed-effects."><i class="fa fa-check"></i><b>10.3.2</b> <em>F</em>-test for significance of fixed effects.</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="chp8.html"><a href="chp8.html#de-meaned-approach"><i class="fa fa-check"></i><b>10.4</b> De-Meaned approach</a><ul>
+<li class="chapter" data-level="10.4.1" data-path="chp8.html"><a href="chp8.html#manually-de-mean"><i class="fa fa-check"></i><b>10.4.1</b> Manually De-Mean</a></li>
+<li class="chapter" data-level="10.4.2" data-path="chp8.html"><a href="chp8.html#using-the-plm-package"><i class="fa fa-check"></i><b>10.4.2</b> Using the <code>plm</code> package</a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="chp8.html"><a href="chp8.html#two-way-fixed-effects-models"><i class="fa fa-check"></i><b>10.5</b> Two-Way Fixed Effects Models</a><ul>
+<li class="chapter" data-level="10.5.1" data-path="chp8.html"><a href="chp8.html#time-as-a-factor"><i class="fa fa-check"></i><b>10.5.1</b> Time as a factor</a></li>
+<li class="chapter" data-level="10.5.2" data-path="chp8.html"><a href="chp8.html#effect-twoways"><i class="fa fa-check"></i><b>10.5.2</b> effect = “twoways”</a></li>
+</ul></li>
+<li class="chapter" data-level="10.6" data-path="chp8.html"><a href="chp8.html#difference-in-difference-models"><i class="fa fa-check"></i><b>10.6</b> Difference-in-Difference Models</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="chp9.html"><a href="chp9.html"><i class="fa fa-check"></i><b>11</b> Instrumental Variables: Using Exogenous Variation to Fight Endogeneity</a><ul>
+<li class="chapter" data-level="11.1" data-path="chp9.html"><a href="chp9.html#stage-least-squares"><i class="fa fa-check"></i><b>11.1</b> 2 Stage Least Squares</a></li>
+<li class="chapter" data-level="11.2" data-path="chp9.html"><a href="chp9.html#explanatory-power-of-the-instruments"><i class="fa fa-check"></i><b>11.2</b> Explanatory power of the instruments</a></li>
+<li class="chapter" data-level="11.3" data-path="chp9.html"><a href="chp9.html#estimating-simultaneous-equation-model"><i class="fa fa-check"></i><b>11.3</b> Estimating Simultaneous Equation Model</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="chp10.html"><a href="chp10.html"><i class="fa fa-check"></i><b>12</b> Experiments: Dealing with Real–World Challenges</a><ul>
+<li class="chapter" data-level="12.1" data-path="chp10.html"><a href="chp10.html#assess-balance"><i class="fa fa-check"></i><b>12.1</b> Assess Balance</a></li>
+<li class="chapter" data-level="12.2" data-path="chp10.html"><a href="chp10.html#estimate-itt-model"><i class="fa fa-check"></i><b>12.2</b> Estimate ITT Model</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="chp11.html"><a href="chp11.html"><i class="fa fa-check"></i><b>13</b> Regression Discontinuity: Looking for Jumps in Data</a><ul>
+<li class="chapter" data-level="13.1" data-path="chp11.html"><a href="chp11.html#same-slope"><i class="fa fa-check"></i><b>13.1</b> Same slope</a></li>
+<li class="chapter" data-level="13.2" data-path="chp11.html"><a href="chp11.html#varying-slopes"><i class="fa fa-check"></i><b>13.2</b> Varying Slopes</a></li>
+<li class="chapter" data-level="13.3" data-path="chp11.html"><a href="chp11.html#plot-rd-model"><i class="fa fa-check"></i><b>13.3</b> Plot RD Model</a></li>
+<li class="chapter" data-level="13.4" data-path="chp11.html"><a href="chp11.html#rddtools-package"><i class="fa fa-check"></i><b>13.4</b> <code>rddtools</code> package</a><ul>
+<li class="chapter" data-level="13.4.1" data-path="chp11.html"><a href="chp11.html#same-slope-1"><i class="fa fa-check"></i><b>13.4.1</b> Same slope</a></li>
+<li class="chapter" data-level="13.4.2" data-path="chp11.html"><a href="chp11.html#varying-slopes-1"><i class="fa fa-check"></i><b>13.4.2</b> Varying Slopes</a></li>
+<li class="chapter" data-level="13.4.3" data-path="chp11.html"><a href="chp11.html#scatter-plot"><i class="fa fa-check"></i><b>13.4.3</b> Scatter Plot</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="chp12.html"><a href="chp12.html"><i class="fa fa-check"></i><b>14</b> Dummy Dependent Variables</a><ul>
+<li class="chapter" data-level="14.1" data-path="chp12.html"><a href="chp12.html#probit-estimation"><i class="fa fa-check"></i><b>14.1</b> Probit Estimation</a><ul>
+<li class="chapter" data-level="14.1.1" data-path="chp12.html"><a href="chp12.html#eda"><i class="fa fa-check"></i><b>14.1.1</b> EDA</a></li>
+<li class="chapter" data-level="14.1.2" data-path="chp12.html"><a href="chp12.html#estimate-the-model"><i class="fa fa-check"></i><b>14.1.2</b> Estimate the model</a></li>
+<li class="chapter" data-level="14.1.3" data-path="chp12.html"><a href="chp12.html#estimated-effects"><i class="fa fa-check"></i><b>14.1.3</b> Estimated Effects</a></li>
+</ul></li>
+<li class="chapter" data-level="14.2" data-path="chp12.html"><a href="chp12.html#logit-estimation"><i class="fa fa-check"></i><b>14.2</b> Logit Estimation</a><ul>
+<li class="chapter" data-level="14.2.1" data-path="chp12.html"><a href="chp12.html#discrete-differences"><i class="fa fa-check"></i><b>14.2.1</b> Discrete Differences</a></li>
+<li class="chapter" data-level="14.2.2" data-path="chp12.html"><a href="chp12.html#marginal-effects-1"><i class="fa fa-check"></i><b>14.2.2</b> Marginal Effects</a></li>
+</ul></li>
+<li class="chapter" data-level="14.3" data-path="chp12.html"><a href="chp12.html#testing-hypotheses"><i class="fa fa-check"></i><b>14.3</b> Testing Hypotheses</a></li>
+<li class="chapter" data-level="14.4" data-path="chp12.html"><a href="chp12.html#graphing-probit-and-logit-models"><i class="fa fa-check"></i><b>14.4</b> Graphing Probit and Logit Models</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="chp13.html"><a href="chp13.html"><i class="fa fa-check"></i><b>15</b> Time Series: Dealing with Stickiness over Time</a><ul>
+<li class="chapter" data-level="15.1" data-path="chp13.html"><a href="chp13.html#time-series-objects-in-r"><i class="fa fa-check"></i><b>15.1</b> Time Series Objects in R</a></li>
+<li class="chapter" data-level="15.2" data-path="chp13.html"><a href="chp13.html#detecting-autocorrelation"><i class="fa fa-check"></i><b>15.2</b> Detecting Autocorrelation</a></li>
+<li class="chapter" data-level="15.3" data-path="chp13.html"><a href="chp13.html#correcting-autocorrelation"><i class="fa fa-check"></i><b>15.3</b> Correcting Autocorrelation</a><ul>
+<li class="chapter" data-level="15.3.1" data-path="chp13.html"><a href="chp13.html#newey-west"><i class="fa fa-check"></i><b>15.3.1</b> Newey-West</a></li>
+<li class="chapter" data-level="15.3.2" data-path="chp13.html"><a href="chp13.html#cochrane-orcutt"><i class="fa fa-check"></i><b>15.3.2</b> Cochrane-Orcutt</a></li>
+</ul></li>
+<li class="chapter" data-level="15.4" data-path="chp13.html"><a href="chp13.html#dynamic-models"><i class="fa fa-check"></i><b>15.4</b> Dynamic Models</a></li>
+<li class="chapter" data-level="15.5" data-path="chp13.html"><a href="chp13.html#dickey-fuller-test"><i class="fa fa-check"></i><b>15.5</b> Dickey-Fuller Test</a></li>
+<li class="chapter" data-level="15.6" data-path="chp13.html"><a href="chp13.html#first-differencing"><i class="fa fa-check"></i><b>15.6</b> First Differencing</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="chp14.html"><a href="chp14.html"><i class="fa fa-check"></i><b>16</b> Advanced OLS</a><ul>
+<li class="chapter" data-level="16.1" data-path="chp14.html"><a href="chp14.html#derive-ols-estimator-matrix-form"><i class="fa fa-check"></i><b>16.1</b> Derive OLS estimator (Matrix Form)</a><ul>
+<li class="chapter" data-level="16.1.1" data-path="chp14.html"><a href="chp14.html#example"><i class="fa fa-check"></i><b>16.1.1</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="16.2" data-path="chp14.html"><a href="chp14.html#gaussmarkov-theorem"><i class="fa fa-check"></i><b>16.2</b> Gauss–Markov Theorem</a><ul>
+<li class="chapter" data-level="16.2.1" data-path="chp14.html"><a href="chp14.html#ols-estimator-is-linear"><i class="fa fa-check"></i><b>16.2.1</b> OLS estimator is linear</a></li>
+<li class="chapter" data-level="16.2.2" data-path="chp14.html"><a href="chp14.html#ols-estimator-is-unbiased"><i class="fa fa-check"></i><b>16.2.2</b> OLS estimator is unbiased</a></li>
+<li class="chapter" data-level="16.2.3" data-path="chp14.html"><a href="chp14.html#variance-covariance-is-a-minimum"><i class="fa fa-check"></i><b>16.2.3</b> Variance-Covariance is a minimum</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="chp14.html"><a href="chp14.html#probability-distributions-in-r-1"><i class="fa fa-check"></i><b>16.3</b> Probability Distributions in R</a><ul>
+<li class="chapter" data-level="16.3.1" data-path="chp14.html"><a href="chp14.html#obtaining-critical-statistics"><i class="fa fa-check"></i><b>16.3.1</b> Obtaining Critical Statistics</a></li>
+<li class="chapter" data-level="16.3.2" data-path="chp14.html"><a href="chp14.html#generating-random-numbers-1"><i class="fa fa-check"></i><b>16.3.2</b> Generating Random Numbers</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="chp15.html"><a href="chp15.html"><i class="fa fa-check"></i><b>17</b> Advanced Panel Data</a><ul>
+<li class="chapter" data-level="17.1" data-path="chp15.html"><a href="chp15.html#the-data"><i class="fa fa-check"></i><b>17.1</b> The Data</a></li>
+<li class="chapter" data-level="17.2" data-path="chp15.html"><a href="chp15.html#variation-within-units"><i class="fa fa-check"></i><b>17.2</b> Variation within Units</a></li>
+<li class="chapter" data-level="17.3" data-path="chp15.html"><a href="chp15.html#two-way-fixed-effects-model"><i class="fa fa-check"></i><b>17.3</b> Two-Way Fixed Effects Model</a></li>
+<li class="chapter" data-level="17.4" data-path="chp15.html"><a href="chp15.html#testing-for-autocorrelation"><i class="fa fa-check"></i><b>17.4</b> Testing for autocorrelation</a></li>
+<li class="chapter" data-level="17.5" data-path="chp15.html"><a href="chp15.html#estimating-hatrho"><i class="fa fa-check"></i><b>17.5</b> Estimating <span class="math inline">\(\hat\rho\)</span></a></li>
+<li class="chapter" data-level="17.6" data-path="chp15.html"><a href="chp15.html#estimate-a-rho-transformed-model"><i class="fa fa-check"></i><b>17.6</b> Estimate a <span class="math inline">\(\rho\)</span>-Transformed Model</a></li>
+<li class="chapter" data-level="17.7" data-path="chp15.html"><a href="chp15.html#lagged-dependent-variable-panel-data-model"><i class="fa fa-check"></i><b>17.7</b> Lagged Dependent Variable Panel Data Model</a></li>
+<li class="chapter" data-level="17.8" data-path="chp15.html"><a href="chp15.html#random-effects-model"><i class="fa fa-check"></i><b>17.8</b> Random Effects Model</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R Companion to <em>Real Econometrics</em></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="cph3" class="section level1">
+<h1><span class="header-section-number">Chapter 5</span> Bivariate OLS: The Foundation of Econometric Analysis</h1>
+<p>We will work through <em>Computing Corner</em>.</p>
+<div id="estimating-a-simple-regression" class="section level2">
+<h2><span class="header-section-number">5.1</span> Estimating a simple regression</h2>
+<p>To run a simple regression in R, make us of the function <code>lm</code>. Like all functions <code>lm</code> requires and argument list. You can see the arguments required and the defaualt values, if any, in a variety of ways in R Studio. <code>args(lm)</code> will return the arguments for the lm function. <code>?lm</code> will open the help page in the Files/Plots/Packages/Help Pane, which can also be accessed by typing lm in the search in the same pane. Estimating a regression using <code>lm</code> requires only two arguments: the formula and data arguments. If you provide those arguments in that order, R doesn’t require that you use the argument’s name. This is true for all functions in R, the default is that the arguments appear in order. We can see by calling <code>str</code> on ols_donuts that <code>lm</code> creates a list object which contains 12 elements. A list is an object that contains elements of several different types like, strings, vectors, matrices, lists, etc. Each of those elements can be extracted from the list in much the same way as accessing pieces of a data frame.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(magrittr)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">load</span>(<span class="st">&quot;donuts.RData&quot;</span>)</a>
+<a class="sourceLine" id="cb1-3" title="3">ols_donuts &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">formula =</span> weight <span class="op">~</span><span class="st"> </span>donuts_per_week, <span class="dt">data =</span> donuts)</a>
+<a class="sourceLine" id="cb1-4" title="4">ols_donuts <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb1-5" title="5"><span class="st">  </span><span class="kw">str</span>()</a></code></pre></div>
+<pre><code>List of 12
+ $ coefficients : Named num [1:2] 121.61 9.22
+  ..- attr(*, &quot;names&quot;)= chr [1:2] &quot;(Intercept)&quot; &quot;donuts_per_week&quot;
+ $ residuals    : Named num [1:13] 24.26 19.39 -51.61 -92.73 3.92 ...
+  ..- attr(*, &quot;names&quot;)= chr [1:13] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...
+ $ effects      : Named num [1:13] -619.6 215.66 -60.24 -99.06 4.49 ...
+  ..- attr(*, &quot;names&quot;)= chr [1:13] &quot;(Intercept)&quot; &quot;donuts_per_week&quot; &quot;&quot; &quot;&quot; ...
+ $ rank         : int 2
+ $ fitted.values: Named num [1:13] 251 122 122 168 306 ...
+  ..- attr(*, &quot;names&quot;)= chr [1:13] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...
+ $ assign       : int [1:2] 0 1
+ $ qr           :List of 5
+  ..$ qr   : num [1:13, 1:2] -3.606 0.277 0.277 0.277 0.277 ...
+  .. ..- attr(*, &quot;dimnames&quot;)=List of 2
+  .. .. ..$ : chr [1:13] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...
+  .. .. ..$ : chr [1:2] &quot;(Intercept)&quot; &quot;donuts_per_week&quot;
+  .. ..- attr(*, &quot;assign&quot;)= int [1:2] 0 1
+  ..$ qraux: num [1:2] 1.28 1.31
+  ..$ pivot: int [1:2] 1 2
+  ..$ tol  : num 0.0000001
+  ..$ rank : int 2
+  ..- attr(*, &quot;class&quot;)= chr &quot;qr&quot;
+ $ df.residual  : int 11
+ $ xlevels      : Named list()
+ $ call         : language lm(formula = weight ~ donuts_per_week, data = donuts)
+ $ terms        :Classes &#39;terms&#39;, &#39;formula&#39;  language weight ~ donuts_per_week
+  .. ..- attr(*, &quot;variables&quot;)= language list(weight, donuts_per_week)
+  .. ..- attr(*, &quot;factors&quot;)= int [1:2, 1] 0 1
+  .. .. ..- attr(*, &quot;dimnames&quot;)=List of 2
+  .. .. .. ..$ : chr [1:2] &quot;weight&quot; &quot;donuts_per_week&quot;
+  .. .. .. ..$ : chr &quot;donuts_per_week&quot;
+  .. ..- attr(*, &quot;term.labels&quot;)= chr &quot;donuts_per_week&quot;
+  .. ..- attr(*, &quot;order&quot;)= int 1
+  .. ..- attr(*, &quot;intercept&quot;)= int 1
+  .. ..- attr(*, &quot;response&quot;)= int 1
+  .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: R_GlobalEnv&gt; 
+  .. ..- attr(*, &quot;predvars&quot;)= language list(weight, donuts_per_week)
+  .. ..- attr(*, &quot;dataClasses&quot;)= Named chr [1:2] &quot;numeric&quot; &quot;numeric&quot;
+  .. .. ..- attr(*, &quot;names&quot;)= chr [1:2] &quot;weight&quot; &quot;donuts_per_week&quot;
+ $ model        :&#39;data.frame&#39;:  13 obs. of  2 variables:
+  ..$ weight         : num [1:13] 275 141 70 75 310 80 160 263 205 185 ...
+  ..$ donuts_per_week: num [1:13] 14 0 0 5 20 0.75 0.25 16 3 2 ...
+  ..- attr(*, &quot;terms&quot;)=Classes &#39;terms&#39;, &#39;formula&#39;  language weight ~ donuts_per_week
+  .. .. ..- attr(*, &quot;variables&quot;)= language list(weight, donuts_per_week)
+  .. .. ..- attr(*, &quot;factors&quot;)= int [1:2, 1] 0 1
+  .. .. .. ..- attr(*, &quot;dimnames&quot;)=List of 2
+  .. .. .. .. ..$ : chr [1:2] &quot;weight&quot; &quot;donuts_per_week&quot;
+  .. .. .. .. ..$ : chr &quot;donuts_per_week&quot;
+  .. .. ..- attr(*, &quot;term.labels&quot;)= chr &quot;donuts_per_week&quot;
+  .. .. ..- attr(*, &quot;order&quot;)= int 1
+  .. .. ..- attr(*, &quot;intercept&quot;)= int 1
+  .. .. ..- attr(*, &quot;response&quot;)= int 1
+  .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: R_GlobalEnv&gt; 
+  .. .. ..- attr(*, &quot;predvars&quot;)= language list(weight, donuts_per_week)
+  .. .. ..- attr(*, &quot;dataClasses&quot;)= Named chr [1:2] &quot;numeric&quot; &quot;numeric&quot;
+  .. .. .. ..- attr(*, &quot;names&quot;)= chr [1:2] &quot;weight&quot; &quot;donuts_per_week&quot;
+ - attr(*, &quot;class&quot;)= chr &quot;lm&quot;</code></pre>
+<p>You can see the type for each of the 12 elements in the list. Each of those elements can be extracted by using the $ convention you use to get variables from a data frame (which is a type of list) as describe in the text. In addition, there are many commands that will extract a standard set of elements and present them in conventional ways. For example, to get the regression results, <code>summary</code> from base R, <code>stargazer</code> from the stargazer package, and <code>tidy</code> and <code>glance</code> from the <code>broom</code> package provide the output in useful ways. <code>augment</code> from the broom package creates a tibble of actual, fitted, residuals, etc. In fact, all of the commands in the <code>broom</code> package create tibbles which can useful for further analysis. <code>stargazer</code> can be modified to include a variety of statistics. So, you can extract fitted values or residuals, e.g., in the same way you retrieve any data from a data frame or tibble.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="kw">library</span>(broom)</a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="kw">library</span>(stargazer)</a>
+<a class="sourceLine" id="cb3-4" title="4">ols_donuts <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb3-5" title="5"><span class="st">  </span><span class="kw">summary</span>()</a></code></pre></div>
+<pre><code>
+Call:
+lm(formula = weight ~ donuts_per_week, data = donuts)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-92.73 -13.51   3.92  36.08  55.72 
+
+Coefficients:
+                Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)       121.61      16.59    7.33 0.000015 ***
+donuts_per_week     9.22       1.96    4.71  0.00064 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 45.8 on 11 degrees of freedom
+Multiple R-squared:  0.668, Adjusted R-squared:  0.638 
+F-statistic: 22.2 on 1 and 11 DF,  p-value: 0.000643</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">ols_donuts <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="st">  </span><span class="kw">stargazer</span>(<span class="dt">type =</span> <span class="st">&quot;text&quot;</span>)</a></code></pre></div>
+<pre><code>
+===============================================
+                        Dependent variable:    
+                    ---------------------------
+                              weight           
+-----------------------------------------------
+donuts_per_week              9.220***          
+                              (1.960)          
+                                               
+Constant                    122.000***         
+                             (16.600)          
+                                               
+-----------------------------------------------
+Observations                    13             
+R2                             0.668           
+Adjusted R2                    0.638           
+Residual Std. Error      45.800 (df = 11)      
+F Statistic           22.200*** (df = 1; 11)   
+===============================================
+Note:               *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">ols_donuts <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb7-2" title="2"><span class="st">  </span><span class="kw">tidy</span>()</a></code></pre></div>
+<pre><code># A tibble: 2 x 5
+  term            estimate std.error statistic   p.value
+  &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)       122.       16.6       7.33 0.0000149
+2 donuts_per_week     9.22      1.96      4.71 0.000643 </code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">ols_donuts <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb9-2" title="2"><span class="st">  </span><span class="kw">glance</span>()</a></code></pre></div>
+<pre><code># A tibble: 1 x 11
+  r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC
+      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1     0.668         0.638  45.8      22.2 6.43e-4     2  -67.1  140.  142.
+# ... with 2 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">ols_donuts <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb11-2" title="2"><span class="st">  </span><span class="kw">augment</span>()</a></code></pre></div>
+<pre><code># A tibble: 13 x 9
+   weight donuts_per_week .fitted .se.fit .resid   .hat .sigma .cooksd
+    &lt;dbl&gt;           &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+ 1    275           14       251.    21.0  24.3  0.211    47.3 0.0474 
+ 2    141            0       122.    16.6  19.4  0.131    47.6 0.0156 
+ 3     70            0       122.    16.6 -51.6  0.131    44.7 0.110  
+ 4     75            5       168.    12.7 -92.7  0.0773   37.1 0.186  
+ 5    310           20       306.    31.2   3.92 0.464    48.0 0.00591
+ 6     80            0.75    129.    15.7 -48.5  0.117    45.2 0.0844 
+ 7    160            0.25    124.    16.3  36.1  0.126    46.5 0.0513 
+ 8    263           16       269.    24.3  -6.19 0.281    48.0 0.00495
+ 9    205            3       149.    13.6  55.7  0.0879   44.4 0.0781 
+10    185            2       140.    14.4  44.9  0.0986   45.7 0.0584 
+11    170            0.8     129.    15.6  41.0  0.116    46.0 0.0597 
+12    155            5       168.    12.7 -12.7  0.0773   47.9 0.00350
+13    145            4       159.    13.0 -13.5  0.0807   47.8 0.00415
+# ... with 1 more variable: .std.resid &lt;dbl&gt;</code></pre>
+</div>
+<div id="scatter-plot-with-regression-line" class="section level2">
+<h2><span class="header-section-number">5.2</span> scatter Plot with Regression Line</h2>
+<p>ggplot2 makes adding a fitted regression line to a scatter plot very easy. You need only add a geometry called geom_smooth with the appropriate method to plot. The default is to include a confidence interval estimate around the fitted line. To remove the error band add the option <code>se = FALSE</code>.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">donuts <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb13-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> donuts_per_week, <span class="dt">y =</span> weight)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb13-3" title="3"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb13-4" title="4"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)</a></code></pre></div>
+<p><img src="bailey_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+<div id="subsetting-data-for-regressions" class="section level2">
+<h2><span class="header-section-number">5.3</span> Subsetting Data for Regressions</h2>
+<p>Subsetting can be directly done with the <code>subset</code> option in the <code>lm</code> call. To run a regression that excludes the Homer record, use the option <code>subset = (name != "Homer")</code>.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">ols_no_homer &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">formula =</span> weight <span class="op">~</span><span class="st"> </span>donuts_per_week, <span class="dt">data =</span> donuts, <span class="dt">subset =</span> (name <span class="op">!=</span><span class="st"> &quot;Homer&quot;</span>))</a>
+<a class="sourceLine" id="cb14-2" title="2">ols_no_homer <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb14-3" title="3"><span class="st">  </span><span class="kw">tidy</span>()</a></code></pre></div>
+<pre><code># A tibble: 2 x 5
+  term            estimate std.error statistic   p.value
+  &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)       122.       17.1       7.12 0.0000323
+2 donuts_per_week     8.74      2.19      4.00 0.00252  </code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">ols_no_homer <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb16-2" title="2"><span class="st">  </span><span class="kw">summary</span>()</a></code></pre></div>
+<pre><code>
+Call:
+lm(formula = weight ~ donuts_per_week, data = donuts, subset = (name != 
+    &quot;Homer&quot;))
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-90.58 -20.99   7.26  37.24  56.90 
+
+Coefficients:
+                Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)       121.87      17.13    7.12 0.000032 ***
+donuts_per_week     8.74       2.19    4.00   0.0025 ** 
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 47.3 on 10 degrees of freedom
+Multiple R-squared:  0.615, Adjusted R-squared:  0.577 
+F-statistic:   16 on 1 and 10 DF,  p-value: 0.00252</code></pre>
+<p>Alternatively we can make use of <code>filter</code> from the <code>dplyr</code> package. Recall, <code>filter</code> is the data manipulation verb that chooses observations in a data frame. I introduce the exposition operator <code>%$%</code> from the magrittr package. <code>%$%</code> is useful at the end of a pipeline to expose your manipulated data to function. You can use it with <code>subset</code> or <code>filter</code>.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1">donuts <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb18-2" title="2"><span class="st">  </span><span class="kw">subset</span>(name <span class="op">!=</span><span class="st"> &quot;Homer&quot;</span>) <span class="op">%$%</span></a>
+<a class="sourceLine" id="cb18-3" title="3"><span class="st">  </span><span class="kw">lm</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week)</a></code></pre></div>
+<pre><code>
+Call:
+lm(formula = weight ~ donuts_per_week)
+
+Coefficients:
+    (Intercept)  donuts_per_week  
+         121.87             8.74  </code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">donuts <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb20-2" title="2"><span class="st">  </span><span class="kw">filter</span>(name <span class="op">!=</span><span class="st"> &quot;Homer&quot;</span>) <span class="op">%$%</span></a>
+<a class="sourceLine" id="cb20-3" title="3"><span class="st">  </span><span class="kw">lm</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week)</a></code></pre></div>
+<pre><code>
+Call:
+lm(formula = weight ~ donuts_per_week)
+
+Coefficients:
+    (Intercept)  donuts_per_week  
+         121.87             8.74  </code></pre>
+<p>To include those observations where weight is greater than 100:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1">donuts <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb22-2" title="2"><span class="st">  </span><span class="kw">subset</span>(weight <span class="op">&gt;</span><span class="st"> </span><span class="dv">100</span>) <span class="op">%$%</span></a>
+<a class="sourceLine" id="cb22-3" title="3"><span class="st">  </span><span class="kw">lm</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week)</a></code></pre></div>
+<pre><code>
+Call:
+lm(formula = weight ~ donuts_per_week)
+
+Coefficients:
+    (Intercept)  donuts_per_week  
+         151.05             7.66  </code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1">donuts <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb24-2" title="2"><span class="st">  </span><span class="kw">filter</span>(weight <span class="op">&gt;</span><span class="st"> </span><span class="dv">100</span>) <span class="op">%$%</span></a>
+<a class="sourceLine" id="cb24-3" title="3"><span class="st">  </span><span class="kw">lm</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week)</a></code></pre></div>
+<pre><code>
+Call:
+lm(formula = weight ~ donuts_per_week)
+
+Coefficients:
+    (Intercept)  donuts_per_week  
+         151.05             7.66  </code></pre>
+</div>
+<div id="heteroscesdasticity-consistent-standard-errors." class="section level2">
+<h2><span class="header-section-number">5.4</span> Heteroscesdasticity-consistent standard errors.</h2>
+<p>The <code>estimatr</code> package allows you to directly calculate robust standard errors.</p>
+<p>R Studio allows you to install packages in the Files/Plots/Packages/Help Pane by clicking on the Install icon on the Packages tab; as you type the name of the package, you will see completion suggestions. Choose the package you wish to install and R Studio will install it. You can load a package by checking the box next to its name in the Packages tab. Clicking on the packages name will bring up info about the pacakge.</p>
+<p>Call <code>lm_robust()</code> to estimate an OLS model with robust standard errors with the <code>se_type = "HC0</code> option for the most common method of generating robust standard errors.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1"><span class="kw">library</span>(estimatr)</a>
+<a class="sourceLine" id="cb26-2" title="2">ols_robust &lt;-<span class="st"> </span><span class="kw">lm_robust</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week, donuts, <span class="dt">se_type =</span> <span class="st">&quot;HC0&quot;</span>)</a>
+<a class="sourceLine" id="cb26-3" title="3">ols_robust <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb26-4" title="4"><span class="st">  </span><span class="kw">tidy</span>()</a></code></pre></div>
+<pre><code>             term estimate std.error statistic    p.value conf.low
+1     (Intercept)   121.61     15.87      7.66 0.00000983    86.68
+2 donuts_per_week     9.22      1.02      9.07 0.00000194     6.99
+  conf.high df outcome
+1     156.5 11  weight
+2      11.5 11  weight</code></pre>
+</div>
+<div id="generating-random-numbers" class="section level2">
+<h2><span class="header-section-number">5.5</span> Generating Random Numbers</h2>
+<p>Random numbers can be useful in variety of applications in econometrics. One application is simulation, where we simulate observations to demonstrate properties of OLS estimators, eg. Once you’ve decided the distribution from which your random numbers will be drawn and the number of draws you wish to make, you will create a vector of those observations. The most intuitive form of random number generation is <code>sample</code>. Suppose you wanted to simulate the role of a single die, use <code>sample(1:6,1)</code> or using the pipe operator <code>1:6 %&gt;% sample(1)</code>. Read the command aloud like this “from the integers 1, 2, 3, 4, 5, 6, choose a sample of size 1.” You can choose larger samples by changing the size argument. The size argument can not be larger than the number of integers unless the default option of replace = FALSE, is changed to replace = TRUE. To generate a simulation of 100 rolls of a single die call <code>1:6 %&gt;% sample(100, replace = TRUE)</code>.</p>
+<p>Random numbers may be generate from any probability distribution. The random number generator function for a given probability distribution begins with the letter r followed by the name of the distribution in r. To generate uniform random numbers between 0 and 1, use <code>runif</code>, from a normal distribution use <code>rnorm</code>, etc. Use <code>args(distribution name)</code> or <code>?distribution name</code> to find out more about the necessary arguments for individual distributions.</p>
+</div>
+<div id="simulations" class="section level2">
+<h2><span class="header-section-number">5.6</span> Simulations</h2>
+<p>Monte Carlo simulations are a useful tool for understanding how the value of an estimator changes as the sample data changes. Consider the example of rolling a single die n times and calculating the average number of pips on the side up face of the die. We know that <span class="math inline">\(\bar X\)</span> is an ubiased estimator of <span class="math inline">\(\mu\)</span>. Recall that an estimator, <span class="math inline">\(\hat\theta\)</span> is unbiased if <span class="math inline">\(E(\hat\theta) = \theta\)</span>. We can show that <span class="math inline">\(E(\bar X) = \mu\)</span>. Let <span class="math display">\[\bar X = \frac{\sum{x_i}}{n}\]</span></p>
+<p>Then, <span class="math display">\[\begin{aligned}
+E(\bar{X}) &amp;= E\left( \frac{\sum{x_i}}{n} \right)\\
+&amp;= \frac{1}{n}\sum{E(x_i)} \\
+&amp;= \frac{1}{n}\sum{\mu}\\
+&amp;= \frac{1}{n}n\mu\\
+&amp;= \mu
+\end{aligned}\]</span></p>
+<p>So, we would expect <span class="math inline">\(\bar X = 3.5\)</span> since <span class="math inline">\(\mu = 3.5\)</span>. Simulating 100 rolls of a single die 1000 times would allow us to look at the sampling distribution of the sample mean. This will allow us to see the range of values that <span class="math inline">\(\bar X\)</span> might take on.</p>
+<p>Perform a Monte Carlo simulation by generating many samples, find the value of the estimator, and investigate it’s distribution. We could do this by generating a single sample, calculating the value of the estimator, and repeating the desired number of times. This would be tedious. We can instead make use of the concept of a loop in R. A loop evaluates the same code repeatedly until some threshold is met.</p>
+<p>There are two types of loops in R, for loops and while loops. A for loop runs the code a specific number of times; a while loop runs the code until a logical condition is met. We will use a for loop to run our simulation. First, instruct R on the number of times to run through the loop. The loop itself is contained between the braces {}.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1"><span class="co"># library(tidyverse)</span></a>
+<a class="sourceLine" id="cb28-2" title="2">xbar &lt;-<span class="st"> </span><span class="dv">1</span> <span class="co"># initialize the vector to store the observations of x bar</span></a>
+<a class="sourceLine" id="cb28-3" title="3"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">1000</span>) {</a>
+<a class="sourceLine" id="cb28-4" title="4">  x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">6</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample</span>(<span class="dv">100</span>, <span class="dt">replace =</span> T)</a>
+<a class="sourceLine" id="cb28-5" title="5">  xbar[i] &lt;-<span class="st"> </span><span class="kw">mean</span>(x)</a>
+<a class="sourceLine" id="cb28-6" title="6">}</a>
+<a class="sourceLine" id="cb28-7" title="7">xbar <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb28-8" title="8"><span class="st">  </span><span class="kw">mean</span>() <span class="co"># find the mean of the 1000</span></a></code></pre></div>
+<pre><code>[1] 3.49</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1">xbar <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb30-2" title="2"><span class="st">  </span><span class="kw">as.data.frame</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># coerce xbar to a data frame</span></a>
+<a class="sourceLine" id="cb30-3" title="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> xbar)) <span class="op">+</span><span class="st"> </span><span class="co"># map xbar to x</span></a>
+<a class="sourceLine" id="cb30-4" title="4"><span class="st">  </span><span class="kw">geom_density</span>() <span class="op">+</span><span class="st"> </span><span class="co"># geom_density creates a &quot;probability distribution&quot;</span></a>
+<a class="sourceLine" id="cb30-5" title="5"><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="fl">3.5</span>) <span class="co"># place a verticle line at the mean.</span></a></code></pre></div>
+<p><img src="bailey_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>We could do the same thing with the simple linear regression <span class="math inline">\(Y_i = \beta_0+\beta_1X_i+\epsilon_i\)</span>. We know the OLS estimator of <span class="math inline">\(\beta_1\)</span> is <span class="math inline">\(\hat\beta_1\)</span>. The value of the estimator, called the estimate, depends upon the particular sample that is drawn. Monte Carlo simulation will allows to see how the estimate changes across many samples.</p>
+<p>For <span class="math inline">\(\hat\beta_j\)</span> to be an unbiased esitmator of <span class="math inline">\(\beta_j\)</span>, <span class="math inline">\(E(\hat\beta_j) = \beta_j\)</span>. The proof is beyond the scope of this manual, but you will see or have seen the proof.</p>
+<p>Suppose we perform a Monte Carlo simulation with know values of <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> where the error term <span class="math inline">\(\epsilon_i\)</span> is drawn from a normal distribution with a mean of zero and a constant variance, i.e., <span class="math inline">\(\epsilon_i ~ N(0, \sigma^2)\)</span>, will the estimates be statistically the same as the known parameters. Let’s find out. Suppose the population regression function is <span class="math inline">\(y_i = 10 + 3x_i\)</span>,</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" title="1">n &lt;-<span class="st"> </span><span class="dv">50</span></a>
+<a class="sourceLine" id="cb31-2" title="2">N &lt;-<span class="st"> </span><span class="dv">1000</span> <span class="co"># of simulations</span></a>
+<a class="sourceLine" id="cb31-3" title="3">beta_<span class="dv">0</span> &lt;-<span class="st"> </span><span class="dv">10</span></a>
+<a class="sourceLine" id="cb31-4" title="4">beta_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="dv">3</span></a>
+<a class="sourceLine" id="cb31-5" title="5">beta_hat_<span class="dv">0</span> &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb31-6" title="6">beta_hat_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb31-7" title="7">y &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb31-8" title="8">x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">10</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample</span>(n, <span class="dt">replace =</span> T) <span class="co"># we would determine x here if x were fixed in repeated sampling</span></a>
+<a class="sourceLine" id="cb31-9" title="9"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>N) {</a>
+<a class="sourceLine" id="cb31-10" title="10"> x &lt;-<span class="st"> </span><span class="dv">0</span><span class="op">:</span><span class="dv">10</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample</span>(n, <span class="dt">replace =</span> T)</a>
+<a class="sourceLine" id="cb31-11" title="11"> epsilon &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n, <span class="dv">0</span> , <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb31-12" title="12"> y &lt;-<span class="st">  </span>beta_<span class="dv">0</span> <span class="op">+</span><span class="st"> </span>beta_<span class="dv">1</span><span class="op">*</span>x <span class="op">+</span><span class="st"> </span>epsilon</a>
+<a class="sourceLine" id="cb31-13" title="13"> beta_hat_<span class="dv">0</span>[i] &lt;-<span class="st"> </span><span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x)<span class="op">$</span>coef[<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb31-14" title="14"> beta_hat_<span class="dv">1</span>[i] &lt;-<span class="st"> </span><span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x)<span class="op">$</span>coef[<span class="dv">2</span>]</a>
+<a class="sourceLine" id="cb31-15" title="15">}</a>
+<a class="sourceLine" id="cb31-16" title="16"><span class="co">#</span></a>
+<a class="sourceLine" id="cb31-17" title="17">beta_hat_<span class="dv">0</span> <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb31-18" title="18"><span class="st">  </span><span class="kw">mean</span>()</a></code></pre></div>
+<pre><code>[1] 10.1</code></pre>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1">beta_hat_<span class="dv">1</span> <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb33-2" title="2"><span class="st">  </span><span class="kw">mean</span>()</a></code></pre></div>
+<pre><code>[1] 2.99</code></pre>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" title="1">beta_hat_<span class="dv">0</span> <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb35-2" title="2"><span class="kw">as.data.frame</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb35-3" title="3"><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> beta_hat_<span class="dv">0</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb35-4" title="4"><span class="kw">geom_density</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb35-5" title="5"><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">10</span>)</a></code></pre></div>
+<p><img src="bailey_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" title="1">beta_hat_<span class="dv">1</span> <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb36-2" title="2"><span class="kw">as.data.frame</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb36-3" title="3"><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> beta_hat_<span class="dv">1</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb36-4" title="4"><span class="kw">geom_density</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb36-5" title="5"><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">3</span>)</a></code></pre></div>
+<p><img src="bailey_files/figure-html/unnamed-chunk-11-2.png" width="672" /></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="chp2.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="chp4.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["bailey.pdf", "bailey.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

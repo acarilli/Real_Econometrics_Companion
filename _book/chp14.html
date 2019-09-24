@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 16 Advanced OLS | R Companion to Real Econometrics</title>
+  <meta name="description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 16 Advanced OLS | R Companion to Real Econometrics" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 16 Advanced OLS | R Companion to Real Econometrics" />
+  
+  <meta name="twitter:description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  
+
+<meta name="author" content="Tony Carilli" />
+
+
+<meta name="date" content="2019-09-23" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="chp13.html"/>
+<link rel="next" href="chp15.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">R Companion to *Real Econometrics*</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a><ul>
+<li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#install-r-and-rstudio"><i class="fa fa-check"></i><b>2.1</b> Install R and RStudio</a></li>
+<li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#using-rstudio"><i class="fa fa-check"></i><b>2.2</b> Using RStudio</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="intro.html"><a href="intro.html#source-pane"><i class="fa fa-check"></i><b>2.2.1</b> Source Pane</a></li>
+<li class="chapter" data-level="2.2.2" data-path="intro.html"><a href="intro.html#environmenthistory-pane"><i class="fa fa-check"></i><b>2.2.2</b> Environment/History Pane</a></li>
+<li class="chapter" data-level="2.2.3" data-path="intro.html"><a href="intro.html#console-pane"><i class="fa fa-check"></i><b>2.2.3</b> Console Pane</a></li>
+<li class="chapter" data-level="2.2.4" data-path="intro.html"><a href="intro.html#filesplotspackageshelp-pane"><i class="fa fa-check"></i><b>2.2.4</b> Files/Plots/Packages/Help Pane</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="intro.html"><a href="intro.html#r-markdown"><i class="fa fa-check"></i><b>2.3</b> R Markdown</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="chp1.html"><a href="chp1.html"><i class="fa fa-check"></i><b>3</b> The Quest for Causality</a><ul>
+<li class="chapter" data-level="3.1" data-path="chp1.html"><a href="chp1.html#introduction"><i class="fa fa-check"></i><b>3.1</b> Introduction</a><ul>
+<li class="chapter" data-level="3.1.1" data-path="chp1.html"><a href="chp1.html#table-1.1"><i class="fa fa-check"></i><b>3.1.1</b> Table 1.1</a></li>
+<li class="chapter" data-level="3.1.2" data-path="chp1.html"><a href="chp1.html#figure-1.2"><i class="fa fa-check"></i><b>3.1.2</b> Figure 1.2</a></li>
+<li class="chapter" data-level="3.1.3" data-path="chp1.html"><a href="chp1.html#figure-1.3"><i class="fa fa-check"></i><b>3.1.3</b> Figure 1.3</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="chp2.html"><a href="chp2.html"><i class="fa fa-check"></i><b>4</b> Stats in the Wild: Good Data Practices</a><ul>
+<li class="chapter" data-level="4.1" data-path="chp2.html"><a href="chp2.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
+<li class="chapter" data-level="4.2" data-path="chp2.html"><a href="chp2.html#table-and-figure-reproduction"><i class="fa fa-check"></i><b>4.2</b> Table and Figure Reproduction</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="chp2.html"><a href="chp2.html#table-2.1"><i class="fa fa-check"></i><b>4.2.1</b> Table 2.1</a></li>
+<li class="chapter" data-level="4.2.2" data-path="chp2.html"><a href="chp2.html#table-2.2"><i class="fa fa-check"></i><b>4.2.2</b> Table 2.2</a></li>
+<li class="chapter" data-level="4.2.3" data-path="chp2.html"><a href="chp2.html#table-2.5"><i class="fa fa-check"></i><b>4.2.3</b> Table 2.5</a></li>
+<li class="chapter" data-level="4.2.4" data-path="chp2.html"><a href="chp2.html#figure-2.3"><i class="fa fa-check"></i><b>4.2.4</b> Figure 2.3</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="chp2.html"><a href="chp2.html#computing-center"><i class="fa fa-check"></i><b>4.3</b> Computing Center</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="chp2.html"><a href="chp2.html#reading-data"><i class="fa fa-check"></i><b>4.3.1</b> Reading Data</a></li>
+<li class="chapter" data-level="4.3.2" data-path="chp2.html"><a href="chp2.html#manually-entering-data"><i class="fa fa-check"></i><b>4.3.2</b> Manually Entering Data</a></li>
+<li class="chapter" data-level="4.3.3" data-path="chp2.html"><a href="chp2.html#simple-statistics"><i class="fa fa-check"></i><b>4.3.3</b> Simple Statistics</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="cph3.html"><a href="cph3.html"><i class="fa fa-check"></i><b>5</b> Bivariate OLS: The Foundation of Econometric Analysis</a><ul>
+<li class="chapter" data-level="5.1" data-path="cph3.html"><a href="cph3.html#estimating-a-simple-regression"><i class="fa fa-check"></i><b>5.1</b> Estimating a simple regression</a></li>
+<li class="chapter" data-level="5.2" data-path="cph3.html"><a href="cph3.html#scatter-plot-with-regression-line"><i class="fa fa-check"></i><b>5.2</b> scatter Plot with Regression Line</a></li>
+<li class="chapter" data-level="5.3" data-path="cph3.html"><a href="cph3.html#subsetting-data-for-regressions"><i class="fa fa-check"></i><b>5.3</b> Subsetting Data for Regressions</a></li>
+<li class="chapter" data-level="5.4" data-path="cph3.html"><a href="cph3.html#heteroscesdasticity-consistent-standard-errors."><i class="fa fa-check"></i><b>5.4</b> Heteroscesdasticity-consistent standard errors.</a></li>
+<li class="chapter" data-level="5.5" data-path="cph3.html"><a href="cph3.html#generating-random-numbers"><i class="fa fa-check"></i><b>5.5</b> Generating Random Numbers</a></li>
+<li class="chapter" data-level="5.6" data-path="cph3.html"><a href="cph3.html#simulations"><i class="fa fa-check"></i><b>5.6</b> Simulations</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="chp4.html"><a href="chp4.html"><i class="fa fa-check"></i><b>6</b> Hypothesis Testing and Interval Estimation; Answering Research Questions</a><ul>
+<li class="chapter" data-level="6.1" data-path="chp4.html"><a href="chp4.html#computing-corner"><i class="fa fa-check"></i><b>6.1</b> Computing Corner</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="chp4.html"><a href="chp4.html#probability-distributions-in-r"><i class="fa fa-check"></i><b>6.1.1</b> Probability Distributions in R</a></li>
+<li class="chapter" data-level="6.1.2" data-path="chp4.html"><a href="chp4.html#critical-values-in-r"><i class="fa fa-check"></i><b>6.1.2</b> Critical Values in R</a></li>
+<li class="chapter" data-level="6.1.3" data-path="chp4.html"><a href="chp4.html#confidence-intervals-for-ols-estimates"><i class="fa fa-check"></i><b>6.1.3</b> Confidence Intervals for OLS estimates</a></li>
+<li class="chapter" data-level="6.1.4" data-path="chp4.html"><a href="chp4.html#power-curves"><i class="fa fa-check"></i><b>6.1.4</b> Power Curves</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="chp5.html"><a href="chp5.html"><i class="fa fa-check"></i><b>7</b> Multivariate OLS: Where the Action Is</a><ul>
+<li class="chapter" data-level="7.1" data-path="chp5.html"><a href="chp5.html#computing-corner-1"><i class="fa fa-check"></i><b>7.1</b> Computing Corner</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="chp5.html"><a href="chp5.html#multiple-regression"><i class="fa fa-check"></i><b>7.1.1</b> Multiple Regression</a></li>
+<li class="chapter" data-level="7.1.2" data-path="chp5.html"><a href="chp5.html#multicollinearity"><i class="fa fa-check"></i><b>7.1.2</b> Multicollinearity</a></li>
+<li class="chapter" data-level="7.1.3" data-path="chp5.html"><a href="chp5.html#standardized-coefficients"><i class="fa fa-check"></i><b>7.1.3</b> Standardized Coefficients</a></li>
+<li class="chapter" data-level="7.1.4" data-path="chp5.html"><a href="chp5.html#f-tests"><i class="fa fa-check"></i><b>7.1.4</b> <em>F</em> tests</a></li>
+<li class="chapter" data-level="7.1.5" data-path="chp5.html"><a href="chp5.html#examples"><i class="fa fa-check"></i><b>7.1.5</b> Examples</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="chp6.html"><a href="chp6.html"><i class="fa fa-check"></i><b>8</b> Dummy Variables: Smarter than You Think</a><ul>
+<li class="chapter" data-level="8.1" data-path="chp6.html"><a href="chp6.html#dummy-variables-in-r"><i class="fa fa-check"></i><b>8.1</b> Dummy Variables in R</a><ul>
+<li class="chapter" data-level="8.1.1" data-path="chp6.html"><a href="chp6.html#factors"><i class="fa fa-check"></i><b>8.1.1</b> Factors</a></li>
+<li class="chapter" data-level="8.1.2" data-path="chp6.html"><a href="chp6.html#character-vectors-as-dummies"><i class="fa fa-check"></i><b>8.1.2</b> Character Vectors as Dummies</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="chp6.html"><a href="chp6.html#difference-in-means-test"><i class="fa fa-check"></i><b>8.2</b> Difference in Means Test</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="chp6.html"><a href="chp6.html#using-t.test"><i class="fa fa-check"></i><b>8.2.1</b> Using <code>t.test</code></a></li>
+<li class="chapter" data-level="8.2.2" data-path="chp6.html"><a href="chp6.html#using-lm-and-lm_robust"><i class="fa fa-check"></i><b>8.2.2</b> Using <code>lm</code> and <code>lm_robust</code></a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="chp6.html"><a href="chp6.html#integer-and-numerical-vectors-as-dummy-variables"><i class="fa fa-check"></i><b>8.3</b> Integer and Numerical Vectors as Dummy Variables</a></li>
+<li class="chapter" data-level="8.4" data-path="chp6.html"><a href="chp6.html#manipulating-factors"><i class="fa fa-check"></i><b>8.4</b> Manipulating Factors</a></li>
+<li class="chapter" data-level="8.5" data-path="chp6.html"><a href="chp6.html#dummy-interaction-variables"><i class="fa fa-check"></i><b>8.5</b> Dummy Interaction Variables</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="chp7.html"><a href="chp7.html"><i class="fa fa-check"></i><b>9</b> Specifying Models</a><ul>
+<li class="chapter" data-level="9.1" data-path="chp7.html"><a href="chp7.html#polynomial-models"><i class="fa fa-check"></i><b>9.1</b> Polynomial Models</a></li>
+<li class="chapter" data-level="9.2" data-path="chp7.html"><a href="chp7.html#logarithmic"><i class="fa fa-check"></i><b>9.2</b> Logarithmic</a><ul>
+<li class="chapter" data-level="9.2.1" data-path="chp7.html"><a href="chp7.html#constant-elasticity-log-log-or-double-log"><i class="fa fa-check"></i><b>9.2.1</b> Constant Elasticity (log-log or double log)</a></li>
+<li class="chapter" data-level="9.2.2" data-path="chp7.html"><a href="chp7.html#constant-growth-in-a-dependent-variable-log-lin-or-semilog"><i class="fa fa-check"></i><b>9.2.2</b> Constant Growth in a Dependent Variable (log-lin or semilog)</a></li>
+<li class="chapter" data-level="9.2.3" data-path="chp7.html"><a href="chp7.html#constant-change-in-dependent-variable-lin-log"><i class="fa fa-check"></i><b>9.2.3</b> Constant % Change in Dependent Variable (lin-log)</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="chp7.html"><a href="chp7.html#other-useful-functional-forms"><i class="fa fa-check"></i><b>9.3</b> Other Useful Functional Forms</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="chp8.html"><a href="chp8.html"><i class="fa fa-check"></i><b>10</b> Using Fixed Effects Models to Fight Endogeneity in Panel Data and Difference–in–Difference Models</a><ul>
+<li class="chapter" data-level="10.1" data-path="chp8.html"><a href="chp8.html#simpsons-paradox"><i class="fa fa-check"></i><b>10.1</b> Simpson’s Paradox</a></li>
+<li class="chapter" data-level="10.2" data-path="chp8.html"><a href="chp8.html#figures-8.1-8.3"><i class="fa fa-check"></i><b>10.2</b> Figures 8.1-8.3</a></li>
+<li class="chapter" data-level="10.3" data-path="chp8.html"><a href="chp8.html#one-way-fixed-effects-models"><i class="fa fa-check"></i><b>10.3</b> One-Way Fixed Effects Models</a><ul>
+<li class="chapter" data-level="10.3.1" data-path="chp8.html"><a href="chp8.html#lsdv-approach"><i class="fa fa-check"></i><b>10.3.1</b> LSDV Approach</a></li>
+<li class="chapter" data-level="10.3.2" data-path="chp8.html"><a href="chp8.html#f-test-for-significance-of-fixed-effects."><i class="fa fa-check"></i><b>10.3.2</b> <em>F</em>-test for significance of fixed effects.</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="chp8.html"><a href="chp8.html#de-meaned-approach"><i class="fa fa-check"></i><b>10.4</b> De-Meaned approach</a><ul>
+<li class="chapter" data-level="10.4.1" data-path="chp8.html"><a href="chp8.html#manually-de-mean"><i class="fa fa-check"></i><b>10.4.1</b> Manually De-Mean</a></li>
+<li class="chapter" data-level="10.4.2" data-path="chp8.html"><a href="chp8.html#using-the-plm-package"><i class="fa fa-check"></i><b>10.4.2</b> Using the <code>plm</code> package</a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="chp8.html"><a href="chp8.html#two-way-fixed-effects-models"><i class="fa fa-check"></i><b>10.5</b> Two-Way Fixed Effects Models</a><ul>
+<li class="chapter" data-level="10.5.1" data-path="chp8.html"><a href="chp8.html#time-as-a-factor"><i class="fa fa-check"></i><b>10.5.1</b> Time as a factor</a></li>
+<li class="chapter" data-level="10.5.2" data-path="chp8.html"><a href="chp8.html#effect-twoways"><i class="fa fa-check"></i><b>10.5.2</b> effect = “twoways”</a></li>
+</ul></li>
+<li class="chapter" data-level="10.6" data-path="chp8.html"><a href="chp8.html#difference-in-difference-models"><i class="fa fa-check"></i><b>10.6</b> Difference-in-Difference Models</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="chp9.html"><a href="chp9.html"><i class="fa fa-check"></i><b>11</b> Instrumental Variables: Using Exogenous Variation to Fight Endogeneity</a><ul>
+<li class="chapter" data-level="11.1" data-path="chp9.html"><a href="chp9.html#stage-least-squares"><i class="fa fa-check"></i><b>11.1</b> 2 Stage Least Squares</a></li>
+<li class="chapter" data-level="11.2" data-path="chp9.html"><a href="chp9.html#explanatory-power-of-the-instruments"><i class="fa fa-check"></i><b>11.2</b> Explanatory power of the instruments</a></li>
+<li class="chapter" data-level="11.3" data-path="chp9.html"><a href="chp9.html#estimating-simultaneous-equation-model"><i class="fa fa-check"></i><b>11.3</b> Estimating Simultaneous Equation Model</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="chp10.html"><a href="chp10.html"><i class="fa fa-check"></i><b>12</b> Experiments: Dealing with Real–World Challenges</a><ul>
+<li class="chapter" data-level="12.1" data-path="chp10.html"><a href="chp10.html#assess-balance"><i class="fa fa-check"></i><b>12.1</b> Assess Balance</a></li>
+<li class="chapter" data-level="12.2" data-path="chp10.html"><a href="chp10.html#estimate-itt-model"><i class="fa fa-check"></i><b>12.2</b> Estimate ITT Model</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="chp11.html"><a href="chp11.html"><i class="fa fa-check"></i><b>13</b> Regression Discontinuity: Looking for Jumps in Data</a><ul>
+<li class="chapter" data-level="13.1" data-path="chp11.html"><a href="chp11.html#same-slope"><i class="fa fa-check"></i><b>13.1</b> Same slope</a></li>
+<li class="chapter" data-level="13.2" data-path="chp11.html"><a href="chp11.html#varying-slopes"><i class="fa fa-check"></i><b>13.2</b> Varying Slopes</a></li>
+<li class="chapter" data-level="13.3" data-path="chp11.html"><a href="chp11.html#plot-rd-model"><i class="fa fa-check"></i><b>13.3</b> Plot RD Model</a></li>
+<li class="chapter" data-level="13.4" data-path="chp11.html"><a href="chp11.html#rddtools-package"><i class="fa fa-check"></i><b>13.4</b> <code>rddtools</code> package</a><ul>
+<li class="chapter" data-level="13.4.1" data-path="chp11.html"><a href="chp11.html#same-slope-1"><i class="fa fa-check"></i><b>13.4.1</b> Same slope</a></li>
+<li class="chapter" data-level="13.4.2" data-path="chp11.html"><a href="chp11.html#varying-slopes-1"><i class="fa fa-check"></i><b>13.4.2</b> Varying Slopes</a></li>
+<li class="chapter" data-level="13.4.3" data-path="chp11.html"><a href="chp11.html#scatter-plot"><i class="fa fa-check"></i><b>13.4.3</b> Scatter Plot</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="chp12.html"><a href="chp12.html"><i class="fa fa-check"></i><b>14</b> Dummy Dependent Variables</a><ul>
+<li class="chapter" data-level="14.1" data-path="chp12.html"><a href="chp12.html#probit-estimation"><i class="fa fa-check"></i><b>14.1</b> Probit Estimation</a><ul>
+<li class="chapter" data-level="14.1.1" data-path="chp12.html"><a href="chp12.html#eda"><i class="fa fa-check"></i><b>14.1.1</b> EDA</a></li>
+<li class="chapter" data-level="14.1.2" data-path="chp12.html"><a href="chp12.html#estimate-the-model"><i class="fa fa-check"></i><b>14.1.2</b> Estimate the model</a></li>
+<li class="chapter" data-level="14.1.3" data-path="chp12.html"><a href="chp12.html#estimated-effects"><i class="fa fa-check"></i><b>14.1.3</b> Estimated Effects</a></li>
+</ul></li>
+<li class="chapter" data-level="14.2" data-path="chp12.html"><a href="chp12.html#logit-estimation"><i class="fa fa-check"></i><b>14.2</b> Logit Estimation</a><ul>
+<li class="chapter" data-level="14.2.1" data-path="chp12.html"><a href="chp12.html#discrete-differences"><i class="fa fa-check"></i><b>14.2.1</b> Discrete Differences</a></li>
+<li class="chapter" data-level="14.2.2" data-path="chp12.html"><a href="chp12.html#marginal-effects-1"><i class="fa fa-check"></i><b>14.2.2</b> Marginal Effects</a></li>
+</ul></li>
+<li class="chapter" data-level="14.3" data-path="chp12.html"><a href="chp12.html#testing-hypotheses"><i class="fa fa-check"></i><b>14.3</b> Testing Hypotheses</a></li>
+<li class="chapter" data-level="14.4" data-path="chp12.html"><a href="chp12.html#graphing-probit-and-logit-models"><i class="fa fa-check"></i><b>14.4</b> Graphing Probit and Logit Models</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="chp13.html"><a href="chp13.html"><i class="fa fa-check"></i><b>15</b> Time Series: Dealing with Stickiness over Time</a><ul>
+<li class="chapter" data-level="15.1" data-path="chp13.html"><a href="chp13.html#time-series-objects-in-r"><i class="fa fa-check"></i><b>15.1</b> Time Series Objects in R</a></li>
+<li class="chapter" data-level="15.2" data-path="chp13.html"><a href="chp13.html#detecting-autocorrelation"><i class="fa fa-check"></i><b>15.2</b> Detecting Autocorrelation</a></li>
+<li class="chapter" data-level="15.3" data-path="chp13.html"><a href="chp13.html#correcting-autocorrelation"><i class="fa fa-check"></i><b>15.3</b> Correcting Autocorrelation</a><ul>
+<li class="chapter" data-level="15.3.1" data-path="chp13.html"><a href="chp13.html#newey-west"><i class="fa fa-check"></i><b>15.3.1</b> Newey-West</a></li>
+<li class="chapter" data-level="15.3.2" data-path="chp13.html"><a href="chp13.html#cochrane-orcutt"><i class="fa fa-check"></i><b>15.3.2</b> Cochrane-Orcutt</a></li>
+</ul></li>
+<li class="chapter" data-level="15.4" data-path="chp13.html"><a href="chp13.html#dynamic-models"><i class="fa fa-check"></i><b>15.4</b> Dynamic Models</a></li>
+<li class="chapter" data-level="15.5" data-path="chp13.html"><a href="chp13.html#dickey-fuller-test"><i class="fa fa-check"></i><b>15.5</b> Dickey-Fuller Test</a></li>
+<li class="chapter" data-level="15.6" data-path="chp13.html"><a href="chp13.html#first-differencing"><i class="fa fa-check"></i><b>15.6</b> First Differencing</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="chp14.html"><a href="chp14.html"><i class="fa fa-check"></i><b>16</b> Advanced OLS</a><ul>
+<li class="chapter" data-level="16.1" data-path="chp14.html"><a href="chp14.html#derive-ols-estimator-matrix-form"><i class="fa fa-check"></i><b>16.1</b> Derive OLS estimator (Matrix Form)</a><ul>
+<li class="chapter" data-level="16.1.1" data-path="chp14.html"><a href="chp14.html#example"><i class="fa fa-check"></i><b>16.1.1</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="16.2" data-path="chp14.html"><a href="chp14.html#gaussmarkov-theorem"><i class="fa fa-check"></i><b>16.2</b> Gauss–Markov Theorem</a><ul>
+<li class="chapter" data-level="16.2.1" data-path="chp14.html"><a href="chp14.html#ols-estimator-is-linear"><i class="fa fa-check"></i><b>16.2.1</b> OLS estimator is linear</a></li>
+<li class="chapter" data-level="16.2.2" data-path="chp14.html"><a href="chp14.html#ols-estimator-is-unbiased"><i class="fa fa-check"></i><b>16.2.2</b> OLS estimator is unbiased</a></li>
+<li class="chapter" data-level="16.2.3" data-path="chp14.html"><a href="chp14.html#variance-covariance-is-a-minimum"><i class="fa fa-check"></i><b>16.2.3</b> Variance-Covariance is a minimum</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="chp14.html"><a href="chp14.html#probability-distributions-in-r-1"><i class="fa fa-check"></i><b>16.3</b> Probability Distributions in R</a><ul>
+<li class="chapter" data-level="16.3.1" data-path="chp14.html"><a href="chp14.html#obtaining-critical-statistics"><i class="fa fa-check"></i><b>16.3.1</b> Obtaining Critical Statistics</a></li>
+<li class="chapter" data-level="16.3.2" data-path="chp14.html"><a href="chp14.html#generating-random-numbers-1"><i class="fa fa-check"></i><b>16.3.2</b> Generating Random Numbers</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="chp15.html"><a href="chp15.html"><i class="fa fa-check"></i><b>17</b> Advanced Panel Data</a><ul>
+<li class="chapter" data-level="17.1" data-path="chp15.html"><a href="chp15.html#the-data"><i class="fa fa-check"></i><b>17.1</b> The Data</a></li>
+<li class="chapter" data-level="17.2" data-path="chp15.html"><a href="chp15.html#variation-within-units"><i class="fa fa-check"></i><b>17.2</b> Variation within Units</a></li>
+<li class="chapter" data-level="17.3" data-path="chp15.html"><a href="chp15.html#two-way-fixed-effects-model"><i class="fa fa-check"></i><b>17.3</b> Two-Way Fixed Effects Model</a></li>
+<li class="chapter" data-level="17.4" data-path="chp15.html"><a href="chp15.html#testing-for-autocorrelation"><i class="fa fa-check"></i><b>17.4</b> Testing for autocorrelation</a></li>
+<li class="chapter" data-level="17.5" data-path="chp15.html"><a href="chp15.html#estimating-hatrho"><i class="fa fa-check"></i><b>17.5</b> Estimating <span class="math inline">\(\hat\rho\)</span></a></li>
+<li class="chapter" data-level="17.6" data-path="chp15.html"><a href="chp15.html#estimate-a-rho-transformed-model"><i class="fa fa-check"></i><b>17.6</b> Estimate a <span class="math inline">\(\rho\)</span>-Transformed Model</a></li>
+<li class="chapter" data-level="17.7" data-path="chp15.html"><a href="chp15.html#lagged-dependent-variable-panel-data-model"><i class="fa fa-check"></i><b>17.7</b> Lagged Dependent Variable Panel Data Model</a></li>
+<li class="chapter" data-level="17.8" data-path="chp15.html"><a href="chp15.html#random-effects-model"><i class="fa fa-check"></i><b>17.8</b> Random Effects Model</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R Companion to <em>Real Econometrics</em></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="chp14" class="section level1">
+<h1><span class="header-section-number">Chapter 16</span> Advanced OLS</h1>
+<p>We will prove the Gauss–Markov Theorem with matrix algebra and learn how to generate random numbers in R.</p>
+<div id="derive-ols-estimator-matrix-form" class="section level2">
+<h2><span class="header-section-number">16.1</span> Derive OLS estimator (Matrix Form)</h2>
+<p>Suppose we have a linear statistical model <span class="math inline">\(y=XB+e\)</span>. Let y is an n x 1 vector of observations on the dependent variable</p>
+<p><span class="math display">\[y = \begin{bmatrix}y_1\\y_2\\\vdots\\y_n\end{bmatrix}\]</span>.</p>
+<p>Let X be an n x k matrix of observations on k - 1 independent variables
+<span class="math display">\[X = \begin{bmatrix}1 &amp; X_{21} &amp; X_{31}&amp;\cdots&amp;X_{k1}\\
+1 &amp; X_{22} &amp; X_{32}&amp;\cdots&amp;X_{k2}\\
+&amp;&amp;\ddots\\
+1 &amp; X_{2n} &amp; X_{3n}&amp;\cdots&amp;X_{kn}
+\end{bmatrix}\]</span></p>
+<p>Let <span class="math inline">\(\hat{\beta}\)</span> be a k x 1 vector of estimators for B.
+<span class="math display">\[\hat{\beta}=\begin{bmatrix}\hat{\beta_1}\\
+\hat{\beta_2}\\
+\vdots\\
+\hat{\beta_k}\\
+\end{bmatrix}\]</span></p>
+<p>Let e be an n x 1 matrix of residuals.</p>
+<p><span class="math display">\[e = \begin{bmatrix}e_1\\e_2\\\vdots\\e_n\end{bmatrix}\]</span></p>
+<p>We want to find <span class="math inline">\(\hat{\beta}\)</span> such that <span class="math inline">\(\sum{e^2}\)</span> is a minimum. The estimated equation is <span class="math display">\[\hat{y} = X\hat{\beta}+\hat{e}\]</span></p>
+<p>The ordinary least squares estimator is <span class="math inline">\(\hat{\beta}\)</span> such that <span class="math inline">\(\hat{e}^T\hat{e}\)</span> is minimized. Solving for <span class="math inline">\(\hat{e}\)</span> yields. <span class="math display">\[\hat{e}=y-X\hat{\beta}\]</span></p>
+<p>So,</p>
+<p><span class="math display">\[\begin{aligned}\hat{e}^T\hat{e}&amp;=(y-X\hat{\beta})^T(y-X\hat{\beta)}\\
+&amp;= y^Ty-\hat{\beta}X^Ty-y^TX\hat{\beta}  + \hat{\beta}X^TX\hat{\beta}\\
+&amp;=y^Ty-2\hat{\beta}X^Ty+\hat{\beta}X^TX\hat{\beta}\\
+\end{aligned}\]</span></p>
+<p>Take the partial derivative of <span class="math inline">\(\hat{e}^T\hat{e}\)</span> with respect to <span class="math inline">\(\hat{\beta}\)</span> and set it equal to 0.</p>
+<p><span class="math display">\[\begin{aligned}
+\frac{\partial\hat{e}^T\hat{e}}{\partial\hat{\beta}} &amp;= -2X^Ty+2X^TX\hat{\beta}=0\\
+&amp;=-X^Ty + X^TX\hat{\beta} = 0 \\
+X^TX\hat{\beta} &amp;= X^Ty
+\end{aligned}\]</span></p>
+<p>Pre-multiple both sides by <span class="math inline">\((X^TX)^{-1}\)</span></p>
+<p><span class="math display">\[\begin{aligned}
+(X^TX)^{-1}(X^TX)\hat{\beta} &amp;= (X^TX)^{-1}X^Ty \\
+I\hat{\beta} &amp;= (X^TX)^{-1}X^Ty \\
+\hat{\beta} &amp;= (X^TX)^{-1}X^Ty
+\end{aligned}\]</span></p>
+<div id="example" class="section level3">
+<h3><span class="header-section-number">16.1.1</span> Example</h3>
+<p>Suppose we have 14 observations on the dependent y:</p>
+<p><span class="math display">\[\begin{bmatrix}1065\\ 1254\\ 1300\\1577\\1600\\1750\\1800\\1870\\1935\\1948\\2254\\ 2600\\2800\\3000\end{bmatrix}\]</span></p>
+<p>We also have 14 observations on a single independent variable</p>
+<p><span class="math display">\[X = \begin{bmatrix}
+1 &amp; 199.9 \\
+1 &amp; 228 \\
+1 &amp; 235\\
+1 &amp; 285\\
+1 &amp; 239\\
+1 &amp; 293\\
+1 &amp; 285\\
+1 &amp; 365\\
+1 &amp; 295\\
+1 &amp; 290\\
+1 &amp; 385\\
+1 &amp; 505\\
+1 &amp; 425\\
+1 &amp; 425\\
+1 &amp; 415
+\end{bmatrix}\]</span></p>
+<p>Let’s find the <span class="math inline">\(\begin{bmatrix} \hat{\beta_0} \\ \hat{\beta_1} \end{bmatrix}\)</span> step by step using matrix operators in R. The matrix operators we need are in the table below.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Operator</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>%*%</code></td>
+<td>matrix multiplication</td>
+</tr>
+<tr class="even">
+<td><code>t()</code></td>
+<td>transposes a matrix</td>
+</tr>
+<tr class="odd">
+<td><code>solve()</code></td>
+<td>inverts a matrix</td>
+</tr>
+<tr class="even">
+<td><code>crossprod()</code></td>
+<td>performs t(x) %*% x</td>
+</tr>
+</tbody>
+</table>
+<p>Let’s step through the calculations one at a time.</p>
+<div id="create-x-and-y" class="section level4">
+<h4><span class="header-section-number">16.1.1.1</span> create X and y</h4>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co"># create the 1 x 14 column vector y</span></a>
+<a class="sourceLine" id="cb1-2" title="2">y &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">199.9</span>, <span class="dv">228</span>, <span class="dv">235</span>, <span class="dv">285</span>, <span class="dv">239</span>, <span class="dv">293</span>, <span class="dv">285</span>, <span class="dv">365</span>, <span class="dv">295</span>, <span class="dv">290</span>, <span class="dv">385</span>, <span class="dv">505</span>, <span class="dv">425</span>, <span class="dv">415</span>)</a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="co"># create the 2 x 14 matrix X</span></a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="co"># cbind combines vectors by columns into a matrix</span></a>
+<a class="sourceLine" id="cb1-5" title="5">X &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">c</span>(<span class="kw">rep</span>(<span class="dv">1</span>,<span class="dv">14</span>)), <span class="co"># rep() repeats a value a given number of times</span></a>
+<a class="sourceLine" id="cb1-6" title="6">           <span class="kw">c</span>(<span class="dv">1065</span>, <span class="dv">1254</span>, <span class="dv">1300</span>,<span class="dv">1577</span>,<span class="dv">1600</span>,<span class="dv">1750</span>,<span class="dv">1800</span>,<span class="dv">1870</span>,<span class="dv">1935</span>,<span class="dv">1948</span>,<span class="dv">2254</span>, <span class="dv">2600</span>,<span class="dv">2800</span>,<span class="dv">3000</span>))</a>
+<a class="sourceLine" id="cb1-7" title="7">y</a></code></pre></div>
+<pre><code> [1] 200 228 235 285 239 293 285 365 295 290 385 505 425 415</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">X</a></code></pre></div>
+<pre><code>      [,1] [,2]
+ [1,]    1 1065
+ [2,]    1 1254
+ [3,]    1 1300
+ [4,]    1 1577
+ [5,]    1 1600
+ [6,]    1 1750
+ [7,]    1 1800
+ [8,]    1 1870
+ [9,]    1 1935
+[10,]    1 1948
+[11,]    1 2254
+[12,]    1 2600
+[13,]    1 2800
+[14,]    1 3000</code></pre>
+</div>
+<div id="create-x-transpose" class="section level4">
+<h4><span class="header-section-number">16.1.1.2</span> create X transpose</h4>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">X_T &lt;-<span class="st"> </span><span class="kw">t</span>(X)</a>
+<a class="sourceLine" id="cb5-2" title="2">X_T</a></code></pre></div>
+<pre><code>     [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13]
+[1,]    1    1    1    1    1    1    1    1    1     1     1     1     1
+[2,] 1065 1254 1300 1577 1600 1750 1800 1870 1935  1948  2254  2600  2800
+     [,14]
+[1,]     1
+[2,]  3000</code></pre>
+</div>
+<div id="create-x-transpose-x" class="section level4">
+<h4><span class="header-section-number">16.1.1.3</span> create X transpose X</h4>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">X_t_X &lt;-<span class="st"> </span>X_T <span class="op">%*%</span><span class="st"> </span>X</a>
+<a class="sourceLine" id="cb7-2" title="2">X_t_X</a></code></pre></div>
+<pre><code>      [,1]     [,2]
+[1,]    14    26753
+[2,] 26753 55462515</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="co"># alternatively we could call crossprod</span></a>
+<a class="sourceLine" id="cb9-2" title="2">X_T_X &lt;-<span class="st"> </span><span class="kw">crossprod</span>(X)</a>
+<a class="sourceLine" id="cb9-3" title="3">X_T_X</a></code></pre></div>
+<pre><code>      [,1]     [,2]
+[1,]    14    26753
+[2,] 26753 55462515</code></pre>
+</div>
+<div id="invert-x-transpose-x" class="section level4">
+<h4><span class="header-section-number">16.1.1.4</span> invert X transpose X</h4>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">X_T_X_inverse &lt;-<span class="st"> </span><span class="kw">solve</span>(X_T_X)</a>
+<a class="sourceLine" id="cb11-2" title="2">X_T_X_inverse</a></code></pre></div>
+<pre><code>         [,1]        [,2]
+[1,]  0.91293 -0.00044036
+[2,] -0.00044  0.00000023</code></pre>
+</div>
+<div id="x-transpose-x-inverse-x-transpose" class="section level4">
+<h4><span class="header-section-number">16.1.1.5</span> X transpose X inverse X Transpose</h4>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">X_T_X_inverse_X_T &lt;-<span class="st"> </span>X_T_X_inverse <span class="op">%*%</span><span class="st"> </span>X_T</a>
+<a class="sourceLine" id="cb13-2" title="2">X_T_X_inverse_X_T</a></code></pre></div>
+<pre><code>          [,1]      [,2]      [,3]      [,4]       [,5]       [,6]
+[1,]  0.443944  0.360715  0.340459  0.218478  0.2083499  0.1422955
+[2,] -0.000195 -0.000151 -0.000141 -0.000077 -0.0000717 -0.0000371
+           [,7]        [,8]       [,9]      [,10]      [,11]     [,12]
+[1,]  0.1202774  0.08945199 0.06082841 0.05510370 -0.0796473 -0.232013
+[2,] -0.0000256 -0.00000943 0.00000555 0.00000854  0.0000791  0.000159
+         [,13]     [,14]
+[1,] -0.320085 -0.408158
+[2,]  0.000205  0.000251</code></pre>
+</div>
+<div id="x-transpose-x-inverse-x-transpose-y" class="section level4">
+<h4><span class="header-section-number">16.1.1.6</span> X transpose X inverse X Transpose y</h4>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">beta &lt;-<span class="st"> </span>X_T_X_inverse <span class="op">%*%</span><span class="st"> </span>X_T <span class="op">%*%</span><span class="st"> </span>y</a>
+<a class="sourceLine" id="cb15-2" title="2">beta</a></code></pre></div>
+<pre><code>       [,1]
+[1,] 52.351
+[2,]  0.139</code></pre>
+<p>This is the matrix of our estimates for B. So, the equation we have estimated is <span class="math inline">\(\hat{y} = 52.351 + 0.139X\)</span></p>
+</div>
+</div>
+</div>
+<div id="gaussmarkov-theorem" class="section level2">
+<h2><span class="header-section-number">16.2</span> Gauss–Markov Theorem</h2>
+<p>The Gauss-Markov theorem proves that among the class of linear estimators of B, the ordinary least squares estimator has the minimum variance. That is, the OLS estimator is BLUE: the <strong>B</strong>est, <strong>L</strong>inear, <strong>U</strong>nbiased, <strong>E</strong>stimator. Below is the proof.</p>
+<div id="ols-estimator-is-linear" class="section level3">
+<h3><span class="header-section-number">16.2.1</span> OLS estimator is linear</h3>
+<p>Since <span class="math inline">\((X^TX)^{-1}X^T\)</span> is a matrix of fixed numbers, <span class="math inline">\(\hat{\beta}\)</span> is linear combination of X and y.</p>
+</div>
+<div id="ols-estimator-is-unbiased" class="section level3">
+<h3><span class="header-section-number">16.2.2</span> OLS estimator is unbiased</h3>
+<p><span class="math inline">\(\hat{\beta}\)</span> is an unbiased estimator of B if <span class="math inline">\(E(\hat{\beta})=B\)</span></p>
+<p><span class="math display">\[E(\hat{\beta}) = E\left[(X^TX)^{-1}X^Ty)\right]\]</span>
+Substituting for <span class="math inline">\(y=XB+e\)</span></p>
+<p><span class="math display">\[\begin{aligned}
+E(\hat{\beta}) &amp;= E\left[(X^TX)^{-1}X^T(XB+e)\right]\\
+&amp;=E\left[(X^TX)^{-1}X^T(XB+e)\right]\\
+&amp;=E\left[(X^TX)^{-1}(X^TX)B+(X^TX)^{-1}X^Te\right]\\
+&amp;=E\left[B+(X^TX)^{-1}X^Te\right]\\
+&amp;=E(B) + E\left[(X^TX)^{-1}X^Te\right]\\
+\end{aligned}\]</span></p>
+<p>Since B is a matrix of parameters it is equal to its expected value so</p>
+<p><span class="math display">\[E(\hat{\beta}) = B + E\left[(X^TX)^{-1}X^Te\right]\]</span></p>
+<p>For <span class="math inline">\(\hat{\beta}\)</span> to be an unbiased estimator of B, <span class="math inline">\(E\left[(X^TX)^{-1}X^Te\right]\)</span> must be <span class="math inline">\(0\)</span>. If the X is a matrix of non-stochastic observations on the independent variables, then
+<span class="math display">\[E\left[(X^TX)^{-1}X^Te\right] = (X^TX)^{-1}X^TE(e)\]</span> Since <span class="math inline">\(E(e)=0\)</span>, <span class="math inline">\(\hat{\beta}\)</span> is an unbiased estimator of B. If we assume that X is fixed in repeated samples, X is non-stochastic.</p>
+<p>In the wild X is not fixed in repeated samples, therefore X is stochastic. So if <span class="math inline">\(E\left[(X^TX)^{-1}X^Te\right]\ne0\)</span> X and e are correlated. This is the problem of endogeneity.</p>
+</div>
+<div id="variance-covariance-is-a-minimum" class="section level3">
+<h3><span class="header-section-number">16.2.3</span> Variance-Covariance is a minimum</h3>
+<p>Let’s find the “variance” of the OLS estimators.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> <span class="math inline">\(\text{var-cov}(\hat{\beta})\)</span>.</p>
+<p><span class="math display">\[\begin{aligned}
+\text{var-cov}(\hat{\beta}) &amp;= E\left[(\hat{\beta}-\beta)(\hat{\beta}-\beta)^T\right]\\
+\text{recall from above}\\
+\hat{\beta} &amp;= B + (X^TX)^{-1}X^Te\\
+\text{so} \\
+\hat{\beta} - B &amp;= (X^TX)^{-1}X^Te\\
+(\hat{\beta}-\beta)(\hat{\beta}-\beta)^T &amp;= \left[(X^TX)^{-1}X^Te\right]\left[(X^TX)^{-1}X^Te\right]^T\\
+&amp;= (X^TX)^{-1}X^Tee^TX(X^TX)^{-1}\\
+\text{thus} \\
+\text{var-cov}(\hat{\beta}) &amp;= E\left[ (X^TX)^{-1}X^Tee^TX(X^TX)^{-1}\right]\\
+\text{if X is exogenous}\\
+&amp;= (X^TX)^{-1}X^TE(ee^T)X(X^TX)^{-1}\\
+\text{since  } E(ee^T) = \sigma^2I\\
+&amp;= (X^TX)^{-1}X^T \sigma^2 I X(X^TX)^{-1}\\
+&amp;= \sigma^2(X^TX)^{-1}X^T  I X(X^TX)^{-1}\\
+&amp;= \sigma^2(X^TX)^{-1}X^T  X(X^TX)^{-1}\\
+\text{var-cov}(\hat{\beta})&amp;=\sigma^2(X^TX)^{-1}
+\end{aligned}\]</span></p>
+<p>To prove that this variance is the minimum variance among the class of linear estimators, we will show that any other unbiased linear estimator must have a larger variance. Let <span class="math inline">\(\tilde{\beta}\)</span> be any other linear estimator of B, which can be written as<span class="math inline">\(\tilde{\beta} = \left[ (X^TX)^{-1}X^T+C) \right]y\)</span> where C is a matrix of constants. Substituting <span class="math inline">\(y = X\beta+e\)</span> yields</p>
+<p><span class="math display">\[
+\begin{aligned}
+\tilde{\beta} &amp;=  \left[ (X^TX)^{-1}X^T+C) \right]\left[ XB+e \right]\\
+&amp;= (X^TX)^{-1}X^TXB + CXB + (X^TX)^{-1}X^Te + Ce\\
+&amp;= B + CXB + (X^TX)^{-1}Xe + Ce
+\end{aligned}
+\]</span></p>
+</div>
+</div>
+<div id="probability-distributions-in-r-1" class="section level2">
+<h2><span class="header-section-number">16.3</span> Probability Distributions in R</h2>
+<p>Every distribution that R handles has four functions. There is a root name, for example, the root name for the normal distribution is <code>norm</code>. This root is prefixed by one of the letters</p>
+<ul>
+<li><code>p</code> for “probability”, the cumulative distribution function (c. d. f.)</li>
+<li><code>q</code> for “quantile”, the inverse c. d. f.</li>
+<li><code>d</code> for “density”, the density function (p. f. or p. d. f.)</li>
+<li><code>r</code> for “random”, a random variable having the specified distribution</li>
+</ul>
+<p>For the normal distribution, these functions are <code>pnorm</code>, <code>qnorm</code>, <code>dnorm</code>, and <code>rnorm</code>.</p>
+<p>For a continuous distribution (like the normal), the most useful functions for doing problems involving probability calculations are the “p” and “q” functions (c. d. f. and inverse c. d. f.), because the the density (p. d. f.) calculated by the “d” function can only be used to calculate probabilities via integrals and R doesn’t do integrals.</p>
+<p>For a discrete distribution (like the binomial), the “d” function calculates the density (p. f.), which in this case is a probability <span class="math inline">\(f(x) = P(X = x)\)</span> and hence is useful in calculating probabilities.</p>
+<p>R has functions to handle many probability distributions. The table below gives the names of the functions for a few of the distributions.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Distribution</th>
+<th>Functions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Binomial</td>
+<td>pbinom qbinom dbinom rbinom</td>
+</tr>
+<tr class="even">
+<td>Chi-Square</td>
+<td>pchisq qchisq dchisq rchisq</td>
+</tr>
+<tr class="odd">
+<td>F</td>
+<td>pf qf df rf</td>
+</tr>
+<tr class="even">
+<td>Normal</td>
+<td>rnorm qnorm dnorm rnorm</td>
+</tr>
+<tr class="odd">
+<td>Student t</td>
+<td>pt qt dt rt</td>
+</tr>
+<tr class="even">
+<td>Uniform</td>
+<td>punif qunif dunif runif</td>
+</tr>
+</tbody>
+</table>
+<p>You can find the specific argumnets for each with <code>?args(pnorm)</code>, for example. Or help with <code>?pt</code>, for example.</p>
+<div id="obtaining-critical-statistics" class="section level3">
+<h3><span class="header-section-number">16.3.1</span> Obtaining Critical Statistics</h3>
+<p>Make use of the functions above to obtain critical statistics for hypothesis testing. For example, suppose we wanted to perform a two-tail <em>t-test</em> at the the <span class="math inline">\(\alpha=5\%\)</span> level of significance with <span class="math inline">\(df = 132\)</span> degrees of freedom. We would call <code>qt(p = .975, df = 132, lower.tail = TRUE)</code>. This would return <span class="math inline">\(t_{.05,132} = 1.978\)</span></p>
+</div>
+<div id="generating-random-numbers-1" class="section level3">
+<h3><span class="header-section-number">16.3.2</span> Generating Random Numbers</h3>
+<p>Supposed we’d like to generate a sample of size <span class="math inline">\(n = 10\)</span> random values of <span class="math inline">\(X\)</span> such that <span class="math inline">\(X \sim N(12, 5)\)</span>, we would call <code>rnorm(n = 10, mean = 12, sd = 5)</code>. This would return <span class="math inline">\(12.978, 8.715, 1.786, 8.591, 18.433, 1.031, 13.561, 15.623, 12.056, 19.635\)</span>.</p>
+
+</div>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="1">
+<li id="fn1"><p>Recall that the variance of a random variable, X, is essentially the mean of the squared deviations. Or <span class="math inline">\(\text{Var}(X) = E(X-\mu)^2\)</span><a href="chp14.html#fnref1" class="footnote-back">↩</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="chp13.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="chp15.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["bailey.pdf", "bailey.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

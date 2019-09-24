@@ -1,0 +1,253 @@
+# Advanced OLS {#chp14}
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA, message = FALSE, warning = FALSE,
+                      options(digits = 3, scipen = 999))
+```
+
+We will prove the Gauss--Markov Theorem with matrix algebra and learn how to generate random numbers in R.
+
+## Derive OLS estimator (Matrix Form)
+
+Suppose we have a linear statistical model $y=XB+e$. Let y is an n x 1 vector of observations on the dependent variable 
+
+$$y = \begin{bmatrix}y_1\\y_2\\\vdots\\y_n\end{bmatrix}$$.  
+
+Let X be an n x k matrix of observations on k - 1 independent variables 
+$$X = \begin{bmatrix}1 & X_{21} & X_{31}&\cdots&X_{k1}\\
+1 & X_{22} & X_{32}&\cdots&X_{k2}\\
+&&\ddots\\
+1 & X_{2n} & X_{3n}&\cdots&X_{kn}
+\end{bmatrix}$$
+
+Let $\hat{\beta}$ be a k x 1 vector of estimators for B.
+$$\hat{\beta}=\begin{bmatrix}\hat{\beta_1}\\
+\hat{\beta_2}\\
+\vdots\\
+\hat{\beta_k}\\
+\end{bmatrix}$$
+
+Let e be an n x 1 matrix of residuals.
+
+$$e = \begin{bmatrix}e_1\\e_2\\\vdots\\e_n\end{bmatrix}$$
+
+We want to find $\hat{\beta}$ such that $\sum{e^2}$ is a minimum.  The estimated equation is $$\hat{y} = X\hat{\beta}+\hat{e}$$
+
+The ordinary least squares estimator is $\hat{\beta}$ such that $\hat{e}^T\hat{e}$ is minimized.  Solving for $\hat{e}$ yields. $$\hat{e}=y-X\hat{\beta}$$
+
+So, 
+
+$$\begin{aligned}\hat{e}^T\hat{e}&=(y-X\hat{\beta})^T(y-X\hat{\beta)}\\
+&= y^Ty-\hat{\beta}X^Ty-y^TX\hat{\beta}  + \hat{\beta}X^TX\hat{\beta}\\
+&=y^Ty-2\hat{\beta}X^Ty+\hat{\beta}X^TX\hat{\beta}\\
+\end{aligned}$$
+
+Take the partial derivative of $\hat{e}^T\hat{e}$ with respect to $\hat{\beta}$ and set it equal to 0.
+
+$$\begin{aligned}
+\frac{\partial\hat{e}^T\hat{e}}{\partial\hat{\beta}} &= -2X^Ty+2X^TX\hat{\beta}=0\\
+&=-X^Ty + X^TX\hat{\beta} = 0 \\
+X^TX\hat{\beta} &= X^Ty
+\end{aligned}$$
+
+Pre-multiple both sides by $(X^TX)^{-1}$
+
+$$\begin{aligned}
+(X^TX)^{-1}(X^TX)\hat{\beta} &= (X^TX)^{-1}X^Ty \\
+I\hat{\beta} &= (X^TX)^{-1}X^Ty \\
+\hat{\beta} &= (X^TX)^{-1}X^Ty
+\end{aligned}$$
+
+### Example
+
+Suppose we have 14 observations on the dependent y:
+
+$$\begin{bmatrix}1065\\ 1254\\ 1300\\1577\\1600\\1750\\1800\\1870\\1935\\1948\\2254\\ 2600\\2800\\3000\end{bmatrix}$$
+
+We also have 14 observations on a single independent variable
+
+$$X = \begin{bmatrix}
+1 & 199.9 \\
+1 & 228 \\
+1 & 235\\
+1 & 285\\
+1 & 239\\
+1 & 293\\
+1 & 285\\
+1 & 365\\
+1 & 295\\
+1 & 290\\
+1 & 385\\
+1 & 505\\
+1 & 425\\
+1 & 425\\
+1 & 415
+\end{bmatrix}$$
+
+Let's find the $\begin{bmatrix} \hat{\beta_0} \\ \hat{\beta_1} \end{bmatrix}$ step by step using matrix operators in R.  The matrix operators we need are in the table below.
+
+Operator | What it does
+- | -
+`%*%`| matrix multiplication
+`t()` | transposes a matrix
+`solve()` | inverts a matrix
+`crossprod()` | performs t(x) %*% x
+
+Let's step through the calculations one at a time.  
+
+#### create X and y
+
+```{r x_and_y}
+# create the 1 x 14 column vector y
+y <- c(199.9, 228, 235, 285, 239, 293, 285, 365, 295, 290, 385, 505, 425, 415)
+# create the 2 x 14 matrix X
+# cbind combines vectors by columns into a matrix
+X <- cbind(c(rep(1,14)), # rep() repeats a value a given number of times
+           c(1065, 1254, 1300,1577,1600,1750,1800,1870,1935,1948,2254, 2600,2800,3000))
+y
+X
+```
+
+#### create X transpose
+
+```{r x_transpose}
+X_T <- t(X)
+X_T
+```
+
+#### create X transpose X
+
+```{r X_transpose_X}
+X_t_X <- X_T %*% X
+X_t_X
+# alternatively we could call crossprod
+X_T_X <- crossprod(X)
+X_T_X
+```
+
+#### invert X transpose X
+
+```{r X_transpose_X_inverse}
+X_T_X_inverse <- solve(X_T_X)
+X_T_X_inverse
+```
+
+#### X transpose X inverse X Transpose
+
+```{r X_transpose_X_inverse_X_transpose}
+X_T_X_inverse_X_T <- X_T_X_inverse %*% X_T
+X_T_X_inverse_X_T
+```
+
+#### X transpose X inverse X Transpose y
+
+```{r beta}
+beta <- X_T_X_inverse %*% X_T %*% y
+beta
+```
+
+This is the matrix of our estimates for B.  So, the equation we have estimated is $\hat{y} = `r  beta[1,1]` + `r beta[2,1]`X$
+
+## Gauss--Markov Theorem
+
+The Gauss-Markov theorem proves that among the class of linear estimators of B, the ordinary least squares estimator has the minimum variance.  That is, the OLS estimator is BLUE: the **B**est, **L**inear, **U**nbiased, **E**stimator. Below is the proof.
+
+### OLS estimator is linear
+
+Since $(X^TX)^{-1}X^T$ is a matrix of fixed numbers, $\hat{\beta}$ is linear combination of X and y.  
+
+### OLS estimator is unbiased
+
+$\hat{\beta}$ is an unbiased estimator of B if $E(\hat{\beta})=B$
+
+$$E(\hat{\beta}) = E\left[(X^TX)^{-1}X^Ty)\right]$$
+Substituting for $y=XB+e$
+
+$$\begin{aligned}
+E(\hat{\beta}) &= E\left[(X^TX)^{-1}X^T(XB+e)\right]\\
+&=E\left[(X^TX)^{-1}X^T(XB+e)\right]\\
+&=E\left[(X^TX)^{-1}(X^TX)B+(X^TX)^{-1}X^Te\right]\\
+&=E\left[B+(X^TX)^{-1}X^Te\right]\\
+&=E(B) + E\left[(X^TX)^{-1}X^Te\right]\\
+\end{aligned}$$
+
+Since B is a matrix of parameters it is equal to its expected value so 
+
+$$E(\hat{\beta}) = B + E\left[(X^TX)^{-1}X^Te\right]$$
+
+For $\hat{\beta}$ to be an unbiased estimator of B, $E\left[(X^TX)^{-1}X^Te\right]$ must be $0$. If the X is a matrix of non-stochastic observations on the independent variables, then 
+$$E\left[(X^TX)^{-1}X^Te\right] = (X^TX)^{-1}X^TE(e)$$ Since $E(e)=0$, $\hat{\beta}$ is an unbiased estimator of B. If we assume that X is fixed in repeated samples, X is non-stochastic.
+
+In the wild X is not fixed in repeated samples, therefore X is stochastic.  So if $E\left[(X^TX)^{-1}X^Te\right]\ne0$ X and e are correlated.  This is the problem of endogeneity. 
+
+### Variance-Covariance is a minimum
+
+Let's find the "variance" of the OLS estimators.^[Recall that the variance of a random variable, X, is essentially the mean of the squared deviations. Or $\text{Var}(X) = E(X-\mu)^2$] $\text{var-cov}(\hat{\beta})$.
+
+$$\begin{aligned}
+\text{var-cov}(\hat{\beta}) &= E\left[(\hat{\beta}-\beta)(\hat{\beta}-\beta)^T\right]\\
+\text{recall from above}\\
+\hat{\beta} &= B + (X^TX)^{-1}X^Te\\
+\text{so} \\
+\hat{\beta} - B &= (X^TX)^{-1}X^Te\\
+(\hat{\beta}-\beta)(\hat{\beta}-\beta)^T &= \left[(X^TX)^{-1}X^Te\right]\left[(X^TX)^{-1}X^Te\right]^T\\
+&= (X^TX)^{-1}X^Tee^TX(X^TX)^{-1}\\
+\text{thus} \\
+\text{var-cov}(\hat{\beta}) &= E\left[ (X^TX)^{-1}X^Tee^TX(X^TX)^{-1}\right]\\
+\text{if X is exogenous}\\
+&= (X^TX)^{-1}X^TE(ee^T)X(X^TX)^{-1}\\
+\text{since  } E(ee^T) = \sigma^2I\\
+&= (X^TX)^{-1}X^T \sigma^2 I X(X^TX)^{-1}\\
+&= \sigma^2(X^TX)^{-1}X^T  I X(X^TX)^{-1}\\
+&= \sigma^2(X^TX)^{-1}X^T  X(X^TX)^{-1}\\
+\text{var-cov}(\hat{\beta})&=\sigma^2(X^TX)^{-1}
+\end{aligned}$$
+
+To prove that this variance is the minimum variance among the class of linear estimators, we will show that any other unbiased linear estimator must have a larger variance.  Let $\tilde{\beta}$ be any other linear estimator of B, which can be written as$\tilde{\beta} = \left[ (X^TX)^{-1}X^T+C) \right]y$ where C is a matrix of constants.  Substituting $y = X\beta+e$ yields
+
+$$
+\begin{aligned}
+\tilde{\beta} &=  \left[ (X^TX)^{-1}X^T+C) \right]\left[ XB+e \right]\\
+&= (X^TX)^{-1}X^TXB + CXB + (X^TX)^{-1}X^Te + Ce\\
+&= B + CXB + (X^TX)^{-1}Xe + Ce
+\end{aligned}
+$$
+
+## Probability Distributions in R
+
+Every distribution that R handles has four functions. There is a root name, for example, the root name for the normal distribution is `norm`. This root is prefixed by one of the letters
+
+* `p` for "probability", the cumulative distribution function (c. d. f.)
+* `q` for "quantile", the inverse c. d. f.
+* `d` for "density", the density function (p. f. or p. d. f.)
+* `r` for "random", a random variable having the specified distribution
+
+For the normal distribution, these functions are `pnorm`, `qnorm`, `dnorm`, and `rnorm`. 
+
+For a continuous distribution (like the normal), the most useful functions for doing problems involving probability calculations are the "p" and "q" functions (c. d. f. and inverse c. d. f.), because the the density (p. d. f.) calculated by the "d" function can only be used to calculate probabilities via integrals and R doesn't do integrals.
+
+For a discrete distribution (like the binomial), the "d" function calculates the density (p. f.), which in this case is a probability $f(x) = P(X = x)$ and hence is useful in calculating probabilities.
+
+R has functions to handle many probability distributions. The table below gives the names of the functions for a few of the distributions.
+
+Distribution | Functions
+--- | ---
+Binomial | pbinom qbinom dbinom rbinom
+Chi-Square | pchisq qchisq dchisq rchisq
+F | pf qf df rf
+Normal |rnorm qnorm dnorm rnorm
+Student t | pt qt dt rt
+Uniform | punif qunif dunif runif
+
+You can find the specific argumnets for each with `?args(pnorm)`, for example.  Or help with `?pt`, for example.
+
+### Obtaining Critical Statistics
+
+Make use of the functions above to obtain critical statistics for hypothesis testing.  For example, suppose we wanted to perform a two-tail *t-test* at the the $\alpha=5\%$ level of significance with $df = 132$ degrees of freedom.  We would call `qt(p = .975, df = 132, lower.tail = TRUE)`. This would return $t_{.05,132} = `r qt(p = .975, df = 132, lower.tail = TRUE)`$
+
+### Generating Random Numbers
+
+Supposed we'd like to generate a sample of size $n = 10$ random values of $X$ such that $X \sim N(12, 5)$, we would call `rnorm(n = 10, mean = 12, sd = 5)`. This would return $`r rnorm(10, 12, 5)`$. 
+
+
+

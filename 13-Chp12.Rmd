@@ -1,0 +1,258 @@
+# Dummy Dependent Variables {#chp12}
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA, message = FALSE, warning = FALSE,
+                      options(digits = 3, scipen = 999))
+```
+
+We will learn techniques in R to estimate and interpret models in which the dependent variable is categorical. In particular we will learn to estimate linear probability models, probit models, and logit models. We will use the libraries below.
+
+```{r}
+data(mtcars)
+library(tidyverse)
+library(magrittr)
+library(broom)
+```
+
+## Probit Estimation
+
+The probit model is given by $$Pr(Y_i=1)=\Phi(\beta_0+\beta_1X_{1i})$$ where $\Phi()$ is the standard normal CDF. Let's make use of the `mtcars`^[`?mtcars` for a reminder.] data set to estimate a probit model to determine engine type as a function of mpg.  Engine type, *vs*, is coded as 0 for V-shaped and 1 for straight.
+
+
+### EDA
+
+Let's look at a scatter plot and a box plot of *mpg* vs *vs*.
+
+```{r}
+mtcars %>% 
+  ggplot(aes(x = mpg, y = vs)) + 
+  geom_point()
+
+mtcars %>% 
+  mutate(vs = as.factor(vs)) %>% 
+  ggplot(aes(x = vs, y = mpg)) + 
+  geom_boxplot()
+
+```
+
+The boxplot indicates that there is difference in mpg between straight vs v-shaped engines.  Note the difference in the code between the two similar calls.  We need to treat *vs* as a factor in the boxplot but not in the scatter diagram. 
+
+### Estimate the model
+
+Let's estimate the probit model $Pr(vs_i=1)=\Phi(\beta_0+\beta_1mpg_i)$.  `glm` is used to fit dummy dependent variable models.^[These models are also known as limited dependent variable models or limdep models.] To estimate the probit model `glm` requires three arguments: `formula`, `family`, and `data`.  You are familiar with the data and formula arguments.  The family argument is description of the error distribution.  In this case our family argument will be `binomial(link = "probit")`.
+
+```{r}
+mtcars %$% 
+  glm(vs ~ mpg, family = binomial(link = "probit")) %>% 
+  tidy()
+```
+
+### Estimated Effects
+
+#### Discrete Difference
+
+##### $X_1$ is Continuous
+
+To estimate the effect of a change in the independent variable on the probability of observing the dependent variable we need to calculate the average difference between the fitted values of the model, *P1*, and the predicted values of the model when the independent variable we are interested in is changed by one standard deviation, *P2*. 
+
+Fitted values, *P1*, are easily obtained from the glm object as follows:
+
+```{r}
+vs_glm <-
+  mtcars %$%
+  glm(vs ~ mpg, family = binomial(link = "probit"))
+P1 <- vs_glm$fitted
+```
+
+The fitted variables have had `pnorm()` applied to the linear estimates, so they are *P1*.
+
+To obtain marginal effects, we need to let *mpg* vary by one standard deviation and obtain the predicted values from the estimated equation.  To find *P2*, the predicted values resulting from a one standard deviation change in the independent variable, we will make use of `predict.glm`.  `predict.glm`^[`?predict.glm` for more information.] will require two arguments to estimate *P2*, the equation object and the newdata `predict.glm(object, newdata = df`.  Unfortunately the expose pipe `%$%` does not function with `predict.glm`, so we will have to create a data frame of the changed independent variable.  We will use the `dplyr` verbs `select` and `mutate` to create the new data frame.  We calculate *P2* below:
+
+```{r}
+# Create the new data
+newdata <- 
+mtcars %>% 
+  dplyr::select(mpg) %>% #I used this form to avoid the conflict with select in the MASS package
+  mutate(mpg = mpg + sd(mpg))
+# Create P2
+P2 <- 
+  predict.glm(vs_glm, newdata) %>% 
+  pnorm()
+# Marginal Effect
+mean(P2-P1)
+```
+
+So, a one standard deviation increase in *mpg* will yield a 33.89% increase in the probability that the car has straight engine.
+
+##### Independent variable is a dummy.  
+
+Let's add *am*, transmission type, to the model.  *am* is coded as 0 if the car has an automatic transmission and 1 if it has a manual transmission. First, estimate the model $Pr(vs_i=1)=\Phi(\beta_0+\beta_1am+\beta_2mpg_i)$.
+
+```{r}
+mtcars %$%
+  glm(vs ~ am + mpg, family = binomial(link = "probit"))
+```
+
+We will follow similar steps as those above to interpret a change from automatic to manual transmission on the probability that the engine is straight. We will estimate *P0*, the fitted values, when *am* = 0, and *P1*, the fitted values when *am* = 1.  
+
+```{r}
+# Estimate the model
+vs_am_glm <- 
+  mtcars %$%
+  glm(vs ~ am + mpg, family = binomial(link = "probit"))
+# P0
+newdata <- 
+  mtcars %>% 
+  dplyr::select(am, mpg) %>% 
+  mutate(am = 0)
+P0 <- 
+  predict.glm(vs_am_glm, newdata) %>% 
+  pnorm()
+# P1
+newdata <- 
+  mtcars %>% 
+  dplyr::select(am, mpg) %>% 
+  mutate(am = 1)
+P1 <- 
+  predict.glm(vs_am_glm, newdata) %>% 
+  pnorm()
+mean(P1-P0)
+```
+
+A car with an manual transmission is 26.9% less likely, on average, to have a straight engine, *ceteris paribus*.
+
+#### Marginal Effects
+
+If $X_1$ is continuous we can estimate the marginal effects of a change in $X_1$ as $\phi(\hat\beta_0+\hat\beta_1X_{1i}+\hat\beta_2X_{2i})\hat\beta_1$. Where $\phi()$ is the normal PDF. Let's estimate the marginal effect of *mpg* on *vs* using the model above.  
+
+```{r}
+marg_effect <- 
+dnorm(vs_am_glm$coef[1] + vs_am_glm$coef[2]*mtcars$am + vs_am_glm$coef[3]*mtcars$mpg) * vs_am_glm$coef[3]
+mean(marg_effect)
+```
+
+The marginal effect of *mpg* on type of engine is 0.069.
+
+##### `mfx` and `margins` Packages
+
+We can use the `mfx` and `margins` packages to estimate the marginal effect of a continuous variable directly from the model we estimate. `mfx::probitmfx(formula, data, atmean = F)` and `margins::margins(model)` are the respective function calls to estimate marginal effects from the two packages.
+
+```{r}
+# mfx
+mfx::probitmfx(vs_am_glm, mtcars, atmean = F)
+```
+
+Note that these values are identically to the ones calculated by hand above.
+
+```{r}
+# margins
+margins::margins(vs_am_glm, data = mtcars)
+```
+
+The marginal effect of *mpg* is the same, while the effect of *am* is similar.  `?margins` or [An Introduction to 'margins'](https://cran.r-project.org/web/packages/margins/vignettes/Introduction.html#references) for more on the `margins` package.
+
+## Logit Estimation
+
+The logit model takes the form $Pr(Y_i=1)=\frac{e^{\beta_0+\beta_1X_{1i}}}{1+e^{\beta_0+\beta_1X_{1i}}}$ An alternative form of the logit model might be easier to interpret.  With appropriate algebraic gymnastics we can write the logistic model as $\ln(\frac{p_i}{1-p_i})=\beta_0+\beta_1X_{1i}$, where $\ln(\frac{p_1}{1-p_i})$ is the log of the odds ratio.  
+
+Let's estimate the model from above as a logit rather than a probit.  All we need to do is change the link argument to logit to estimate the model.   
+
+```{r}
+mtcars %$%
+  glm(vs ~ mpg + am, family = binomial(link = "logit"))
+```
+
+Suppose we'd like to know the probability that a vehicle with automatic transmission that gets 25 mpg has a straight engine.  Calculate the odds ratio as $\ln(\frac{p_1}{1-p_i})=-12.7051+0.6809*25-3.0073*0 = 4.9474$. Exponentiate both sides and solve for *p*. $e^{\ln(\frac{p_i}{1-p_i})} = e^{4.9474}$.  We know that an exponentiated natural log is just itself so we have $\frac{p_i}{1-p_i}=140.808$.  Solving for *p* yields $p_i=\frac{140.808}{141.808}=.9925$. The probability we are looking for is 99.25%.  So,
+$\hat p=\frac{e^{\hat\beta_0+\hat\beta_1X_1}}{1 + e^{\hat\beta_0+\hat\beta_1X_1}}$.
+
+### Discrete Differences
+
+The discrete-difference can be calculated as the difference in two probabilities.  We can estimate the mean change in probability from an increase in *mpg* of 1. 
+
+```{r}
+vs_logit <- 
+  mtcars %$%
+  glm(vs ~ mpg + am, family = binomial(link = "logit"))
+# p1 are the fitted values of the regression
+p1 <- vs_logit$fitted
+# to calculate p2 add one to mpg and find the predicted values
+newdata <- 
+  mtcars %>% 
+  dplyr::select(mpg, am) %>% 
+  mutate(mpg = mpg + 1)
+p2 <- exp(predict(vs_logit, newdata))/(1+exp(predict(vs_logit, newdata)))
+# calcualte the mean difference between the p2 and p1
+mean(p2-p1)
+```
+
+On average an increase of 1 *mpg* will increase the probability the car has straight engine by 7.3%.
+
+### Marginal Effects
+
+Use the `mfx` or `margins` package to estimate the marginal effects of a change in an independent variable.
+
+```{r}
+# mfx 
+mfx::logitmfx(vs_logit, mtcars, atmean = F)
+# margins
+margins::margins(vs_logit, mtcars)
+```
+
+## Testing Hypotheses
+
+Let's estimate a new probit model $Pr(vs_i=1)=\Phi(\beta_0+\beta_1am+\beta_2mpg_i+\beta_3hp_i)$ using the `mtcars` data set and test the hypothesis that our model has overall explanatory power. $$H_0:\beta_1=\beta_2=\beta_3=0$$
+vs.  $$\text{@ least one }\beta\ne0$$
+We an estimate a restricted model and compare the likelihood ratios to the likelihood ratio of the unrestricted model and perform the LR test where $LR = 2(\log L_{UR}-\log L_R)\text{~}\chi^2_{df}$. Where the *df* is equal to the number of restrictions or number of equal signs in $H_0$. 
+
+```{r}
+ur_model <- 
+  mtcars %$%
+  glm(vs ~ am + mpg + hp, family = binomial(link = "probit"))
+r_model <- 
+  mtcars %$%
+  glm(vs ~ 1, family = binomial(link = "probit"))
+lr <- 2*(logLik(ur_model)[1]-logLik(r_model)[1])
+1 - pchisq(lr, 3)
+```
+
+We can reject $H_0$.
+
+Instead, let's use `lrtest` from the `lmtest` package to test hypotheses about our limited dependent variable models.  We can specify the restrictions as an argument in the call.
+
+```{r}
+lmtest::lrtest(ur_model, c("am", "mpg", "hp"))
+```
+
+Let's test the null hypothesis $$H_0:\beta_2=\beta_3$$ $$H_1: \beta_2\ne\beta_3$$
+The restricted model becomes $Pr(vs_i=1)=\Phi(\beta_0+\beta_1am+\beta_2(mpg_i+hp_i))$
+
+```{r}
+r_model <- 
+  mtcars %$%
+  glm(vs ~ am + I(mpg + hp), family = binomial(link = "probit"))
+lmtest::lrtest(ur_model, r_model)
+```
+
+We fail to reject $H_0$ and conclude that we have no evidence to believe that $\beta_2\ne\beta_3$.
+
+We would test hypotheses concerning logit models in same way.
+
+## Graphing Probit and Logit Models
+
+```{r}
+mtcars %>% 
+  ggplot(aes(x = mpg, y = vs)) + 
+  geom_point() +
+  geom_smooth(method = "glm", method.args=list(family=binomial(link = "probit")), se = F) + 
+  ggtitle("Probit")
+```
+
+```{r}
+mtcars %>% 
+  ggplot(aes(x = mpg, y = vs)) + 
+  geom_point() +
+  geom_smooth(method = "glm", method.args=list(family=binomial(link = "logit")), se = F) + 
+  ggtitle("Logit")
+```
+
+

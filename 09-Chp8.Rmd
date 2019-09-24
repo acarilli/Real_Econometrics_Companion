@@ -1,0 +1,312 @@
+
+# Using Fixed Effects Models to Fight Endogeneity in Panel Data and Difference--in--Difference Models {#chp8}
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA, message = FALSE, warning = FALSE,
+                      options(digits = 3, scipen = 999))
+```
+
+In this chapter we will learn to deal with panel data in R.  Panel data are data that include observations in and through time.  Panel data combine aspects of cross--sectional data with time--series data.  The libraries necessary for this chapter are:
+
+```{r}
+library(tidyverse)
+library(magrittr)
+library(broom)
+library(estimatr)
+library(carData)
+```
+
+## Simpson's Paradox
+
+Simpson's paradox - Simpson ([1951](https://www.jstor.org/stable/2984065?seq=1#metadata_info_tab_contents)) is phenomenon where an apparent relationship between two variables reverses itself when the data are dis-aggregated.  For example, let's look at the admissions rate for men and women in the University of California at Berkeley admissions data.  
+
+UCBAdmissions is a cross-tabulation of 4526 applicants by 3 variables: Admit, Gender, and Dept, the number of observations for each is n stored as 3-dimensional array.
+
+```{r data}
+UCBAdmissions
+```
+
+To calculate admission rates, we need to create a new variable, apps, that is the sum of admitted and rejected apps for both men and women.   
+
+```{r}
+UCBAdmissions %>% 
+  as_tibble() %>% # convert the table to a data frame
+  group_by(Dept, Gender) %>%  # allows us to sum admitted and rejected by department
+  mutate(apps = sum(n)) %>% # create number of applicants by department
+  ungroup() %>% # return the full data frame
+  filter(Admit == "Admitted") %>% # select only those applicants admitted
+  group_by(Gender) %>% # allows us to calculate acceptance rates by gender
+  summarize(rate = sum(n)/sum(apps))
+```
+
+Males are accepted at rate of 44.5% while females are accepted at lower rate of 30.4%.  
+
+```{r}
+UCBAdmissions %>% 
+  as_tibble() %>% 
+  group_by(Dept, Gender) %>%  
+  mutate(apps = sum(n)) %>% 
+  ungroup() %>% 
+  filter(Admit == "Admitted") %>% 
+  group_by(Dept, Gender) %>% 
+  summarize(n/apps)
+```
+
+We now see that females are admitted at higher rates to four of the six departments. 
+
+## Figures 8.1-8.3
+
+We see a similar effect in Figures 8.1-8.3 in the text.  We can reproduce those graphs with the code below.  The crime data set contains observations on 19 variables from 58 cities over the period 1972 to 1993.  First choose observations for only the California cities of Fresno, Los Angeles, Oakland, Sacramento, and San Francisco. Next convert the robbery and police to numbers per 1000 persons.  The data frame crime contains the data.# the %in% operator means match the elements in one vector with elements in another.  
+
+```{r include=FALSE}
+crime <- read_csv("Data/CrimedataEdited.csv")
+```
+
+```{r figure8.1}
+crime %>% 
+  select(cityname, policesworn, robbery, popcity) %>% # choose relevant variables
+  filter(cityname %in% c("fresno", "losangel", "oakland", "sacramen", "sanfran")) %>% # choose relevant cities
+  mutate(robbery=robbery/popcity*1000, policesworn = policesworn/popcity*1000) %>% # convert to per 1000
+  ggplot(aes(x = policesworn, y = robbery)) +
+  geom_point(na.rm = T) + 
+  geom_smooth(method = lm, na.rm = T, se = F) + 
+  xlab("Police per 1000 People") + 
+  ylab("Robberies per 1000 People") +
+  labs(caption = "Figure 8.1: Robberies and Police for Large Cities in California") + # create caption
+  theme(plot.caption = element_text(hjust = 0)) # left justify the caption
+```
+
+```{r figure8.2}
+crime %>% 
+  select(cityname, policesworn, robbery, popcity) %>% 
+  filter(cityname %in% c("fresno", "losangel", "oakland", "sacramen", "sanfran")) %>% 
+  mutate(robbery=robbery/popcity*1000, policesworn = policesworn/popcity*1000) %>% 
+  ggplot(aes(x = policesworn, y = robbery, color = cityname)) +
+  geom_point(na.rm = T) + 
+  xlab("Police per 1000 People") + 
+  ylab("Robberies per 1000 People") +
+  labs(caption = "Figure 8.2: Robberies and Police for Specified Cities in California") + 
+  theme(plot.caption = element_text(hjust = 0), legend.position = "none") + # remove legend
+  # place city names with corresponding colors.
+  annotate(geom = "text", x = 1.6, y = 10, label = "Oakland", col = "#00BF7D") + 
+  annotate(geom = "text", x = 2, y = 5, label = "Sacramento", col = "#00B0F6") + 
+  annotate(geom = "text", x = 2.58, y = 4.5, label = "Los Angeles", col = "#A3A500") + 
+  annotate(geom = "text", x = 2.7, y = 7.8, label = "San Francisco", col = "#E76BF3") + 
+  annotate(geom = "text", x = 1.25, y = 3.5, label = "Fresno", col = "#F8766D")
+```
+
+```{r figure8.3}
+crime %>% 
+  select(cityname, policesworn, robbery, popcity) %>% 
+  filter(cityname %in% c("fresno", "losangel", "oakland", "sacramen", "sanfran")) %>% 
+  mutate(robbery=robbery/popcity*1000, policesworn = policesworn/popcity*1000) %>% 
+  ggplot(aes(x = policesworn, y = robbery, color = cityname)) +
+  geom_point(na.rm = T) + 
+  xlab("Police per 1000 People") + 
+  ylab("Robberies per 1000 People") +
+  labs(caption = "Figure 8.3: Robberies and Police for Specified Cities in California with City-Specific Regression Lines") + 
+  theme(plot.caption = element_text(hjust = 0), legend.position = "none") + 
+  annotate(geom = "text", x = 1.6, y = 10, label = "Oakland", col = "#00BF7D") + 
+  annotate(geom = "text", x = 2, y = 5, label = "Sacramento", col = "#00B0F6") + 
+  annotate(geom = "text", x = 2.58, y = 4.5, label = "Los Angeles", col = "#A3A500") + 
+  annotate(geom = "text", x = 2.7, y = 7.8, label = "San Francisco", col = "#E76BF3") + 
+  annotate(geom = "text", x = 1.25, y = 3.5, label = "Fresno", col = "#F8766D") +
+  geom_smooth(method = "lm", se = F) # add regression lines. the addition of the color aesthetic will cause geom_smooth to add regression lines for each "color"
+```
+
+## One-Way Fixed Effects Models
+
+### LSDV Approach
+
+The least squares dummy variable approach allows us to account for the fixed effects by including a dummy variable for each unit.  First, let's calculate the pooled model.
+
+```{r pooled_regression}
+crime %>% 
+  select(cityname, policesworn, robbery, popcity) %>% 
+  filter(cityname %in% c("fresno", "losangel", "oakland", "sacramen", "sanfran")) %>% 
+  mutate(robbery=robbery/popcity*1000, policesworn = policesworn/popcity*1000) %$%
+  lm(robbery ~ policesworn) %>% 
+  tidy()
+```
+
+We can see that the coefficient on the police variable is positive and significantly different than zero.  
+
+To apply LSDV approach in R, we add cityname as an explanatory variable.  Since cityname is a character vector, R will treat it as a factor.
+
+```{r lsdv}
+crime %>% 
+  select(cityname, policesworn, robbery, popcity) %>% 
+  filter(cityname %in% c("fresno", "losangel", "oakland", "sacramen", "sanfran")) %>% 
+  mutate(robbery=robbery/popcity*1000, policesworn = policesworn/popcity*1000) %$%
+  lm(robbery ~ policesworn + cityname) 
+```
+
+We can confirm that below. 
+
+```{r}
+crime %>% 
+  select(cityname, policesworn, robbery, popcity) %>% 
+  filter(cityname %in% c("fresno", "losangel", "oakland", "sacramen", "sanfran")) %>% 
+  mutate(robbery=robbery/popcity*1000, 
+         policesworn = policesworn/popcity*1000,
+         cityname = as_factor(cityname)) %$% # coerce cityname to a factor
+  lm(robbery ~ policesworn + cityname) 
+```
+
+The equation for each city is:
+$$\text{Fresno: }Robbery = 8.79-2.75Police$$ 
+$$\text{Los Angeles: }Robbery = 17.53-2.75Police$$
+$$\text{Oakland: }Robbery = 16.89-2.75Police$$
+$$\text{Sacramento: }Robbery = 12.56-2.75Police$$
+$$\text{San Francisco: }Robbery = 19.25-2.75Police$$
+We see the effect of Simpson's Paradox in the slope variable here.  The slope variable is now negative and significant.  It should be noted that these results are not consistent with Figure 8.3.  Here we have only one slope coefficient with five different intercepts; Figure 8.3 shows five different slope coefficients along with five different intercepts.  We can return results consistent with Figure 8.3 as below.  We can show the equation for each of the five cities by adding the coefficient on the dummy variable to the intercept with the base case being Fresno^[The base case can be changed from the default with appropriate arguments see the [forcats](https://forcats.tidyverse.org/) package for more.]
+
+```{r}
+crime %>% 
+  select(cityname, policesworn, robbery, popcity) %>% 
+  filter(cityname %in% c("fresno", "losangel", "oakland", "sacramen", "sanfran")) %>% 
+  mutate(robbery=robbery/popcity*1000, 
+         policesworn = policesworn/popcity*1000,
+         cityname = as_factor(cityname)) %$% # coerce cityname to a factor
+  lm(robbery ~ policesworn * cityname) 
+```
+
+Now the equation for each city requires that we add the slope dummy coefficient to the intercept coefficient and the interaction coefficient to the coefficient on policesworn.  So the equation for each city is:^[Please note that not all of the coefficients are significant at the 5% level.  This is ignored in the equations derived for expository purposes.  In fact, we can see that the slope coefficients for Oakland, Sacramento, and San Francisco are not significantly different from the slope coefficient for Fresno, since each of those interaction effects are not significant.]
+
+$$\text{Fresno: }Robbery = 8.79-2.75Police$$
+$$\text{Los Angeles: }Robbery=28.46-8.79Police$$
+$$\text{Oakland: }Robbery=12.51-1.76Police$$
+$$\text{Sacramento: }Robbery=15.31-5.69Police$$
+$$\text{San Francisco: }Robbery=13.23-1.83Police$$
+
+The above equation are consistent with the regression lines in Figure 8.3.
+
+### *F*-test for significance of fixed effects.
+
+The unrestricted model is given by:$$Y_{it}=\beta_0+\beta_1X_{1it}+\beta_2D_{1i}+\beta_3D_{2i}+\cdots+\beta_PD_{P-1,i}+\nu_{it}$$ To test for the significance of fixed effects we test the following hypothesis: $$H_0:\beta_2=\beta_3=\cdots=\beta_P$$ $$H_1: \text{@ least one }\beta\ne0$$ As in Chapter 5, we will make use of `linearHypothesis` from the car package.
+
+```{r}
+library(car)
+crime %>% 
+  select(cityname, policesworn, robbery, popcity) %>% 
+  filter(cityname %in% c("fresno", "losangel", "oakland", "sacramen", "sanfran")) %>% 
+  mutate(robbery=robbery/popcity*1000, 
+         policesworn = policesworn/popcity*1000,
+         cityname = as_factor(cityname)) %$% # coerce cityname to a factor
+  lm(robbery ~ policesworn + cityname) %>% 
+  linearHypothesis(c("citynamelosangel = 0", # use the variable names from the lm object
+                     "citynameoakland = 0", 
+                     "citynamesacramen = 0", 
+                     "citynamesanfran = 0" ))
+```
+
+Since the reported *F*-stat is 50.626 with a *p-value* of 0, we will reject the null hypothesis of no fixed effects in favor of the alternative suggesting that fixed effects exist.
+
+## De-Meaned approach 
+
+### Manually De-Mean
+
+We can estimate the fixed-model with a de-meaned approach with the model: $$Y_{it}-\bar Y_{i.}=\beta_1(X_{it}-\bar X_{i.})$$
+
+`scale` will de-mean the data with the argument `scale = F`.  Learn more about `scale` by calling `?scale`. Do de-mean the data by city will use `group_by` in our pipeline to group the data by city, then we will `mutate` the crime and police variables with `scale` to de-mean them.  We should end up the same estimate of the slope coefficient from the LSDV approach.
+
+```{r}
+crime %>% 
+  select(cityname, policesworn, robbery, popcity) %>% 
+  filter(cityname %in% c("fresno", "losangel", "oakland", "sacramen", "sanfran")) %>% 
+  mutate(robbery=robbery/popcity*1000, 
+         policesworn = policesworn/popcity*1000,
+         cityname = as_factor(cityname)) %>%
+  group_by(cityname) %>% 
+  mutate(robbery = scale(robbery, scale = F),
+         policesworn = scale(policesworn, scale = F)) %$%
+  lm(robbery ~ policesworn) 
+```
+
+The slope coefficient is the same as the slope coefficient estimated by LSDV.  
+
+### Using the `plm` package
+
+We can estimate the fixed effects model with `plm` from the `plm` package.  The `plm` package was created to make the estimation of linear panel models straightforward.  To learn more read the `vignette(plmPackage)`.  To estimate the one-way fixed effects model with `plm`, we need four arguments`formula`, `data`, `index`, and `model`.  The `formula` and  `data` arguments are the same as those in the `lm` call.  `index` is a vector of the units and the type of variation is invoked with `model`.  We estimate the model below:
+
+```{r}
+library(plm)  
+crime %>% 
+  select(cityname, policesworn, robbery, popcity) %>% 
+  filter(cityname %in% c("fresno", "losangel", "oakland", "sacramen", "sanfran")) %>% 
+  mutate(robbery=robbery/popcity*1000, 
+         policesworn = policesworn/popcity*1000,
+         cityname = as_factor(cityname)) -> # the %$% pipe does not function with plm
+  cali # the modified data are assigned to the object cali
+  plm(robbery ~ policesworn, data = cali, index = "cityname", model = "within")
+```
+
+Again, we get the same estimate of the slope coefficient.  
+
+## Two-Way Fixed Effects Models
+
+The two-way fixed effects model is given by:$$Y_{it}=\beta_0+\beta_1X_{1it}+\alpha_i+\tau_t+\nu_{it}$$
+
+So we need to incorporate time into the one-way fixed effects model.  This can be accomplished in one of two ways.  Time can be treated as a factor (dummy variable) or set the effect in `plm` to `"twoways"`.  The results will be the same.
+
+### Time as a factor
+
+```{r}
+crime %>% 
+  select(cityname, policesworn, robbery, popcity, year) %>% 
+  filter(cityname %in% c("fresno", "losangel", "oakland", "sacramen", "sanfran")) %>% 
+  mutate(robbery=robbery/popcity*1000, 
+         policesworn = policesworn/popcity*1000,
+         cityname = as_factor(cityname)) -> # the %$% pipe does not function with plm
+  cali # the modified data are assigned to the object cali
+  plm(robbery ~ policesworn + factor(year), data = cali, index = "cityname", model = "within")
+```
+
+
+### effect = "twoways"
+
+```{r}
+crime %>% 
+  select(cityname, policesworn, robbery, popcity, year) %>% 
+  filter(cityname %in% c("fresno", "losangel", "oakland", "sacramen", "sanfran")) %>% 
+  mutate(robbery=robbery/popcity*1000, 
+         policesworn = policesworn/popcity*1000,
+         cityname = as_factor(cityname)) -> # the %$% pipe does not function with plm
+  cali # the modified data are assigned to the object cali
+  plm(robbery ~ policesworn, data = cali, index = "cityname", model = "within", effect = "twoways")
+```
+
+As expected, the coefficient on the police variable is the same in each case. 
+
+## Difference-in-Difference Models
+
+In 1992 New Jersey raised it's minimum wage from $4.25 to $5.05 while neighboring Pennsylvania did not.  We can use a difference-in-difference model to investigate the effect of the treatment (increase in minimum wage) on the effect full time employment.  The `PoEdata`^[The PoEdata package is not housed at CRAN, instead it is house at GitHub, so installing it requires an extra step.] package contains a data set named `njmin3` that has 820 observations on 14 variables, call `?njmin` for more information.
+
+Estimate the basic model $$fte_{it}=\beta_0+\beta_1nj_i+\beta_2d_i+\beta_3(nj_i\times d_i) + \epsilon_{it}$$ where $fte_i$ is full-time equivalent employees, $nj_i$ is the treatment^[$nj_i$ takes the value 1 for New Jersey where the minimum wage was increased and the value 0 for Pennsylvania where the minimum wage was not changed], and $d_i$ is the after dummy^[$d_1$ takes the value 1 after the minimum wage is changed and the value 0 before the change.].  Since $\beta_3$ is the difference in differences of treated and control states, test the hypothesis: $$H_0:\beta_3=0$$$$H_1:\beta_3\ne0$$
+
+```{r}
+# Call the following only once.
+# install.packages("devtools") # required to insall GitHub packages do this only once
+# devtools::install_git("https://github.com/ccolonescu/PoEdata") # install the package from GitHub 
+```
+
+```{r}
+library(PoEdata)
+data(njmin3)
+njmin3 %$%
+  lm(fte ~ nj*d) %>% 
+  summary()
+```
+
+At the $\alpha=.05$ level of significance the t-statistic with 790 degrees of freedom is $\pm$ $`r qt(.975,790)`$. The calculated t-statistic is 1.631 so we fail to reject the null hypothesis and conclude that there is no evidence to suggest that the change in the minimum wage changed full-time employment. 
+
+We control for other variables below
+
+```{r}
+njmin3 %$%
+  lm(fte ~ nj*d + co_owned) %>% 
+  summary()
+```
+
+
+

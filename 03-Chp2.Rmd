@@ -1,0 +1,396 @@
+# Stats in the Wild: Good Data Practices {#chp2}
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA, message = FALSE, warning = FALSE,
+                      options(digits = 3, scipen = 999))
+```
+
+## Introduction
+
+I will introduce some additional R commands and packages through reproducing Table 2.1, Table 2.2, Table 2.5, and Figure 2.3.  In addition, we will go through the *Computing Corner*.
+
+## Table and Figure Reproduction
+
+### Table 2.1
+
+Since we saved the data frame we created in Chapter 1 as donuts.RData, we will `load` the file into global environment. We are only interested in the summary statistics for Weight and Donuts.  We can get a basic set of summary statistics by calling `summary` on the data frame.  But, `stargazer` from 
+the stargazer package.  The stargazer produces well formatted tables in LaTex code, HTML code, and ASCII text. 
+
+We will make use of the pipe operator from the `magrittr` package (also part of the `tidyverse`), as well.  The pipe operator `%>%` (ctr-shift-m shortcut in R Studio) allows for more intuitive reading of code especially when nesting commands inside of each other.  Take a simple example of finding calling the `str` command on a data frame, `df`.  Without the pipe operator ` %>% `, we would call the command like this `str(df)` and you might read this aloud alike this find the structure of df.  With the pipe operator, call the command like this `df %>% str()`.  Read aloud it might be something like this "take the `df` data and find its structure."  The pipe operator really shines when functions are nested together, as we shall see below.
+
+```{r, comment=NA, warning=F, message=F}
+load("donuts.RData")
+library(tidyverse)
+library(stargazer)
+donuts %>% 
+  select("Weight" = weight, "Donuts" = donuts_per_week) %>% # choose and rename the columns
+  as.data.frame %>% # stargazer doesn't play nice with tibbles
+    stargazer(type = "text", # tell stargazer to produce an ASCII text version of the table
+              title = "Table 2.1", 
+              omit.summary.stat = c("p25", "p75")) # omit the default 1st and 3rd quartiles
+```
+
+### Table 2.2
+
+To reproduce Table 2.2 we will need to add a variable named male which will take on the value 1 for each observation in the data that represents a male and a 0 otherwise.
+
+```{r}
+load("donuts.RData")
+donuts$name # this syntax reads print the variable name from the donuts data frame.
+```
+
+Making use of donuts$name we see that the observations 1, 4, 5, 6, 7, 8, 9, 10, 11 are male and observations 2, 3, 12, 13 are not. We add the variable male to the donuts data frame as follows:
+
+```{r}
+donuts$male <- c(1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0)
+```
+
+Call `table` to create a rudimentary version of Table 2.2
+
+```{r}
+donuts$male %>% 
+  table()
+```
+
+
+### Table 2.5
+
+To reproduce Table 2.5 we must first retrieve the data.  We will retrieve the data directly from the agencies responsible for their collection. You can retrieve the data as a comma-separated values (`csv`) file.  A `csv` file is a plain text file in which the data are stored in a tabular format with values separated by a comma. 
+
+The crime data can be found on the U.S. Department of Justice Federal Bureau of Investigation Uniform Crime Reporting Statistics [website](https://www.ucrdatatool.gov/). The single parent, urban, and poverty data can found on the U.S. Census [website](https://www.census.gov/).
+
+An investigation of the CrimeOneYearofData.csv file shows that there is meta information contained in the file along with the data.  We could open the csv file in Excel and edited to remove the information or we could read it directly into R using `read_csv` from the `readr` package with options to ignore the meta information. The readr package has many advantages over the base R read functions, see `vignette("readr")` for more information.  All of the text's data files are available in `csv` format, so we will make repeated use of `read-csv`. Investigation of the file with either Excel or text editor, shows the first nine rows are either blank or contain information about the data.  Rows 63 to 183 contain footnotes and other additional information about the data.  The names of the variables are in row ten of the csv file; so, we will skip the first nine rows using the option `skip`.  We can choose the rows that contain the states and Washington, D.C., with the `n_max` option.  Also, we need only the columns that contain the state names and the violent crime numbers.  After reading in the data we will use `select` from the `dplyr` package. 
+
+Similar to `ggplot` being based on the grammar of graphics, `dplyr` is a grammar of data manipulation.  dplyr consists of a set of "verbs" to help solve common data manipulation problems.  To learn more about dplyr read `vignette("dplyr")`,  visit [dplyr](https://dplyr.tidyverse.org/), or for a good introduction visit the [data import chapter](https://r4ds.had.co.nz/transform.html) in *R for Data Science*.  We will make use of the pipe operator from the `magrittr` package (also part of the `tidyverse`), as well.  
+
+
+```{r warning=F, message=F}
+library(readr)
+crime_one_year_of_data <- read_csv("Data/CrimeOneYearofData.csv", # read the data from its location
+                               skip = 9, # start at row 10
+                               n_max = 51) %>% # use only 51 records (ignores the US total row)
+  select(c(1,3)) # select only the first and third columns
+```
+
+Using `glimpse` from dplyr, we see that we have a tibble with 51 observations and 2 variables.  `glimpse` is similar to `str`.
+
+```{r warning=F, message=F}
+crime_one_year_of_data %>% 
+  glimpse
+```
+
+We can see that State is a character vector and Violent Crime Rate is a numeric vector.  Looking at the names of the variables we can see they do not adhere to the stylistic guidelines discussed above.  The State variable begins with a capital letter and the Violent Crime Variable has capital letters and spaces in its name (the spaces are why you see the tick mark "`" before and after the name).  The state names are spelled out, but to reproduce Figure 2.3 we need to change those to two-letter abbreviations.  
+
+To bring the names into stylistic guidelines we can use `clean_names` from the janitor package, `snake case` is the default conversion.  Note, the versatility of the ` %>% ` operator.  If we did not use the ` %>% ` operator, the code would have been written as `glimpse(crime_one_year_of_data <- clean_names(crime_one_year_of_data))`  
+
+```{r, message=F, warning=F}
+library(janitor)
+crime_one_year_of_data <- crime_one_year_of_data %>% 
+  clean_names() %>% 
+  glimpse
+```
+
+We will read the other data in a similar fashion. 
+
+```{r, message=F, warning=F}
+# Source: U.S. Census Bureau, 2009 American Community Survey, Table C23008
+ACS_09_1YR_C23008_with_ann <- read_csv("Data/ACS_09_1YR_C23008_with_ann.csv", 
+    skip = 1,
+    n_max = 51) %>% 
+  clean_names() 
+names(ACS_09_1YR_C23008_with_ann)[names(ACS_09_1YR_C23008_with_ann) == "geography"] <- "state"
+# names(ACS_09_1YR_C23008_with_ann) looks at all the names 
+# [names(ACS_09_1YR_C23008_with_ann) == "geography"] extracts the column number of the name we want to change
+# <- "state" assigns the name state to that column number
+ACS_09_1YR_C23008_with_ann %>% glimpse()
+```
+
+To create the percentage of children with single parents, add those under 6 living with one parent to those between 6 and 17 living with one parent and divide by the estimated total.  We create the new variable with the `mutate` verb from dplyr and `select` state and percent with single parents into a new data frame.
+
+```{r, message=F, warning=F}
+single_parents <- 
+ACS_09_1YR_C23008_with_ann %>% 
+  mutate(percent_single_parents = 
+           (estimate_under_6_years_living_with_one_parent + 
+              estimate_6_to_17_years_living_with_one_parent) / 
+           estimate_total) %>% 
+  select(state, percent_single_parents) %>% 
+  glimpse()
+```
+
+```{r, message=F, warning=F}
+# Source: U.S. Census Bureau, 2009 American Community Survey, Table S1701
+ACS_09_1YR_S1701_with_ann <- read_csv("Data/ACS_09_1YR_S1701_with_ann.csv", 
+    skip = 1,
+    n_max = 51) %>% 
+  clean_names() %>% 
+  select("state" = geography, # directly name the variables when selected
+         "percent_poverty" = percent_below_poverty_level_estimate_population_for_whom_poverty_status_is_determined) %>% 
+  glimpse()
+```
+
+To create the percent urban in 2009, we need to interpolate using the 2000 and 2010 censuses.  After reading each set of data we will combine them into one data frame using `right_join` from the dplyr package.
+
+```{r}
+# Source: U.S. Census Bureau, Table P002
+DEC_00_SF1_P002_with_ann <- read_csv("Data/DEC_00_SF1_P002_with_ann.csv", 
+    skip = 1) %>% 
+  clean_names() %>%
+  select("state" = geography, "total_00" = total , "urban_00" = urban) %>% 
+  glimpse()
+# Source: U.S. Census Bureau, Table H2
+DEC_10_SF1_P2_with_ann <- read_csv("Data/DEC_10_SF1_P2_with_ann.csv", 
+    skip = 1) %>% 
+  clean_names() %>%
+  select("state" = geography, "total_10" = total , "urban_10" = urban) %>% 
+  glimpse()
+```
+
+Note that total_10 from the 2010 census is a character vector.  This means that there is at least one observation that includes characters.  In fact, we can see at least 3 of the observations include parenthetical notes.  `print` the variable to the screen to confirm each of the patterns is of the form "(some text)". 
+
+```{r}
+DEC_10_SF1_P2_with_ann$total_10
+```
+
+We have confirmed that undesirable string has the same form in each position it exists.  We must remove those comments and coerce the variable to numeric to proceed.  We can determine how many instances of these comments occur using `str_detect` from the `stringr` package.  `str_detect` will return a logical vector, so we need only sum the vector to count the number of times this occurs.
+
+When calling `sum` on a logical vector, TRUE is treated as 1 and FALSE as 0, so summing the vector "counts" the number of TRUE occurrences.  A regular expression, `regex` or `regexp`, is a sequence of characters that define a search pattern, to learn more visit [regexr.com](https://regexr.com/).  The pattern we are looking for here is given by "\\(.+\\)".  Since the parenthesis is a special character, it must be escaped with \\, the . is a wild card, the + means 1 or more, so the .+ means find anything that appears 1 or more times.  So the expression can be read as start with ( find anything which occurs one or more times and end with ).  
+
+```{r}
+str_detect(DEC_10_SF1_P2_with_ann$total_10, "\\(.+\\)") %>% 
+  sum()
+```
+
+The pattern occurs 13 times.  We need to remove the string and coerce the character vector to a numeric vector.  `str_replace_all` will remove all occurrences of the string.  `as.numeric` will coerce the character vector to a numeric vector.  We will make use of the "two-way" pipe operator `%<>%` in each function call.  This operator takes the left hand side passes it to to the function and returns the result back to the original vector effectively overwriting it.
+
+```{r, message=F, warning=F}
+library(magrittr)
+# the  %<>% operator is a "two way" pipe that sends the result back to the left hand side.
+DEC_10_SF1_P2_with_ann$total_10 %<>% str_replace_all("\\(.+\\)", "") # "" replaces the string with blank
+DEC_10_SF1_P2_with_ann$total_10 %<>% as.numeric()
+DEC_10_SF1_P2_with_ann %>% glimpse()
+```
+
+We see that total_10 is now a numeric vector. 
+
+We can now combine the two data frames using `right_join` from the dplyr package.  Since each data frame has the state variable, `right_join` will add the columns from the 2010 census to the end (right) of the 2000 census matching observations by state.  We will assign the result to percent_urban.
+
+```{r}
+urban <- DEC_00_SF1_P002_with_ann %>% 
+  right_join(DEC_10_SF1_P2_with_ann) %>% 
+  glimpse()
+```
+
+We can, now, interpolate the 2009 observations from the 2000 and 2010 observations.  Since 2009 is nine tenths of the distance to 2010 from 2000, we will add 9/10 of the difference between the two observations to the 2000 observation.  
+
+```{r}
+urban %<>% 
+  mutate(percent_urban = (.9 * (urban_10 - urban_00) + urban_00) / 
+           (.9 * (total_10 - total_00) + total_00) * 100) %>% 
+  select(state, percent_urban)
+```
+
+We now have 4 data frames containing the information we need to create Table 2.5 and Figure 2.3.  We will create a one data frame by joining the four data frames using the dplyr package.  
+
+```{r}
+crime_df <- crime_one_year_of_data %>% 
+  right_join(single_parents) %>% 
+  right_join(urban) %>% 
+  right_join(ACS_09_1YR_S1701_with_ann) %>% 
+  glimpse()
+```
+
+Figure 2.3 includes state abbreviations rather than state names.  We will change the names into abbreviations with the help of a built in character vector. state.name is character vector of state names, excluding Washington DC, built into R. We can concatenate that vector with the character string "District of Columbia", sort the new character vector alphabetically, convert the names to abbreviations with `state2abbr` from the `openintro` package, and assign the result to the state vector in the crime_one_year_of_data data frame.
+
+```{r, message=F, warning=F}
+library(openintro)
+state_abb <- c(state.name, "District of Columbia") %>% 
+  sort() %>% 
+  state2abbr()
+crime_df$state <- state_abb  
+crime_df %>% glimpse
+```
+
+We proceed as we did with Table 2.1 to reproduce Table 2.3.  
+
+```{r, comment=NA, warning=F, message=F}
+crime_df %>% 
+  select("Violent crime rate (per 100,00 people)" = violent_crime_rate,
+         "Percent single parents" = percent_single_parents,
+         "Percent urban" = percent_urban,
+         "Percent poverty" = percent_poverty) %>%
+  as.data.frame() %>% 
+  stargazer(type = "text", 
+            title = "Table 2.3",
+            omit.summary.stat = c("p25", "p75")) 
+```
+
+### Figure 2.3
+
+We will use `ggplot` from the `ggplot2` package to reproduce Figure 2.3.  We will use the `plot_grd` from `cowplot` package to create a grid of the three individual plots after we create them individually.
+
+```{r comment=NA, warning=F, message=F}
+plot_urban <- 
+  crime_df %>% 
+  ggplot(aes(x = percent_urban, y = violent_crime_rate)) +
+  labs(x = "Percent urban\n(0-to-100 scale)", # \n creates a new line
+       y = "Violent\ncrime\nrate\n(per\n100,000\npeople)") +
+  geom_text(aes(label = state), color = "blue") +
+  scale_y_continuous(breaks = seq(200, 1200, 200)) + # creates a sequence from 200 to 1200 by 200
+  scale_x_continuous(breaks = seq(40, 100, 10)) + # creates a sequence from 40 to 100 by 10
+  theme(axis.title.y = element_text(angle = 0), 
+        panel.grid = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line())
+
+plot_single <- 
+  crime_df %>% 
+  ggplot(aes(x = percent_single_parents, y = violent_crime_rate)) +
+  labs(x = "Percent single parent\n(0-to-1 scale)", # \n creates a new line
+       y = "") +
+  geom_text(aes(label = state), color = "blue") +
+  scale_y_continuous(breaks = seq(200, 1200, 200)) +
+  theme(axis.title.y = element_text(angle = 0), 
+        panel.grid = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line())
+
+plot_poverty <- 
+  crime_df %>% 
+  ggplot(aes(x = percent_poverty, y = violent_crime_rate)) +
+  labs(x = "Percent poverty\n(0-to-100 scale)", # \n creates a new line
+       y = "") +
+  geom_text(aes(label = state), color = "blue") +
+  scale_y_continuous(breaks = seq(200, 1200, 200)) +
+  scale_x_continuous(breaks = seq(8, 22, 2)) +
+  theme(axis.title.y = element_text(angle = 0), 
+        panel.grid = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line())
+
+library(cowplot)
+plot_grid(plot_urban, plot_single, plot_poverty,  ncol = 3)
+
+```
+
+FIGURE 2.3: Scatterplots of Violent Crime against Percent Urban, Single Parent, and Poverty
+
+## Computing Center
+
+### Reading Data
+
+There are packages available to read data formatted in a variety of ways into R.  Data can also be imported using the Import Dataset icon in the Environment/History pane.  When learning to import data, this method can be useful as it will create the command line necessary to import the data, which you can then paste into your R Script of R Markdown file.
+
+### Manually Entering Data
+
+In Chapter 1 we saw that we can directly (manually) enter data into R as well. Below is the appropriate syntax for doing so.
+
+```{r}
+name <- c("Homer", "Marge", "Lisa", "Bart", "Comic Book Guy", "Mr. Burns", "Smithers", "Chief Wiggum", "Principle Skinner", "Rev. Lovejoy", "Ned Flanders", "Patty", "Selma")
+donuts_per_week <- c(14, 0, 0, 5, 20, 0.75, 0.25, 16, 3, 2, 0.8, 5, 4)
+weight <- c(275, 141, 70, 75, 310, 80, 160, 263, 205, 185, 170, 155, 145)
+```
+
+We can combine this into a single "file" called a data frame as follows:
+
+```{r}
+Donuts <- data.frame(name, donuts_per_week, weight)
+Donuts %>% 
+  str()
+```
+
+The character vector "name" is coerced to a Factor by default.  Factors in R are store as a vector of integer values with a corresponding set of character values.  We will see that Factors are very useful, however, in this case we want name to remain a character vector.  If we add the option `stringsAsFactors = FALSE` to our call of `data.frame` we can prevent the coercion. Our we can call `tibble` as described in Chapter 1. 
+
+```{r}
+Donuts <- data.frame(name, donuts_per_week, weight, stringsAsFactors = FALSE)
+Donuts %>% str()
+```
+
+You can see in the Global Environment tab of the Environment/History pane that you have an object named Donuts that has 13 observations on 3 variables.  In addition, you can see under values you have each variable as well.  
+
+### Simple Statistics
+
+R has many built in calls to get basic statistics on data.  For example, to get the mean of a variable call `mean()`.  Be aware, that if there are missing values in the data the function call will return NA as it's result.  The donuts data frame contains to missing values "NA", so it won't be a problem.  Some simple exploratory data analysis will let you know if you have any issues in the data.  We saw one of those problems above when we had a variable that we thought was numeric, but was read in as a character vector.  `summary` is a good place to start. 
+
+```{r}
+donuts %>% 
+  summary()
+```
+
+We confirmed that there are no missing values in our data.  If there were, we can easily deal with them with a option in the function call (I include the option below.)
+
+```{r}
+donuts$weight %>% 
+  mean(na.rm = TRUE)  
+```
+
+Call `var` or `sd` to return the sample variance or sample standard deviation.  Of course the standard deviation can also be calculated by calling `sqrt` on the result of the `var` call.  There are multiple ways to retrieve the number of observations of a variable or data frame. The minimum and maximum values are returned by calling `min` and `max`. As described in the text, we can call `sum` on the result of the call `is.finite`.  `nrow` will return the number of observations in a data frame, `NROW` will return the number of observations of a vector or single variable. 
+
+```{r}
+donuts$weight %>% var()
+donuts$weight %>% var() %>% sqrt()
+donuts$weight %>% sd()
+donuts$weight %>% min()
+donuts$weight %>% max()
+donuts$weight %>% NROW()
+```
+
+To return a variety of descriptive statistics on a data frame or variable we can call `stargazer` from the stargazer package.  
+
+```{r}
+donuts %>% 
+  as.data.frame %>% 
+  stargazer(type = "text")
+```
+
+Subsetting in R can be accomplished in a variety of ways.  In Base R, use [] syntax. Use brackets can be used to call specific rows and columns from a matrix or data frame. To return the observation in the 12^th^ row and 3rd column call `donuts[12,3]`.  To return all of the observations in a specific row or column, leave the row or column number out of the call.  To return all of the observations from the 3rd column call `donuts[,3]`.  To return the observations for an individual record, say the 4^th^ row, call `donuts[4,]`.  To choose (subset) all of those records where, e.g,, donuts eaten per week is 0, call `donuts[donuts$donuts_per_week == 0,]`; to choose all those records where donuts donuts are not equal to 0, call `donuts[donuts$donuts_per_week != 0,]`.  We can also subset using `filter` from `dplyr`. An advantage of subsetting with `dplyr` is that the resulting tibble can be piped into the another function call.
+
+```{r}
+donuts[12,3]
+donuts[,3]
+donuts[4,]
+donuts[donuts$donuts_per_week == 0,]
+donuts[donuts$donuts_per_week != 0,]
+donuts %>% 
+  filter(donuts_per_week == 0)
+donuts %>% 
+  filter(donuts_per_week != 0)
+
+```
+
+We can subset on more than one variable as well.  Using Base R we can choose all those males who consumed some donuts per week by calling `donuts[donuts$donuts_per_week != 0 & donuts$male == 1]`.  We can choose all those observations where donut consumption per week is more than 15 or the person is female by using the or operator | in call `donuts[donuts$donuts_per_week > 15 | donuts$male != 1,]`.  `filter` can be used as well.
+
+```{r}
+donuts[donuts$donuts_per_week != 0 & donuts$male == 1,]
+donuts %>% 
+  filter(donuts_per_week != 0 & male == 1)
+# a slightly more intuitive alternative is:
+donuts %>% 
+  filter(donuts_per_week != 0) %>% 
+  filter(male == 1)  
+donuts[donuts$donuts_per_week > 15 | donuts$male != 1,]
+donuts %>% 
+  filter(donuts_per_week > 15 | male != 1)
+
+```
+
+We can modify Figure 2.2 to include only males by modifying our original code by piping the filtered results into `ggplot`.  
+
+```{r figure2.2mod, message = F, warning=F}
+library(ggrepel)
+donuts %>% 
+  filter(male == 1) %>% 
+  ggplot(mapping = aes(x = donuts_per_week, y = weight)) + 
+  geom_vline(xintercept = 0, color = "gray80", size = 1) +
+  geom_point(color = "blue", size = 2) + 
+  labs(x = "Donuts", 
+       y = "Weight\n(in pounds)", # \n creates a new line
+       caption = "Figure 2.2: Weight and Donuts in Springfield") + 
+  geom_text_repel(aes(label = name), color = "blue") +
+  theme(axis.title.y = element_text(angle = 0), 
+          panel.grid = element_blank(), 
+          panel.background = element_blank(), 
+          axis.line = element_line(), 
+          plot.caption = element_text(hjust = 0)) 
+```
+

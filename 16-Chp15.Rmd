@@ -1,0 +1,206 @@
+# Advanced Panel Data {#chp15}
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA, message = FALSE, warning = TRUE, error = FALSE,
+                      options(digits = 3, scipen = 999))
+```
+
+In this chapter we will learn techinques in R for panel data where there might be serially correlated errors, temporal dependence with a lagged dependent variable, and random effects models.
+
+## The Data
+
+We will make use of the `Cigar` dataset from the `plm` package for this chapter. `Cigar` is a panel of 46 U.S. states over the period 1963-1992.  The variables are:
+
+* state - State number
+* year 
+* price - the price per pack of cigarettes in cents
+* pop - state population in thousands
+* pop16 - state population over the age of 16 in thousands
+* cpi - consumer price index (1983=100)
+* ndi - per capita disposable income in dollars
+* sales - cigarette sales per capita in packs
+* pimin - minimum price in adjoining states per pack of cigarettes in cents
+
+```{r}
+library(plm)
+data("Cigar")
+```
+
+
+The `plm` packages offers many functions to simplify the handling of advanced panel data.
+
+## Variation within Units
+
+`dplyr` verbs make checking for variation within units across multiple variables relatively simple. First we use `group-by` so that any functions will be applied to each state individually.  `summarize_all` will apply a function to each variable. 
+
+```{r}
+library(tidyverse)
+library(broom)
+library(magrittr)
+# Check for variaton by state.
+Cigar %>% 
+  group_by(state) %>% # ensures that subsequent functions will be performed by state
+  select(price, pop, pop16, cpi, ndi, sales, pimin) %>% 
+  summarise_all(sd) # sd is standard deviation 
+# Check for variation by year.
+Cigar %>% 
+  group_by(year) %>% 
+  select(-year, -state) %>% # the "-" indicates variables to be removed
+  summarise_all(sd)
+```
+
+CPI is the only variable with a standard deviation of 0 for all units.  As would be expected, CPI should not vary within year.  
+
+`pvar` from the `plm` package will perform the task of checking for variation.
+
+```{r}
+pvar(Cigar)
+```
+
+## Two-Way Fixed Effects Model
+
+Let's estimate cigarette demand as: $$sales_{it}=\beta_0+\beta_1price_{it}+\beta_2pop16_{it}+\beta_3ndi_{it}+\alpha_i+\tau_t+\nu_{it}$$
+
+We would expect $\beta_1<0$, $\beta_2>0$, and $\beta_3<0$ if cigarettes are an inferior good^[If cigarettes are a normal good we'd expect $\beta_3>0$]. 
+
+```{r}
+cigar_plm <- plm(sales ~ price + pop16 + ndi, 
+                 data = Cigar, # recall plm does not play nice with the expose pipe, %$%
+                 index = c("state", "year"), 
+                 model = "within", 
+                 effect = "twoways")
+cigar_plm %>% 
+  tidy()
+```
+
+Each of the coefficients has the expected sign and is significant at the 5% level.
+
+## Testing for autocorrelation
+
+Testing for autocorrelation is done by testing the following hypothesis: $$H_0:\rho=0$$ $$H_1:\rho\ne0$$
+
+```{r}
+Cigar %>% 
+  glimpse()
+```
+
+Our data are organized by unit by year, so we can estimate $\hat\rho$ directly.  First, obtain the residuals, *e*, from the estimated equation.  Estimate the equation $e=\rho e_{i,t-1}+\eta_{it}$.
+
+```{r}
+# Obtain the residuals
+Cigar$e <- cigar_plm$residuals
+# test of rho hat
+aux_1 <- 
+  Cigar %$%
+  lm(e ~ -1 + lag(e)) # -1 removes the constant.
+aux_1 %>% 
+  tidy()
+```
+
+We can reject the null hypothesis at the 1% level.
+
+We can also check for autocorrelation with the LM test by estimating the model $$\hat\epsilon_{it}=\rho\hat\epsilon_{i,t-1}+\gamma_1price_{it}+\gamma_2pop16_{it}+\gamma_3ndi_{it}+\eta_{it}$$ where $nR^2\sim\chi^2_{df=1}$.
+
+```{r}
+aux_2 <- 
+plm(e ~ lag(e) + price + pop16 + ndi,  
+    data = Cigar,
+    index = c("state", "year"), 
+    model = "within", 
+    effect = "twoways") 
+nR2 <- 
+  aux_2 %>% 
+  r.squared *
+  aux_2$df.residual 
+nR2 %>% 
+  pchisq(1, lower.tail = F)
+```
+
+Again, we can reject the null hypothesis of no autocorrelation.
+
+`pwartest` from the `lpm` package allows us to test for autocorrelation (`?pwartest` for relevant arguments).  
+
+```{r}
+pwartest(cigar_plm)
+```
+
+We reject the null hpothesis of no autocorrelation.
+
+## Estimating $\hat\rho$
+
+To correct for autocorrelation we need an estimate of $\hat\rho$. We can estimate $\hat\rho$ using either auxiliary regression from above.
+
+```{r}
+aux_1 %>%  
+   tidy()
+```
+
+Our estimate of $\hat\rho$ is `0.888` is `r aux_1$coef[1]`.  
+
+```{r}
+aux_2 %>% 
+  tidy()
+```
+
+Our estimate of $\hat\rho$ is `r aux_2$coef[1]`. 
+
+## Estimate a $\rho$-Transformed Model
+
+We can manually transform the data and compare the transformed model to the non-transformed model.
+
+```{r}
+rho_hat <- aux_2$coefficients[1] # set rho_hat to the coef of lagged e in aux_2
+plm(I(sales - rho_hat*lag(sales)) ~ 
+      I(price - rho_hat*lag(price)) + 
+      I(pop - rho_hat*lag(pop16)) + 
+      I(ndi - rho_hat*lag(ndi)), 
+    data = Cigar, 
+    index = c("state", "year"), 
+    model = "within", 
+    effect = "twoways") %>% 
+  summary()
+cigar_plm %>% 
+  tidy()
+```
+
+Now only $\hat\beta_1$ is significantly different than zero.
+
+We can use the `panelAR` package to directly estimate a corrected model^[Note the slight differences, because `panelAR` also corrects for heteroscedasticity.]. `?panelAR` for arguments necessary to estimate the corrected model.
+
+```{r}
+library(panelAR)
+panelAR(sales ~ price + pop +ndi, 
+        data = Cigar, 
+        panelVar = "state", 
+        timeVar = "year",
+        autoCorr = "ar1",
+        panelCorrMethod = "pcse") %>% 
+  summary()
+```
+
+## Lagged Dependent Variable Panel Data Model
+
+Let's estimate the lagged-depdendent variable model $$sales_{it} = \gamma sales_{i,t-1}+\beta_0+\beta_1price_{it}+\beta_2pop16_{it}+\beta_3ndi_{it}+\epsilon_{it}$$
+
+```{r}
+cigar_lag_plm <- plm(sales ~ lag(sales) + price + pop16 + ndi, 
+                 data = Cigar, # recall plm does not play nice with the expose pipe, %$%
+                 index = c("state", "year"), 
+                 model = "within", 
+                 effect = "twoways")
+cigar_lag_plm %>% 
+  summary()
+```
+
+## Random Effects Model
+
+```{r}
+plm(sales ~ price + pop16 + ndi,
+    data = Cigar,
+    index = c("state", "year"),
+    model = "random",
+    effect = "twoways" 
+    ) %>% 
+  summary()
+```
+

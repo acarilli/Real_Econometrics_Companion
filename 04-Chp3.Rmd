@@ -1,0 +1,180 @@
+
+# Bivariate OLS: The Foundation of Econometric Analysis {#cph3}
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA, message = FALSE, warning = FALSE,
+                      options(digits = 3, scipen = 999))
+```
+
+We will work through *Computing Corner*.
+
+## Estimating a simple regression
+
+To run a simple regression in R, make us of the function `lm`. Like all functions `lm` requires and argument list.  You can see the arguments required and the defaualt values, if any, in a variety of ways in R Studio.  `args(lm)` will return the arguments for the lm function.  `?lm` will open the help page in the Files/Plots/Packages/Help Pane, which can also be accessed by typing lm in the search in the same pane.  Estimating a regression using `lm` requires only two arguments: the formula and data arguments.  If you provide those arguments in that order, R doesn't require that you use the argument's name.  This is true for all functions in R, the default is that the arguments appear in order.  We can see by calling `str` on ols_donuts that `lm` creates a list object which contains 12 elements.  A list is an object that contains elements of several different types like, strings, vectors, matrices, lists, etc.  Each of those elements can be extracted from the list in much the same way as accessing pieces of a data frame.
+
+```{r}
+library(magrittr)
+load("donuts.RData")
+ols_donuts <- lm(formula = weight ~ donuts_per_week, data = donuts)
+ols_donuts %>% 
+  str()
+```
+
+You can see the type for each of the 12 elements in the list.  Each of those elements can be extracted by using the $ convention you use to get variables from a data frame (which is a type of list) as describe in the text.  In addition, there are many commands that will extract a standard set of elements and present them in conventional ways.  For example, to get the regression results, `summary` from base R, `stargazer` from the stargazer package, and `tidy` and `glance` from the `broom` package provide the output in useful ways.  `augment` from the broom package creates a tibble of actual, fitted, residuals, etc.  In fact, all of the commands in the `broom` package create tibbles which can useful for further analysis.  `stargazer` can be modified to include a variety of statistics.  So, you can extract fitted values or residuals, e.g., in the same way you retrieve any data from a data frame or tibble.
+
+```{r}
+library(tidyverse)
+library(broom)
+library(stargazer)
+ols_donuts %>% 
+  summary()
+ols_donuts %>% 
+  stargazer(type = "text")
+ols_donuts %>% 
+  tidy()
+ols_donuts %>% 
+  glance()
+ols_donuts %>% 
+  augment()
+```
+
+## scatter Plot with Regression Line
+
+ggplot2 makes adding a fitted regression line to a scatter plot very easy.  You need only add a geometry called geom_smooth with the appropriate method to plot.  The default is to include a confidence interval estimate around the fitted line.  To remove the error band add the option `se = FALSE`.
+
+```{r}
+donuts %>%
+  ggplot(aes(x = donuts_per_week, y = weight)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+
+## Subsetting Data for Regressions
+
+Subsetting can be directly done with the `subset` option in the `lm` call.  To run a regression that excludes the Homer record, use the option `subset = (name != "Homer")`.
+
+```{r}
+ols_no_homer <- lm(formula = weight ~ donuts_per_week, data = donuts, subset = (name != "Homer"))
+ols_no_homer %>% 
+  tidy()
+ols_no_homer %>% 
+  summary()
+```
+
+Alternatively we can make use of `filter` from the `dplyr` package.  Recall, `filter` is the data manipulation verb that chooses observations in a data frame.  I introduce the exposition operator `%$%` from the magrittr package.  `%$%` is useful at the end of a pipeline to expose your manipulated data to function.  You can use it with `subset` or `filter`. 
+
+```{r}
+donuts %>%
+  subset(name != "Homer") %$%
+  lm(weight ~ donuts_per_week)
+
+donuts %>%
+  filter(name != "Homer") %$%
+  lm(weight ~ donuts_per_week)
+```
+
+To include those observations where weight is greater than 100:
+
+```{r}
+donuts %>%
+  subset(weight > 100) %$%
+  lm(weight ~ donuts_per_week)
+
+donuts %>%
+  filter(weight > 100) %$%
+  lm(weight ~ donuts_per_week)
+```
+
+## Heteroscesdasticity-consistent standard errors.  
+
+The `estimatr` package allows you to directly calculate robust standard errors.  
+
+R Studio allows you to install packages in the Files/Plots/Packages/Help Pane by clicking on the Install icon on the Packages tab; as you type the name of the package, you will see completion suggestions.  Choose the package you wish to install and R Studio will install it.  You can load a package by checking the box next to its name in the Packages tab.  Clicking on the packages name will bring up info about the pacakge. 
+
+Call `lm_robust()` to estimate an OLS model with robust standard errors with the `se_type = "HC0` option for the most common method of generating robust standard errors.
+
+```{r}
+library(estimatr)
+ols_robust <- lm_robust(weight ~ donuts_per_week, donuts, se_type = "HC0")
+ols_robust %>% 
+  tidy()
+```
+
+## Generating Random Numbers 
+
+Random numbers can be useful in variety of applications in econometrics.  One application is simulation, where we simulate observations to demonstrate properties of OLS estimators, eg.  Once you've decided the distribution from which your random numbers will be drawn and the number of draws you wish to make, you will create a vector of those observations.  The most intuitive form of random number generation is `sample`.  Suppose you wanted to simulate the role of a single die, use `sample(1:6,1)` or using the pipe operator `1:6 %>% sample(1)`.  Read the command aloud like this "from the integers 1, 2, 3, 4, 5, 6, choose a sample of size 1."  You can choose larger samples by changing the size argument.  The size argument can not be larger than the number of integers unless the default option of replace = FALSE, is changed to replace = TRUE.  To generate a simulation of 100 rolls of a single die call `1:6 %>% sample(100, replace = TRUE)`.  
+
+Random numbers may be generate from any probability distribution.  The random number generator function for a given probability distribution begins with the letter r followed by the name of the distribution in r.  To generate uniform random numbers between 0 and 1, use `runif`, from a normal distribution use `rnorm`, etc.  Use `args(distribution name)` or `?distribution name` to find out more about the necessary arguments for individual distributions.   
+
+## Simulations
+
+Monte Carlo simulations are a useful tool for understanding how the value of an estimator changes as the sample data changes.  Consider the example of rolling a single die n times and calculating the average number of pips on the side up face of the die.  We know that $\bar X$ is an ubiased estimator of $\mu$.  Recall that an estimator, $\hat\theta$ is unbiased if $E(\hat\theta) = \theta$.  We can show that $E(\bar X) = \mu$.  Let $$\bar X = \frac{\sum{x_i}}{n}$$
+
+Then, $$\begin{aligned}
+E(\bar{X}) &= E\left( \frac{\sum{x_i}}{n} \right)\\
+&= \frac{1}{n}\sum{E(x_i)} \\
+&= \frac{1}{n}\sum{\mu}\\
+&= \frac{1}{n}n\mu\\
+&= \mu
+\end{aligned}$$
+
+So, we would expect $\bar X = 3.5$ since $\mu = 3.5$.  Simulating 100 rolls of a single die 1000 times would allow us to look at the sampling distribution of the sample mean.  This will allow us to see the range of values that $\bar X$ might take on.  
+
+Perform a Monte Carlo simulation by generating many samples, find the value of the estimator, and investigate it's distribution.  We could do this by generating a single sample, calculating the value of the estimator, and repeating the desired number of times.  This would be tedious.  We can instead make use of the concept of a loop in R.  A loop evaluates the same code repeatedly until some threshold is met. 
+
+There are two types of loops in R, for loops and while loops.  A for loop runs the code a specific number of times; a while loop runs the code until a logical condition is met.  We will use a for loop to run our simulation.  First, instruct R on the number of times to run through the loop.  The loop itself is contained between the braces {}. 
+
+```{r}
+# library(tidyverse)
+xbar <- 1 # initialize the vector to store the observations of x bar
+for(i in 1:1000) {
+  x <- 1:6 %>% sample(100, replace = T)
+  xbar[i] <- mean(x)
+}
+xbar %>% 
+  mean() # find the mean of the 1000
+xbar %>%
+  as.data.frame() %>% # coerce xbar to a data frame
+  ggplot(aes(x = xbar)) + # map xbar to x
+  geom_density() + # geom_density creates a "probability distribution"
+  geom_vline(xintercept = 3.5) # place a verticle line at the mean.
+```
+
+We could do the same thing with the simple linear regression $Y_i = \beta_0+\beta_1X_i+\epsilon_i$.  We know the OLS estimator of $\beta_1$ is $\hat\beta_1$.  The value of the estimator, called the estimate, depends upon the particular sample that is drawn.  Monte Carlo simulation will allows to see how the estimate changes across many samples.  
+
+For $\hat\beta_j$ to be an unbiased esitmator of $\beta_j$, $E(\hat\beta_j) = \beta_j$.  The proof is beyond the scope of this manual, but you will see or have seen the proof.  
+
+Suppose we perform a Monte Carlo simulation with know values of $\beta_0$ and $\beta_1$ where the error term $\epsilon_i$ is drawn from a normal distribution with a mean of zero and a constant variance, i.e., $\epsilon_i ~ N(0, \sigma^2)$, will the estimates be statistically the same as the known parameters.  Let's find out.  Suppose the population regression function is $y_i = 10 + 3x_i$,
+
+```{r}
+n <- 50
+N <- 1000 # of simulations
+beta_0 <- 10
+beta_1 <- 3
+beta_hat_0 <- 0
+beta_hat_1 <- 0
+y <- 0
+x <- 1:10 %>% sample(n, replace = T) # we would determine x here if x were fixed in repeated sampling
+for(i in 1:N) {
+ x <- 0:10 %>% sample(n, replace = T)
+ epsilon <- rnorm(n, 0 , 2)
+ y <-  beta_0 + beta_1*x + epsilon
+ beta_hat_0[i] <- lm(y ~ x)$coef[1]
+ beta_hat_1[i] <- lm(y ~ x)$coef[2]
+}
+#
+beta_hat_0 %>% 
+  mean()
+beta_hat_1 %>% 
+  mean()
+beta_hat_0 %>%
+as.data.frame() %>%
+ggplot(aes(x = beta_hat_0)) +
+geom_density() +
+geom_vline(xintercept = 10)
+beta_hat_1 %>%
+as.data.frame() %>%
+ggplot(aes(x = beta_hat_1)) +
+geom_density() +
+geom_vline(xintercept = 3)
+```

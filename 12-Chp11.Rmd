@@ -1,0 +1,119 @@
+
+# Regression Discontinuity: Looking for Jumps in Data {#chp11}
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA, message = FALSE, warning = FALSE,
+                      options(scipen = 999, digits = 3))
+```
+
+We will learn techniques in R to deal with "jumps" in the data. We will use the following libraries
+
+```{r}
+library(tidyverse)
+library(broom)
+```
+
+## Same slope
+
+To estimate an RD model where the slope is the same before and after the cutoff value make use of the `ifelse` call in R.  `ifelse` returns one value if the test condition holds and another when it doesn't.  For example suppose the we create a variable, *T* that takes on the value 1 when another variable say *X* is greater than 10.  Create *T* with the call `T -> ifelse(X > 10, 1, 0)`^[Using *T* as variable name is not good practice as T is an abbreviation for TRUE, so we will use *D* throughout our code.]. 
+
+Let's estimate an RD model using the data from a 2009 paper by Carpenter and Dobkin about the effect of increasing the drinking age on mortality rates.^[Carpenter, Christopher and Carlos Dobkin. "The Effects of Alcohol Consumption on Mortality: Regression Discontinuity from the Minimum Drinking Age," *American Economic Journal: Applied Econometrics*, 2009, 1:1, 164-182.  
+The data are available at https://github.com/jrnold/masteringmetrics/tree/master/masteringmetrics/data in mlda.rda]. Let's just look at motor vehicle deaths as a function of age.
+
+```{r}
+load("Data/mlda.rda")
+mlda %>% 
+  ggplot(aes(x = agecell, y = mva)) + 
+  geom_point() +
+  geom_vline(xintercept = 21) + 
+  labs(y = "Deaths in Moving Vehicle Accidents", x = "Age")
+```
+
+There appears to be a discontinuity at age 21.  Let's estimate the RD model $$mva = \beta_0+\beta_1T+\beta_2(agecell-21)+\epsilon$$  
+where  
+$$\begin{aligned}
+T &= 1 \text{ if agecell} \geq 21 \\
+T &= 0 \text{ if agecell} < 21
+\end{aligned}$$
+
+We will make use of the `tidyverse` verb `mutate` and pipe operators from the `magrittr` package to create *D*^[Recall we will use *D* to avoid the ambiguity of *T* as a variable name.].  
+
+```{r}
+mlda %>% 
+  mutate(D = ifelse(agecell >= 21, 1, 0)) %$% 
+  lm(mva ~ D + I(agecell - 21)) %>% 
+  summary()
+```
+
+## Varying Slopes 
+
+Let's estimate the relationship described above with a varying slopes RD model.  The model now has the form:  $$mva = \beta_0+\beta_1T+\beta_2(agecell-21)+\beta_3(agecell-21)T+\epsilon$$  
+where  
+$$T = 1 \text{ if agecell}\geq21$$ $$T = 0 \text{ if agecell}<21$$
+```{r}
+mlda %>% 
+  mutate(D = ifelse(agecell >= 21, 1, 0)) %$% 
+  lm(mva ~ D * I(agecell - 21)) %>% 
+  summary()
+```
+
+## Plot RD Model
+
+Use `ggplot` to plot the RD model. We include plots with an simple regression and an RD model.
+
+```{r}
+mlda %>% 
+  select(agecell, mva) %>% 
+  mutate(D = as.factor(ifelse(agecell >= 21, 1, 0))) %>% 
+  ggplot(aes(x = agecell, y = mva)) +
+  geom_point(aes(color = D)) + 
+  geom_smooth(method = "lm")
+
+mlda %>% 
+  select(agecell, mva) %>% 
+  mutate(D = as.factor(ifelse(agecell >= 21, 1, 0))) %>% 
+  ggplot(aes(x = agecell, y = mva, color = D)) +
+  geom_point() + 
+  geom_smooth(method = "lm")
+```
+
+
+## `rddtools` package
+
+We can estimate RD models with the `rddtools` package^[`?rddtools` for more.].  To estimate an RD model with `rddtools` first create an `rdd_data` object as follows: `rdd_data(y = df$y, x = df$x, cutpoint = C)`.  Use the `rdd_data` object with `rdd_reg_lm` to estimate the model. 
+
+### Same slope 
+
+To estimate an RD model with a constant slope call the argument `rdd_reg_lm(rdd_object, slope = "same")`
+
+
+```{r}
+library(rddtools)
+rdd_data(mlda$mva, mlda$agecell, cutpoint = 21) %>% 
+  rdd_reg_lm(slope = "same") %>% 
+  summary()
+```
+
+Note the results are the same as above.
+
+### Varying Slopes
+
+To estimate an RD model with varying slopes, change the slope argument to "separate".
+
+```{r}
+rdd_data(mlda$mva, mlda$agecell, cutpoint = 21) %>% 
+  rdd_reg_lm(slope = "separate") %>% 
+  summary()
+```
+
+### Scatter Plot
+
+```{r}
+rdd_data(mlda$mva, mlda$agecell, cutpoint = 21) %>% 
+  rdd_reg_lm(slope = "same") %>% 
+  plot()
+rdd_data(mlda$mva, mlda$agecell, cutpoint = 21) %>% 
+  rdd_reg_lm(slope = "separate") %>% 
+  plot()
+```
+
