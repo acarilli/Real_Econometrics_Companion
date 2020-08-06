@@ -1,1 +1,1 @@
-This is a minimal example of a book based on R Markdown and **bookdown** (https://github.com/rstudio/bookdown). Please see the page "Get Started" at https://bookdown.org/ for how to compile this example.
+This book is intended as an R Companion to Real Econometrics by Michael Bailey. It relies heavily on the tidyverse and includes code examples for each chapter.  The examples will demonstrate the necessary code to complete the end of chapter exercises.
