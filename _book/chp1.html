@@ -1,30 +1,30 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 3 The Quest for Causality | R Companion to Real Econometrics</title>
-  <meta name="description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
-  <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
+  <meta name="description" content="R, RStudio IDE, and the tidyverse companion to Bailey’s Real Econometrics" />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 3 The Quest for Causality | R Companion to Real Econometrics" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  <meta property="og:description" content="R, RStudio IDE, and the tidyverse companion to Bailey’s Real Econometrics" />
   
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Chapter 3 The Quest for Causality | R Companion to Real Econometrics" />
   
-  <meta name="twitter:description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  <meta name="twitter:description" content="R, RStudio IDE, and the tidyverse companion to Bailey’s Real Econometrics" />
   
 
 <meta name="author" content="Tony Carilli" />
 
 
-<meta name="date" content="2019-09-23" />
+<meta name="date" content="2020-08-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -40,6 +40,7 @@
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
 
 
 
@@ -47,12 +48,22 @@
 
 
 
+
+
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.13/datatables.js"></script>
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -61,14 +72,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -77,9 +90,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -128,7 +141,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./">R Companion to *Real Econometrics*</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a></li>
 <li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a><ul>
 <li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#install-r-and-rstudio"><i class="fa fa-check"></i><b>2.1</b> Install R and RStudio</a></li>
 <li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#using-rstudio"><i class="fa fa-check"></i><b>2.2</b> Using RStudio</a><ul>
@@ -315,29 +328,40 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Chapter 3</span> The Quest for Causality</h1>
 <div id="introduction" class="section level2">
 <h2><span class="header-section-number">3.1</span> Introduction</h2>
-<p>In order to familiarize you with the R code necessary to complete the assignments in <em>Real Econometrics</em>, I will reproduce all examples from Chapter 1. As I present the examples, I will explain the syntax for each pieced of code. You will also be introduced to using R Markdown to produce a seamless integration of your code, your output, and your reports.</p>
+<p>In order to familiarize you with the R code necessary to complete the assignments in <em>Real Econometrics</em>, I will reproduce all examples from Chapter 1. As I present the examples, I will explain the syntax for each piece of code. You will also be introduced to using R Markdown to produce a seamless integration of your code, your output, and your reports.</p>
 <p>In subsequent chapters, I will take you through examples of the relevant code necessary to complete the exercises in R.</p>
 <div id="table-1.1" class="section level3">
 <h3><span class="header-section-number">3.1.1</span> Table 1.1</h3>
 <p>Table 1.1 contains the necessary information to produce Figures 1.2 and 1.3. Creating Table 1.1 will give you an opportunity to create a data frame from four vectors. A data frame is used for storing data tables. A data frame is one of the many data structures in R. The others include vector, list, matrix, factors, and tables. A data frame is collection of vectors of the same length.</p>
 <p>A vector is the most common and basic data structure in R. Vectors can be of two types: atomic vectors or lists. An atomic vector is a collection of observations of a single variable. The vectors in a data frame can be different types, however. Each vector must be of a single type. The atomic vector types or classes in R are logical, integer, numeric (real or decimal), complex, and character. A logical vector is one in which all of the values are TRUE, FALSE, and NA. An integer vector contains only integers, a real vector contains only reals, etc. If a vector contains more than one type of value, the vector and each element of it is coerced to the most general class in the vector.</p>
 <p>Let’s start by creating each vector in Table 1.1. To assign values to a vector, use the assignment operator <code>&lt;-</code> and the concatenate or combine function <code>c()</code>.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">observation_number &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">13</span>) <span class="co"># The colon tells R to create a sequence from 1 to 13 by 1.  This a vector of integers.</span></a>
-<a class="sourceLine" id="cb1-2" title="2">name &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Homer&quot;</span>, <span class="st">&quot;Marge&quot;</span>, <span class="st">&quot;Lisa&quot;</span>, <span class="st">&quot;Bart&quot;</span>, <span class="st">&quot;Comic Book Guy&quot;</span>, <span class="st">&quot;Mr. Burns&quot;</span>,</a>
-<a class="sourceLine" id="cb1-3" title="3">          <span class="st">&quot;Smithers&quot;</span>, <span class="st">&quot;Chief Wiggum&quot;</span>, <span class="st">&quot;Principle Skinner&quot;</span>, <span class="st">&quot;Rev. Lovejoy&quot;</span>,</a>
-<a class="sourceLine" id="cb1-4" title="4">          <span class="st">&quot;Ned Flanders&quot;</span>, <span class="st">&quot;Patty&quot;</span>, <span class="st">&quot;Selma&quot;</span>)  <span class="co"># Each &quot;string&quot; is enclosed in quotes.  This is a character vector.</span></a>
-<a class="sourceLine" id="cb1-5" title="5">donuts_per_week &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">14</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">20</span>, <span class="fl">0.75</span>, <span class="fl">0.25</span>, <span class="dv">16</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="fl">0.8</span>, <span class="dv">5</span>, <span class="dv">4</span>) <span class="co"># This is a numeric vector.</span></a>
-<a class="sourceLine" id="cb1-6" title="6">weight &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">275</span>, <span class="dv">141</span>, <span class="dv">70</span>, <span class="dv">75</span>, <span class="dv">310</span>, <span class="dv">80</span>, <span class="dv">160</span>, <span class="dv">263</span>, <span class="dv">205</span>, <span class="dv">185</span>, <span class="dv">170</span>, <span class="dv">155</span>, <span class="dv">145</span>) <span class="co"># This is a numeric vector.</span></a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="chp1.html#cb1-1"></a>observation_number &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">13</span>) </span>
+<span id="cb1-2"><a href="chp1.html#cb1-2"></a><span class="co"># The colon tells R to create a sequence from 1 to 13 by 1.  This a vector of integers.</span></span>
+<span id="cb1-3"><a href="chp1.html#cb1-3"></a>name &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Homer&quot;</span>, <span class="st">&quot;Marge&quot;</span>, <span class="st">&quot;Lisa&quot;</span>, <span class="st">&quot;Bart&quot;</span>, <span class="st">&quot;Comic Book Guy&quot;</span>, <span class="st">&quot;Mr. Burns&quot;</span>,</span>
+<span id="cb1-4"><a href="chp1.html#cb1-4"></a>          <span class="st">&quot;Smithers&quot;</span>, <span class="st">&quot;Chief Wiggum&quot;</span>, <span class="st">&quot;Principle Skinner&quot;</span>, <span class="st">&quot;Rev. Lovejoy&quot;</span>,</span>
+<span id="cb1-5"><a href="chp1.html#cb1-5"></a>          <span class="st">&quot;Ned Flanders&quot;</span>, <span class="st">&quot;Patty&quot;</span>, <span class="st">&quot;Selma&quot;</span>)</span>
+<span id="cb1-6"><a href="chp1.html#cb1-6"></a><span class="co"># Each &quot;string&quot; is enclosed in quotes.  This is a character vector.</span></span>
+<span id="cb1-7"><a href="chp1.html#cb1-7"></a>donuts_per_week &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">14</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">20</span>, <span class="fl">0.75</span>, <span class="fl">0.25</span>, <span class="dv">16</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="fl">0.8</span>, <span class="dv">5</span>, <span class="dv">4</span>) </span>
+<span id="cb1-8"><a href="chp1.html#cb1-8"></a><span class="co"># This is a numeric vector.</span></span>
+<span id="cb1-9"><a href="chp1.html#cb1-9"></a>weight &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">275</span>, <span class="dv">141</span>, <span class="dv">70</span>, <span class="dv">75</span>, <span class="dv">310</span>, <span class="dv">80</span>, <span class="dv">160</span>, <span class="dv">263</span>, <span class="dv">205</span>, <span class="dv">185</span>, <span class="dv">170</span>, <span class="dv">155</span>, <span class="dv">145</span>) </span>
+<span id="cb1-10"><a href="chp1.html#cb1-10"></a><span class="co"># This is a numeric vector.</span></span></code></pre></div>
+<p>To help you understand what’s going on in the above chunk, think about what the code is doing like this: <em>assign the numbers 1 through 13 to an object name <code>observation_number</code></em>.</p>
 <p>Note in the code chunk above that the symbol, #, is used to create comments within the code. Those things set off by the # will not be executed as code. These are useful for creating notes to yourself or collaborators about what you are doing with certain lines of code.</p>
 <p>We now have four named vectors that we can put into a data frame. A note on naming conventions in R. While there are many name conventions in R, I recommend using snake case where each word is separated by an under score and no capital letters are used. See <a href="http://adv-r.had.co.nz/Style.html">Hadley Wickhams Style Guide</a> for style suggestions for all parts of R programming, not just variable names. Following these guidelines will make your code easier to read and edit.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">library</span>(tidyverse) <span class="co"># load the tidyverse package</span></a>
-<a class="sourceLine" id="cb2-2" title="2">donuts &lt;-<span class="st"> </span><span class="kw">tibble</span>(observation_number, name, donuts_per_week, weight) <span class="co"># create the donuts tibble</span></a>
-<a class="sourceLine" id="cb2-3" title="3"><span class="kw">save</span>(donuts, <span class="dt">file =</span> <span class="st">&quot;donuts.RData&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="chp1.html#cb2-1"></a><span class="kw">library</span>(tidyverse) </span>
+<span id="cb2-2"><a href="chp1.html#cb2-2"></a><span class="co"># load the tidyverse package</span></span>
+<span id="cb2-3"><a href="chp1.html#cb2-3"></a>donuts &lt;-<span class="st"> </span><span class="kw">tibble</span>(observation_number, name, donuts_per_week, weight) </span>
+<span id="cb2-4"><a href="chp1.html#cb2-4"></a><span class="co"># create the donuts tibble</span></span>
+<span id="cb2-5"><a href="chp1.html#cb2-5"></a><span class="kw">save</span>(donuts, <span class="dt">file =</span> <span class="st">&quot;donuts.RData&quot;</span>)</span>
+<span id="cb2-6"><a href="chp1.html#cb2-6"></a><span class="co"># save the data frame as R Data</span></span></code></pre></div>
 <p>A tibble is an update to the traditional data frame. For most of what we will do, it will act the same as a data frame. The two main differences in data frames and tibbles are printing and subsetting. For more on tibbles type <code>vignette("tibble")</code> in the console.</p>
-<p><code>tidyverse</code> is one of the many packages developed within the R community. In R, a package is shareable code that bundles together code, data, documentation, tests, etc. To use a package, it must first be installed and then be loaded. To install a package, call <code>install.packages("package_name")</code><a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>. To make use of a package, load it by calling <code>library(packagename)</code><a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>. Currently there are more than 14,000 packages available, to see the packages visit <a href="https://cran.r-project.org/web/packages/">Contributed Packages</a>. <a href="https://cran.r-project.org/web/views/">CRAN Task Views</a> shows relevant packages by task. You may want to visit <a href="https://cran.r-project.org/web/views/Econometrics.html">CRAN Task View: Econometrics</a> to see the extensive array of packages for use in econometrics.</p>
+<p>The <code>tidyverse</code> is an opinionated collection of R packages that share an underlying philosophy, grammar, and data structures.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>(<a href="https://www.tidyverse.org/" class="uri">https://www.tidyverse.org/</a>).</p>
+<div id="packages" class="section level4">
+<h4><span class="header-section-number">3.1.1.1</span> Packages</h4>
+<p>An R package is shareable bundle of code, data, documentation, tests, etc. To use a package, it must first be installed and then be loaded. To install a package, call <code>install.packages("package_name")</code><a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>. To make use of a package, load it by calling <code>library(packagename)</code><a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>. Currently there are more than 16,000 packages available, to see the packages visit <a href="https://cran.r-project.org/web/packages/">Contributed Packages</a>. <a href="https://cran.r-project.org/web/views/">CRAN Task Views</a> shows relevant packages by task. You may want to visit <a href="https://cran.r-project.org/web/views/Econometrics.html">CRAN Task View: Econometrics</a> to see the extensive array of packages for use in econometrics.</p>
 <p>The <code>tidyverse</code> package is a collection of packages that share an underlying design philosophy, grammar, and data structures. For more on the tidyverse follow this <a href="https://www.tidyverse.org">link</a>. The <code>dplyr</code> package loaded below is a grammar of data manipulation that can be used to solve most data manipulation problems.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="co"># Print the tibble to the console by typing its name.</span></a>
-<a class="sourceLine" id="cb3-2" title="2">donuts</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="chp1.html#cb3-1"></a><span class="co"># Print the tibble to the console by typing its name.</span></span>
+<span id="cb3-2"><a href="chp1.html#cb3-2"></a>donuts</span></code></pre></div>
 <pre><code># A tibble: 13 x 4
    observation_number name              donuts_per_week weight
                 &lt;int&gt; &lt;chr&gt;                       &lt;dbl&gt;  &lt;dbl&gt;
@@ -354,25 +378,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 11                 11 Ned Flanders                 0.8     170
 12                 12 Patty                        5       155
 13                 13 Selma                        4       145</code></pre>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="co"># glimpse will provide information about the data frame, its observations, variables, and their class.</span></a>
-<a class="sourceLine" id="cb5-2" title="2"><span class="kw">library</span>(dplyr)</a>
-<a class="sourceLine" id="cb5-3" title="3"><span class="kw">glimpse</span>(donuts)</a></code></pre></div>
-<pre><code>Observations: 13
-Variables: 4
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="chp1.html#cb5-1"></a><span class="co"># glimpse will provide information about the data frame, its observations, variables, and their class.</span></span>
+<span id="cb5-2"><a href="chp1.html#cb5-2"></a>dplyr<span class="op">::</span><span class="kw">glimpse</span>(donuts)</span></code></pre></div>
+<pre><code>Rows: 13
+Columns: 4
 $ observation_number &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13
-$ name               &lt;chr&gt; &quot;Homer&quot;, &quot;Marge&quot;, &quot;Lisa&quot;, &quot;Bart&quot;, &quot;Comic Bo...
-$ donuts_per_week    &lt;dbl&gt; 14.00, 0.00, 0.00, 5.00, 20.00, 0.75, 0.25,...
-$ weight             &lt;dbl&gt; 275, 141, 70, 75, 310, 80, 160, 263, 205, 1...</code></pre>
-<p>Use the <code>kable</code> function in <code>knitr</code> to create Table 1.1.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">knitr<span class="op">::</span><span class="kw">kable</span>(donuts, </a>
-<a class="sourceLine" id="cb7-2" title="2">             <span class="dt">caption =</span> <span class="st">&#39;Table 1.1 Donut Consumption and Weight&#39;</span>, </a>
-<a class="sourceLine" id="cb7-3" title="3">             <span class="dt">col.names =</span> <span class="kw">c</span>(<span class="st">&quot;Observation&lt;/br&gt; number&quot;</span>, <span class="co"># &lt;/br&gt; is html code to insert a line break</span></a>
-<a class="sourceLine" id="cb7-4" title="4">                           <span class="st">&quot;Name&quot;</span>, <span class="st">&quot;Donuts&lt;/br&gt; per week&quot;</span>,</a>
-<a class="sourceLine" id="cb7-5" title="5">                           <span class="st">&quot;Weight&lt;/br&gt; (pounds)&quot;</span>), </a>
-<a class="sourceLine" id="cb7-6" title="6">             <span class="dt">escape =</span> F,  <span class="co"># necessary to force the line breaks</span></a>
-<a class="sourceLine" id="cb7-7" title="7">             <span class="dt">align =</span> <span class="st">&#39;cccc&#39;</span>) <span class="co"># request that the four columns be centered</span></a></code></pre></div>
+$ name               &lt;chr&gt; &quot;Homer&quot;, &quot;Marge&quot;, &quot;Lisa&quot;, &quot;Bart&quot;, &quot;Comic Book Gu...
+$ donuts_per_week    &lt;dbl&gt; 14.00, 0.00, 0.00, 5.00, 20.00, 0.75, 0.25, 16.0...
+$ weight             &lt;dbl&gt; 275, 141, 70, 75, 310, 80, 160, 263, 205, 185, 1...</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="chp1.html#cb7-1"></a><span class="co"># using a package name with :: allows you to use the package without loading it</span></span>
+<span id="cb7-2"><a href="chp1.html#cb7-2"></a><span class="co"># it also makes clear the package a command comes from</span></span></code></pre></div>
+<p>We can reproduce Table 1.1 with the <code>kable</code> function in <code>knitr</code>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="chp1.html#cb8-1"></a>knitr<span class="op">::</span><span class="kw">kable</span>(donuts, </span>
+<span id="cb8-2"><a href="chp1.html#cb8-2"></a>             <span class="dt">caption =</span> <span class="st">&#39;Table 1.1 Donut Consumption and Weight&#39;</span>, </span>
+<span id="cb8-3"><a href="chp1.html#cb8-3"></a>             <span class="dt">col.names =</span> <span class="kw">c</span>(<span class="st">&quot;Observation&lt;/br&gt; number&quot;</span>, </span>
+<span id="cb8-4"><a href="chp1.html#cb8-4"></a>                           <span class="co"># &lt;/br&gt; is html code to insert a line break</span></span>
+<span id="cb8-5"><a href="chp1.html#cb8-5"></a>                           <span class="st">&quot;Name&quot;</span>, <span class="st">&quot;Donuts&lt;/br&gt; per week&quot;</span>,</span>
+<span id="cb8-6"><a href="chp1.html#cb8-6"></a>                           <span class="st">&quot;Weight&lt;/br&gt; (pounds)&quot;</span>), </span>
+<span id="cb8-7"><a href="chp1.html#cb8-7"></a>             <span class="dt">escape =</span> F,  <span class="co"># necessary to force the line breaks</span></span>
+<span id="cb8-8"><a href="chp1.html#cb8-8"></a>             <span class="dt">align =</span> <span class="st">&#39;cccc&#39;</span>) <span class="co"># request that the four columns be centered</span></span></code></pre></div>
 <table>
-<caption><span id="tab:table">Table 3.1: </span>Table 1.1 Donut Consumption and Weight</caption>
+<caption><span id="tab:kable-table">Table 3.1: </span>Table 1.1 Donut Consumption and Weight</caption>
 <thead>
 <tr class="header">
 <th align="center">Observation</br> number</th>
@@ -462,81 +488,130 @@ $ weight             &lt;dbl&gt; 275, 141, 70, 75, 310, 80, 160, 263, 205, 1...<
 </tr>
 </tbody>
 </table>
+<p>Or we can create an interactive table with the <code>DT</code> package.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="chp1.html#cb9-1"></a>donuts <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-2"><a href="chp1.html#cb9-2"></a><span class="st">  </span>DT<span class="op">::</span><span class="kw">datatable</span>(<span class="dt">caption =</span> <span class="st">&#39;Table 1.1 Donut Consumption and Weight&#39;</span>)</span></code></pre></div>
+<div id="htmlwidget-7eac75d0cecfe816438b" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7eac75d0cecfe816438b">{"x":{"filter":"none","caption":"<caption>Table 1.1 Donut Consumption and Weight<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13"],[1,2,3,4,5,6,7,8,9,10,11,12,13],["Homer","Marge","Lisa","Bart","Comic Book Guy","Mr. Burns","Smithers","Chief Wiggum","Principle Skinner","Rev. Lovejoy","Ned Flanders","Patty","Selma"],[14,0,0,5,20,0.75,0.25,16,3,2,0.8,5,4],[275,141,70,75,310,80,160,263,205,185,170,155,145]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>observation_number<\/th>\n      <th>name<\/th>\n      <th>donuts_per_week<\/th>\n      <th>weight<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
 </div>
 <div id="figure-1.2" class="section level3">
 <h3><span class="header-section-number">3.1.2</span> Figure 1.2</h3>
 <p>To create Figure 1.2 we will use the <a href="https://ggplot2.tidyverse.org/">ggplot2</a> package. <code>ggplot2</code>, also part of the <code>tidyverse</code>, is a system for declarative creating graphics, based on <a href="https://www.springer.com/in/book/9780387245447">The Grammar of Graphics</a>. The Grammar of Graphics is built on two principles. First, graphics are built with distinct layers of grammatical elements. Second, meaningful plots are formed through aesthetic mappings.</p>
-<p>Seven elements comprise the grammar of graphics: data, aesthetics, geometries, facets, statistics, coordinates, and themes. Every graphic must contain, at a minimum, data, aesthetics, and geometries. Data, typically a data frame or tibble, is the data set being plotted. Aesthetics are the scales onto which data are mapped. Aesthetics include x-axis, y-axis, color, fill, size, labels, alpha (transparency), shape, line width, and line type. Geometries are how we want the data plotted, <em>e.g.</em>, as points, lines, bars, histograms, boxplots, etc. Facets allow us to use more than one plot, statistics allow us to add elements like error bands, regression lines, etc. Coordinates allow us to control the space into which we plot the data. Finally, themes are all non-data ink in a graphic.</p>
+<p>Seven elements comprise the grammar of graphics: data, aesthetics, geometries, facets, statistics, coordinates, and themes. Every graphic must contain, at a minimum, data, aesthetics, and geometries. Data, typically a data frame or tibble, is the data set being plotted. Aesthetics are the scales onto which data are mapped. Aesthetics include x-axis, y-axis, color, fill, size, labels, alpha (transparency), shape, line width, and line type. Geometries are how we want the data plotted, <em>e.g.</em>, as points, lines, bars, histograms, boxplots, etc. Facets allow us to create multiple plots by a characteristic or categorical variable, statistics allow us to add elements like error bands, regression lines, etc. Coordinates allow us to control the space into which we plot the data. Finally, themes are all non-data ink in a graphic.</p>
 <p>Follow this link for an overview of <a href="https://ggplot2.tidyverse.org">ggplot2</a>. The Learning ggplot2 section points to three useful places to learn more about using ggplot2. While the use of data visualization is not emphasized in the econometrics, understanding the basic principles will help your data analysis.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="co"># Load the ggplot2 library</span></a>
-<a class="sourceLine" id="cb8-2" title="2"><span class="kw">library</span>(ggplot2)</a>
-<a class="sourceLine" id="cb8-3" title="3"><span class="co"># Create an object p which includes the data and aesthetic mapping</span></a>
-<a class="sourceLine" id="cb8-4" title="4">p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data =</span> donuts, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> donuts_per_week, <span class="dt">y =</span> weight))</a>
-<a class="sourceLine" id="cb8-5" title="5"><span class="co"># Add the geometry that creates the scatter plot</span></a>
-<a class="sourceLine" id="cb8-6" title="6">(p1 &lt;-<span class="st"> </span>p <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()) <span class="co"># putting parenthesis around the line of code force the output to the screen</span></a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="chp1.html#cb10-1"></a>donuts <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb10-2"><a href="chp1.html#cb10-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="dt">data =</span> donuts, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> donuts_per_week, <span class="dt">y =</span> weight)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb10-3"><a href="chp1.html#cb10-3"></a><span class="co"># map donuts per week onto the x-axis and weight on the y-axis</span></span>
+<span id="cb10-4"><a href="chp1.html#cb10-4"></a><span class="st">  </span><span class="kw">geom_point</span>()</span></code></pre></div>
 <p><img src="bailey_files/figure-html/figure1.2-1.png" width="672" /></p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="co"># the parentheses surrounding the function call cause the output to be printed.</span></a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="chp1.html#cb11-1"></a><span class="co"># Add the geometry that creates the scatter plot</span></span></code></pre></div>
+<p>We introduced <code>%&gt;%</code> in the above chunk (it is loaded as part of the <code>tidyverse</code>). <code>%&gt;%</code>, the pipe operator inserts the argument before the pipe as the first argument into the subsequent function call. We can parse the above line of code in English as “Use the <code>donuts</code> data and then create a ggplot with the aesthetics…” Since the first argument in most function calls in R is data, this will make writing code easier and more readable because it avoids excessive nesting in function calls. For example, suppose we have a vector <code>y</code> that we would like to call the functions <code>f</code>, <code>g</code> and <code>h</code> on in turn. We could write the code in two ways:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="chp1.html#cb12-1"></a><span class="co"># nested</span></span>
+<span id="cb12-2"><a href="chp1.html#cb12-2"></a><span class="kw">g</span>(<span class="kw">h</span>(<span class="kw">f</span>(y)))</span>
+<span id="cb12-3"><a href="chp1.html#cb12-3"></a><span class="co"># or with  %&gt;% </span></span>
+<span id="cb12-4"><a href="chp1.html#cb12-4"></a>y <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-5"><a href="chp1.html#cb12-5"></a><span class="st">  </span><span class="kw">f</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-6"><a href="chp1.html#cb12-6"></a><span class="st">  </span><span class="kw">g</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-7"><a href="chp1.html#cb12-7"></a><span class="st">  </span><span class="kw">h</span>()</span></code></pre></div>
+<p>Each is equivalent, but the second is easier to read as a human.</p>
 <p>This basic plot can be transformed into the figure in the text by adding layers to the graphic to change its appearance.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="co"># Change the axis labels and add a caption</span></a>
-<a class="sourceLine" id="cb10-2" title="2">(p2 &lt;-<span class="st"> </span>p1 <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Donuts&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Weight (in pounds)&quot;</span>, <span class="dt">caption =</span> <span class="st">&quot;Figure 1.2: Weight and Donuts in Springfield&quot;</span>)) </a></code></pre></div>
-<p><img src="bailey_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="co"># Add the verticle line at 0</span></a>
-<a class="sourceLine" id="cb11-2" title="2">(p3 &lt;-<span class="st"> </span>p2 <span class="op">+</span><span class="st"> </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">color =</span> <span class="st">&quot;gray80&quot;</span>, <span class="dt">size =</span> <span class="fl">1.25</span>))</a></code></pre></div>
-<p><img src="bailey_files/figure-html/unnamed-chunk-3-2.png" width="672" /></p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="co"># the layering effect puts the line in front of the points, so we have to add it before geom_point</span></a>
-<a class="sourceLine" id="cb12-2" title="2">(p4 &lt;-<span class="st"> </span>p2 <span class="op">+</span><span class="st"> </span><span class="co">#indentation makes to code easier to audit</span></a>
-<a class="sourceLine" id="cb12-3" title="3"><span class="st">    </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">color =</span> <span class="st">&quot;gray80&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb12-4" title="4"><span class="st">    </span><span class="kw">geom_point</span>())</a></code></pre></div>
-<p><img src="bailey_files/figure-html/unnamed-chunk-3-3.png" width="672" /></p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="co"># Add the name labels</span></a>
-<a class="sourceLine" id="cb13-2" title="2">(p5 &lt;-<span class="st"> </span>p4 <span class="op">+</span><span class="st"> </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">label =</span> name)))</a></code></pre></div>
-<p><img src="bailey_files/figure-html/unnamed-chunk-3-4.png" width="672" /></p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="co"># Clean up the name labels with the ggrepel package</span></a>
-<a class="sourceLine" id="cb14-2" title="2"><span class="kw">library</span>(ggrepel)</a>
-<a class="sourceLine" id="cb14-3" title="3">(p6 &lt;-<span class="st"> </span>p4 <span class="op">+</span><span class="st"> </span><span class="kw">geom_text_repel</span>(<span class="kw">aes</span>(<span class="dt">label =</span> name)))</a></code></pre></div>
-<p><img src="bailey_files/figure-html/unnamed-chunk-3-5.png" width="672" /></p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="co"># Use theme to adjust the non data elements</span></a>
-<a class="sourceLine" id="cb15-2" title="2"><span class="co"># \n in the y label creates a new line</span></a>
-<a class="sourceLine" id="cb15-3" title="3">(p7 &lt;-<span class="st"> </span>p6 <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">&quot;Weight</span><span class="ch">\n</span><span class="st">(in pounds)&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb15-4" title="4"><span class="st">    </span><span class="kw">theme</span>(<span class="dt">axis.title.y =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">0</span>), <span class="co"># change orientation of y-axis label</span></a>
-<a class="sourceLine" id="cb15-5" title="5">          <span class="dt">panel.grid =</span> <span class="kw">element_blank</span>(), <span class="co"># remove the background grid</span></a>
-<a class="sourceLine" id="cb15-6" title="6">          <span class="dt">panel.background =</span> <span class="kw">element_blank</span>(), <span class="co"># remove the background</span></a>
-<a class="sourceLine" id="cb15-7" title="7">          <span class="dt">axis.line =</span> <span class="kw">element_line</span>(), <span class="co"># add x and y axes</span></a>
-<a class="sourceLine" id="cb15-8" title="8">          <span class="dt">plot.caption =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="dv">0</span>))) <span class="co">#move the caption to the left.</span></a></code></pre></div>
-<p><img src="bailey_files/figure-html/unnamed-chunk-3-6.png" width="672" /></p>
-<p>We can make the graph in one step, if we desire.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data =</span> donuts, </a>
-<a class="sourceLine" id="cb16-2" title="2">       <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> donuts_per_week, <span class="dt">y =</span> weight)) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb16-3" title="3"><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">color =</span> <span class="st">&quot;gray80&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb16-4" title="4"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb16-5" title="5"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Donuts&quot;</span>, </a>
-<a class="sourceLine" id="cb16-6" title="6">       <span class="dt">y =</span> <span class="st">&quot;Weight</span><span class="ch">\n</span><span class="st">(in pounds)&quot;</span>, <span class="co"># \n creates a new line</span></a>
-<a class="sourceLine" id="cb16-7" title="7">       <span class="dt">caption =</span> <span class="st">&quot;Figure 1.2: Weight and Donuts in Springfield&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb16-8" title="8"><span class="st">  </span><span class="kw">geom_text_repel</span>(<span class="kw">aes</span>(<span class="dt">label =</span> name)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb16-9" title="9"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title.y =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">0</span>), </a>
-<a class="sourceLine" id="cb16-10" title="10">          <span class="dt">panel.grid =</span> <span class="kw">element_blank</span>(), </a>
-<a class="sourceLine" id="cb16-11" title="11">          <span class="dt">panel.background =</span> <span class="kw">element_blank</span>(), </a>
-<a class="sourceLine" id="cb16-12" title="12">          <span class="dt">axis.line =</span> <span class="kw">element_line</span>(), </a>
-<a class="sourceLine" id="cb16-13" title="13">          <span class="dt">plot.caption =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="dv">0</span>)) </a>
-<a class="sourceLine" id="cb16-14" title="14">p </a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="chp1.html#cb13-1"></a><span class="co"># start with the original graphic</span></span>
+<span id="cb13-2"><a href="chp1.html#cb13-2"></a></span>
+<span id="cb13-3"><a href="chp1.html#cb13-3"></a>donuts <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb13-4"><a href="chp1.html#cb13-4"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="dt">data =</span> donuts, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> donuts_per_week, <span class="dt">y =</span> weight)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb13-5"><a href="chp1.html#cb13-5"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb13-6"><a href="chp1.html#cb13-6"></a><span class="co"># add axis labels and a caption </span></span>
+<span id="cb13-7"><a href="chp1.html#cb13-7"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Donuts&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Weight (in pounds)&quot;</span>, </span>
+<span id="cb13-8"><a href="chp1.html#cb13-8"></a>       <span class="dt">caption =</span> <span class="st">&quot;Figure 1.2: Weight and Donuts in Springfield&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb13-9"><a href="chp1.html#cb13-9"></a><span class="co"># add a vertical line</span></span>
+<span id="cb13-10"><a href="chp1.html#cb13-10"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">color =</span> <span class="st">&quot;gray80&quot;</span>, <span class="dt">size =</span> <span class="fl">1.25</span>)</span></code></pre></div>
+<p><img src="bailey_files/figure-html/fig1-2-1-1.png" width="672" /></p>
+<p>The vertical line is in front of the points so will re-arrange the geometries.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="chp1.html#cb14-1"></a>donuts <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb14-2"><a href="chp1.html#cb14-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="dt">data =</span> donuts, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> donuts_per_week, <span class="dt">y =</span> weight)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb14-3"><a href="chp1.html#cb14-3"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">color =</span> <span class="st">&quot;gray80&quot;</span>, <span class="dt">size =</span> <span class="fl">1.25</span>) <span class="op">+</span></span>
+<span id="cb14-4"><a href="chp1.html#cb14-4"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb14-5"><a href="chp1.html#cb14-5"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Donuts&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Weight (in pounds)&quot;</span>, </span>
+<span id="cb14-6"><a href="chp1.html#cb14-6"></a>       <span class="dt">caption =</span> <span class="st">&quot;Figure 1.2: Weight and Donuts in Springfield&quot;</span>)</span></code></pre></div>
+<p><img src="bailey_files/figure-html/fig1-2-2-1.png" width="672" /></p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="chp1.html#cb15-1"></a>donuts <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb15-2"><a href="chp1.html#cb15-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="dt">data =</span> donuts, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> donuts_per_week, <span class="dt">y =</span> weight)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb15-3"><a href="chp1.html#cb15-3"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">color =</span> <span class="st">&quot;gray80&quot;</span>, <span class="dt">size =</span> <span class="fl">1.25</span>) <span class="op">+</span></span>
+<span id="cb15-4"><a href="chp1.html#cb15-4"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb15-5"><a href="chp1.html#cb15-5"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Donuts&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Weight (in pounds)&quot;</span>, </span>
+<span id="cb15-6"><a href="chp1.html#cb15-6"></a>       <span class="dt">caption =</span> <span class="st">&quot;Figure 1.2: Weight and Donuts in Springfield&quot;</span>) <span class="op">+</span></span>
+<span id="cb15-7"><a href="chp1.html#cb15-7"></a><span class="co"># Add the name labels by mapping the string name onto label</span></span>
+<span id="cb15-8"><a href="chp1.html#cb15-8"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">label =</span> name))</span></code></pre></div>
+<p><img src="bailey_files/figure-html/fig1-2-3-1.png" width="672" />
+The names are not in aesthetically pleasing positions. The <code>ggrepel</code> package “cleans” up labels in <code>ggplot2</code>.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="chp1.html#cb16-1"></a><span class="co"># Clean up the name labels with the ggrepel package</span></span>
+<span id="cb16-2"><a href="chp1.html#cb16-2"></a><span class="kw">library</span>(ggrepel)</span>
+<span id="cb16-3"><a href="chp1.html#cb16-3"></a>donuts <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb16-4"><a href="chp1.html#cb16-4"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="dt">data =</span> donuts, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> donuts_per_week, <span class="dt">y =</span> weight)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb16-5"><a href="chp1.html#cb16-5"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">color =</span> <span class="st">&quot;gray80&quot;</span>, <span class="dt">size =</span> <span class="fl">1.25</span>) <span class="op">+</span></span>
+<span id="cb16-6"><a href="chp1.html#cb16-6"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb16-7"><a href="chp1.html#cb16-7"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Donuts&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Weight (in pounds)&quot;</span>, </span>
+<span id="cb16-8"><a href="chp1.html#cb16-8"></a>       <span class="dt">caption =</span> <span class="st">&quot;Figure 1.2: Weight and Donuts in Springfield&quot;</span>) <span class="op">+</span></span>
+<span id="cb16-9"><a href="chp1.html#cb16-9"></a><span class="co"># Add the name labels by mapping the string name onto label</span></span>
+<span id="cb16-10"><a href="chp1.html#cb16-10"></a><span class="st">  </span><span class="kw">geom_text_repel</span>(<span class="kw">aes</span>(<span class="dt">label =</span> name))</span></code></pre></div>
+<p><img src="bailey_files/figure-html/fig1-2-4-1.png" width="672" /></p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="chp1.html#cb17-1"></a><span class="co"># Use theme to adjust the non data elements</span></span>
+<span id="cb17-2"><a href="chp1.html#cb17-2"></a><span class="co"># \n in the y label creates a new line</span></span>
+<span id="cb17-3"><a href="chp1.html#cb17-3"></a>donuts <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb17-4"><a href="chp1.html#cb17-4"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="dt">data =</span> donuts, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> donuts_per_week, <span class="dt">y =</span> weight)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb17-5"><a href="chp1.html#cb17-5"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">color =</span> <span class="st">&quot;gray80&quot;</span>, <span class="dt">size =</span> <span class="fl">1.25</span>) <span class="op">+</span></span>
+<span id="cb17-6"><a href="chp1.html#cb17-6"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb17-7"><a href="chp1.html#cb17-7"></a><span class="co"># change the y-axis so that is on 2 lines \n means &quot;new line&quot;</span></span>
+<span id="cb17-8"><a href="chp1.html#cb17-8"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Donuts&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Weight</span><span class="ch">\n</span><span class="st">(in pounds)&quot;</span>, </span>
+<span id="cb17-9"><a href="chp1.html#cb17-9"></a>       <span class="dt">caption =</span> <span class="st">&quot;Figure 1.2: Weight and Donuts in Springfield&quot;</span>) <span class="op">+</span></span>
+<span id="cb17-10"><a href="chp1.html#cb17-10"></a><span class="st">  </span><span class="kw">geom_text_repel</span>(<span class="kw">aes</span>(<span class="dt">label =</span> name)) <span class="op">+</span></span>
+<span id="cb17-11"><a href="chp1.html#cb17-11"></a><span class="co"># adjust some of the non-data ink or theme elements</span></span>
+<span id="cb17-12"><a href="chp1.html#cb17-12"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title.y =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">0</span>), <span class="co"># change orientation of y-axis label</span></span>
+<span id="cb17-13"><a href="chp1.html#cb17-13"></a>          <span class="dt">panel.grid =</span> <span class="kw">element_blank</span>(), <span class="co"># remove the background grid</span></span>
+<span id="cb17-14"><a href="chp1.html#cb17-14"></a>          <span class="dt">panel.background =</span> <span class="kw">element_blank</span>(), <span class="co"># remove the background</span></span>
+<span id="cb17-15"><a href="chp1.html#cb17-15"></a>          <span class="dt">axis.line =</span> <span class="kw">element_line</span>(), <span class="co"># add x and y axes</span></span>
+<span id="cb17-16"><a href="chp1.html#cb17-16"></a>          <span class="dt">plot.caption =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="dv">0</span>)) <span class="co">#move the caption to the left.</span></span></code></pre></div>
+<p><img src="bailey_files/figure-html/fig1-2-5-1.png" width="672" /></p>
+<p>We can make the graph in one step and save it as an object <code>p</code> that we could add to later if we desire.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="chp1.html#cb18-1"></a>p &lt;-<span class="st"> </span></span>
+<span id="cb18-2"><a href="chp1.html#cb18-2"></a><span class="st">  </span>donuts <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb18-3"><a href="chp1.html#cb18-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> donuts_per_week, <span class="dt">y =</span> weight)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb18-4"><a href="chp1.html#cb18-4"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">color =</span> <span class="st">&quot;gray80&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb18-5"><a href="chp1.html#cb18-5"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb18-6"><a href="chp1.html#cb18-6"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Donuts&quot;</span>, </span>
+<span id="cb18-7"><a href="chp1.html#cb18-7"></a>       <span class="dt">y =</span> <span class="st">&quot;Weight</span><span class="ch">\n</span><span class="st">(in pounds)&quot;</span>, <span class="co"># \n creates a new line</span></span>
+<span id="cb18-8"><a href="chp1.html#cb18-8"></a>       <span class="dt">caption =</span> <span class="st">&quot;Figure 1.2: Weight and Donuts in Springfield&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb18-9"><a href="chp1.html#cb18-9"></a><span class="st">  </span><span class="kw">geom_text_repel</span>(<span class="kw">aes</span>(<span class="dt">label =</span> name)) <span class="op">+</span></span>
+<span id="cb18-10"><a href="chp1.html#cb18-10"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title.y =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">0</span>), </span>
+<span id="cb18-11"><a href="chp1.html#cb18-11"></a>          <span class="dt">panel.grid =</span> <span class="kw">element_blank</span>(), </span>
+<span id="cb18-12"><a href="chp1.html#cb18-12"></a>          <span class="dt">panel.background =</span> <span class="kw">element_blank</span>(), </span>
+<span id="cb18-13"><a href="chp1.html#cb18-13"></a>          <span class="dt">axis.line =</span> <span class="kw">element_line</span>(), </span>
+<span id="cb18-14"><a href="chp1.html#cb18-14"></a>          <span class="dt">plot.caption =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="dv">0</span>)) </span>
+<span id="cb18-15"><a href="chp1.html#cb18-15"></a><span class="co"># print the graphic</span></span>
+<span id="cb18-16"><a href="chp1.html#cb18-16"></a>p </span></code></pre></div>
 <p><img src="bailey_files/figure-html/figure1.2%20again-1.png" width="672" /></p>
 </div>
 <div id="figure-1.3" class="section level3">
 <h3><span class="header-section-number">3.1.3</span> Figure 1.3</h3>
-<p>To create Figure 1.3, we start with the plot above we saved as an object, p. We add an additional geometric, geom_smooth to add the regression line.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">p <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">caption =</span> <span class="st">&quot;Figure 1.3: Regression Line for Weight and Donuts in Springfield&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb17-2" title="2"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="dt">se =</span> F) <span class="op">+</span><span class="st"> </span><span class="co"># method specifies the fit,  se = F turns off the error band.</span></a>
-<a class="sourceLine" id="cb17-3" title="3"><span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">label =</span> <span class="kw">expression</span>(beta[<span class="dv">1</span>]<span class="op">*</span><span class="st">&quot; (the slope)&quot;</span>), <span class="co"># text annotation</span></a>
-<a class="sourceLine" id="cb17-4" title="4">           <span class="dt">y =</span> <span class="dv">205</span>, <span class="co"># position of the text</span></a>
-<a class="sourceLine" id="cb17-5" title="5">           <span class="dt">x =</span> <span class="dv">8</span>,   <span class="co"># position of the text</span></a>
-<a class="sourceLine" id="cb17-6" title="6">           <span class="dt">angle =</span> <span class="dv">20</span>, <span class="co"># angle of the text</span></a>
-<a class="sourceLine" id="cb17-7" title="7">           <span class="dt">color =</span> <span class="st">&quot;Blue&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="co"># color of the text</span></a>
-<a class="sourceLine" id="cb17-8" title="8"><span class="st">  </span><span class="kw">geom_segment</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="fl">121.613</span>, <span class="dt">x =</span> <span class="dv">0</span>, <span class="dt">xend =</span> <span class="dv">0</span>, <span class="dt">yend =</span> <span class="dv">0</span>),</a>
-<a class="sourceLine" id="cb17-9" title="9">               <span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>,</a>
-<a class="sourceLine" id="cb17-10" title="10">               <span class="dt">linetype =</span> <span class="st">&quot;dotted&quot;</span>,</a>
-<a class="sourceLine" id="cb17-11" title="11">               <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb17-12" title="12"><span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">label =</span> <span class="kw">expression</span>(beta[<span class="dv">0</span>]<span class="op">*</span><span class="st">&quot; = 121.613&quot;</span>),</a>
-<a class="sourceLine" id="cb17-13" title="13">           <span class="dt">y =</span> <span class="dv">115</span>, <span class="dt">x =</span> <span class="fl">1.75</span>, <span class="dt">size =</span> <span class="fl">3.5</span>, <span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>)</a></code></pre></div>
+<p>To create Figure 1.3, we start with the plot above we saved as an object, p. We add an additional geometry, geom_smooth to add the regression line.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="chp1.html#cb19-1"></a>p <span class="op">+</span><span class="st"> </span></span>
+<span id="cb19-2"><a href="chp1.html#cb19-2"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">caption =</span> <span class="st">&quot;Figure 1.3: Regression Line for Weight and Donuts in Springfield&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb19-3"><a href="chp1.html#cb19-3"></a><span class="co"># method specifies the fit,  se = F turns off the error band.</span></span>
+<span id="cb19-4"><a href="chp1.html#cb19-4"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="dt">se =</span> F) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb19-5"><a href="chp1.html#cb19-5"></a><span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">label =</span> <span class="kw">expression</span>(beta[<span class="dv">1</span>]<span class="op">*</span><span class="st">&quot; (the slope)&quot;</span>), <span class="co"># text annotation</span></span>
+<span id="cb19-6"><a href="chp1.html#cb19-6"></a>           <span class="dt">y =</span> <span class="dv">205</span>, <span class="co"># position of the text</span></span>
+<span id="cb19-7"><a href="chp1.html#cb19-7"></a>           <span class="dt">x =</span> <span class="dv">8</span>,   <span class="co"># position of the text</span></span>
+<span id="cb19-8"><a href="chp1.html#cb19-8"></a>           <span class="dt">angle =</span> <span class="dv">20</span>, <span class="co"># angle of the text</span></span>
+<span id="cb19-9"><a href="chp1.html#cb19-9"></a>           <span class="dt">color =</span> <span class="st">&quot;Blue&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="co"># color of the text</span></span>
+<span id="cb19-10"><a href="chp1.html#cb19-10"></a><span class="co"># create the dotted blue line on the y-axis</span></span>
+<span id="cb19-11"><a href="chp1.html#cb19-11"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="fl">121.613</span>, <span class="dt">x =</span> <span class="dv">0</span>, <span class="dt">xend =</span> <span class="dv">0</span>, <span class="dt">yend =</span> <span class="dv">0</span>),</span>
+<span id="cb19-12"><a href="chp1.html#cb19-12"></a>               <span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>,</span>
+<span id="cb19-13"><a href="chp1.html#cb19-13"></a>               <span class="dt">linetype =</span> <span class="st">&quot;dotted&quot;</span>,</span>
+<span id="cb19-14"><a href="chp1.html#cb19-14"></a>               <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb19-15"><a href="chp1.html#cb19-15"></a><span class="co"># add text to the graph</span></span>
+<span id="cb19-16"><a href="chp1.html#cb19-16"></a><span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">label =</span> <span class="kw">expression</span>(beta[<span class="dv">0</span>]<span class="op">*</span><span class="st">&quot; = 121.613&quot;</span>),</span>
+<span id="cb19-17"><a href="chp1.html#cb19-17"></a>           <span class="dt">y =</span> <span class="dv">115</span>, <span class="dt">x =</span> <span class="fl">1.75</span>, <span class="dt">size =</span> <span class="fl">3.5</span>, <span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
 <p><img src="bailey_files/figure-html/figure1.3-1.png" width="672" /></p>
 
 </div>
@@ -544,9 +619,10 @@ $ weight             &lt;dbl&gt; 275, 141, 70, 75, 310, 80, 160, 263, 205, 1...<
 </div>
 <div class="footnotes">
 <hr />
-<ol start="2">
-<li id="fn2"><p>You need install a package only once<a href="chp1.html#fnref2" class="footnote-back">↩</a></p></li>
-<li id="fn3"><p>You must load the package during each R session to make use of it.<a href="chp1.html#fnref3" class="footnote-back">↩</a></p></li>
+<ol start="1">
+<li id="fn1"><p>Tidyverse<a href="chp1.html#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>You need install a package only once<a href="chp1.html#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>You must load the package during each R session to make use of it.<a href="chp1.html#fnref3" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>
@@ -560,11 +636,13 @@ $ weight             &lt;dbl&gt; 275, 141, 70, 75, 310, 80, 160, 263, 205, 1...<
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -572,12 +650,11 @@ gitbook.start({
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -589,6 +666,10 @@ gitbook.start({
 "text": null
 },
 "history": {
+"link": null,
+"text": null
+},
+"view": {
 "link": null,
 "text": null
 },
