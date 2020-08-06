@@ -7,12 +7,18 @@ documentclass: book
 bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
-description: "This book looks at the R code necessary to complete the end of chapter exercises in Bailey's Real Econometrics"
+description: "R, RStudio IDE, and the tidyverse companion to Bailey's Real Econometrics"
 ---
 
-# Prerequisites
+# Preface
 
-The intended audience for this book is anyone make using of *Real Econometrics: The Right Tools to Answer Important Questions* 2nd ed. by Michael Bailey who would like to learn the R code necessary to complete the end of chapter exercises.  We really heavily on the `tidyverse` a collection of packages that shares an underlying design philosophy, grammar, and data structures.  We also make use of a variety of packages (bundles of code) where it will make coding more straightfoward in terms of writing, understanding, and editing.   
+The intended audience for this book is anyone making using of *Real Econometrics: The Right Tools to Answer Important Questions* 2nd ed. by Michael Bailey who would like to learn to use R, RStudio, and the `tidyverse` to complete empirical examples from the text.  
+
+RStudio is an integrated development environment that includes a console, syntax-highlighting editor, and tools to integrate report writing with empirical work, etc. [RStudio IDE Features](https://rstudio.com/products/rstudio/features/) for more.    
+
+The `tidyverse` (a collection of packages that shares an underlying design philosophy, grammar, and data structures).  We also make use of a variety of packages (bundles of code) to make coding more straightforward in terms of writing, understanding, and editing.  
+
+This book will be of use to anyone interested in learning to make use of R, RStudio, and the `tidyverse` to "do" econometric work.
 
 
 ```{r include=FALSE}
