@@ -20,7 +20,7 @@ A vector is the most common and basic data structure in R.  Vectors can be of tw
 
 Let's start by creating each vector in Table 1.1.  To assign values to a vector, use the assignment operator `<-` and the concatenate or combine function `c()`.
 
-```{r Table 1.1}
+```{r table-1-1}
 observation_number <- c(1:13) 
 # The colon tells R to create a sequence from 1 to 13 by 1.  This a vector of integers.
 name <- c("Homer", "Marge", "Lisa", "Bart", "Comic Book Guy", "Mr. Burns",
@@ -95,7 +95,7 @@ Seven elements comprise the grammar of graphics: data, aesthetics, geometries, f
 
 Follow this link for an overview of [ggplot2](https://ggplot2.tidyverse.org).  The Learning ggplot2 section points to three useful places to learn more about using ggplot2.  While the use of data visualization is not emphasized in the econometrics, understanding the basic principles will help your data analysis.
 
-```{r figure1.2}
+```{r figure1-2}
 donuts %>% 
   ggplot(data = donuts, mapping = aes(x = donuts_per_week, y = weight)) + 
 # map donuts per week onto the x-axis and weight on the y-axis
