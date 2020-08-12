@@ -4,111 +4,347 @@
 ```{r, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, comment = NA, message = FALSE, warning = FALSE,
                       options(digits = 3, scipen = 999))
+library(tidyverse)
+load("donuts.RData")
 ```
 
-We will work through *Computing Corner*.
+We will work through the *Computing Corner*.
 
 ## Estimating a simple regression
 
-To run a simple regression in R, make us of the function `lm`. Like all functions `lm` requires and argument list.  You can see the arguments required and the defaualt values, if any, in a variety of ways in R Studio.  `args(lm)` will return the arguments for the lm function.  `?lm` will open the help page in the Files/Plots/Packages/Help Pane, which can also be accessed by typing lm in the search in the same pane.  Estimating a regression using `lm` requires only two arguments: the formula and data arguments.  If you provide those arguments in that order, R doesn't require that you use the argument's name.  This is true for all functions in R, the default is that the arguments appear in order.  We can see by calling `str` on ols_donuts that `lm` creates a list object which contains 12 elements.  A list is an object that contains elements of several different types like, strings, vectors, matrices, lists, etc.  Each of those elements can be extracted from the list in much the same way as accessing pieces of a data frame.
+To run a simple regression in R, call the function `lm()`. 
 
-```{r}
-library(magrittr)
-load("donuts.RData")
-ols_donuts <- lm(formula = weight ~ donuts_per_week, data = donuts)
-ols_donuts %>% 
-  str()
+### A short detour on some R basics. 
+
+Some basic principles of R.
+
+1. Everything in R is an **object** including functions.
+1. Everything that happens in R is a **function call**.
+  i) *function calls* act on objects
+  i) *function calls* return objects
+  i) objects returned by *function calls* may be used in *function calls*
+
+It may help to think of *objects* as nouns and *function calls* as verbs.  
+
+*Objects* are created with the assignment operator `<-` (keyboard shortcut: `Alt + -`).  We can name an object almost anything we'd like.^[Call `?Reserved` to see names that you can't use.]  It is good practice to avoid function names like `c`, `T`, `mean`, etc., to not avoid starting a name with a number, to putting spaces in names. See [The tidyverse style guide](https://style.tidyverse.org/) for an example of a consistent philosophy.  We advocate the use of snake case when naming objects with longer names, *e.g.*, we might name GDP per capita as `gpd_per_capita`.  So we might assign 95 to the current temperature like this:
+
+```{r assign-temp, eval=FALSE}
+current_temp <- 95
 ```
 
-You can see the type for each of the 12 elements in the list.  Each of those elements can be extracted by using the $ convention you use to get variables from a data frame (which is a type of list) as describe in the text.  In addition, there are many commands that will extract a standard set of elements and present them in conventional ways.  For example, to get the regression results, `summary` from base R, `stargazer` from the stargazer package, and `tidy` and `glance` from the `broom` package provide the output in useful ways.  `augment` from the broom package creates a tibble of actual, fitted, residuals, etc.  In fact, all of the commands in the `broom` package create tibbles which can useful for further analysis.  `stargazer` can be modified to include a variety of statistics.  So, you can extract fitted values or residuals, e.g., in the same way you retrieve any data from a data frame or tibble.
+*Functions* act on objects and return objects.  Calling a function means to "run" it. All functions have two broad categories of arguments one that supplies the **data** (object) to be acted on and another to control the **details** of the computation.  Let's look at the function call `mean()` as an example.
+
+```{r function-arguments-mean, eval=FALSE}
+mean(x, trim = 0, na.rm = FALSE, ...)
+```
+
+`mean` has a data argument *x* and two control arguments *trim* and *na.rm*.^[The ... represent further arguments passed to or from other methods.] *x* is an R object, typically a vector. *trim* is argument that controls the fraction of observations to be ignored on each end of *x* when calculating the mean.  *trim* has default value of 0 (`trim = 0`).  The *na.rm* argument controls whether mean ignores `NAs` in the data.  The default value is FALSE (`na.rm = FALSE`).  Since the control arguments have default values, the mean requires you give it only one argument to run, *x*.  Of course, you can change the default values of any control arguments. 
+
+R evaluates (looks for arguments in) functions in 3 steps.  First it uses **exact matching** of the argument name.  If the arguments aren't named exactly, it uses **partial matching**  of the argument name.  Finally, it uses the **position** of the argument.  All arguments *do not* have to be specified.  Arguments not specified will use default values.  If an argument necessary to the function call is not used R will *throw* an error. 
+
+Good practice in calling functions requires that we specify non-optional arguments first in our function calls and that we specify the names of all optional arguments.  Good practice yields easier code auditing and editing and replicability.  
+
+Let's look at the ways we can call `mean()`
+
+```{r call-mean}
+# let's assign an object y.
+y <- c(NA, 1:10, NA)
+
+# we can name the arguments exactly
+
+mean(x = y, trim = 0, na.rm = TRUE)
+
+# or we could use the position of the argument
+
+mean(y, 0, TRUE) 
+
+# we could use a combination of the two
+
+mean(y, na.rm = TRUE)
+
+```
+
+Notice in each case `mean()` returned a vector of length 1, that's why the [1] precedes the value of the mean.  The object returned by a function call can be used as an argument in subsequent function call.  For example, suppose we'd like to take the square root of the mean we just calculated.  We can pass the object returned by the mean to the function `sqrt()` as an argument like this:
+
+```{r pass-return-to-function}
+sqrt(mean(y, na.rm = TRUE))
+```
+
+We could do this repeatedly. Let's take the log of that.
 
 ```{r}
-library(tidyverse)
-library(broom)
-library(stargazer)
-ols_donuts %>% 
+log(sqrt(mean(y, na.rm = TRUE)))
+```
+
+As you might imagine, after a while this "nesting" process get's ugly and difficult to follow fast.   This is where the pipe operator ` %>% ` (keyboard short-cut `Ctrl-Shift-M`) shines.  The pipe operator ` %>% ` works by making the object preceding it the first argument in the function call following it.  Let the `bar` be the firs argument in the function call `foo`, we could call the function like this `foo(bar)` or using the pipe operator like this `bar %>%  foo()`.  In simple cases like this there isn't much to gained from the pipe operator.^[Possibly it is clear to say take `bar` and do `foo` to it than to say do `foo` on `bar`.]  The pipe operator shines when multiple function calls are performed in a sequence.  It prevents ugly nesting or having to create assign intermediate objects to call functions on later. Below is the code from above using the ` %>% ` operator.
+
+```{r}
+y %>% 
+  mean(na.rm = TRUE) %>% 
+  sqrt() %>% 
+  log()
+```
+
+While code is written to get R to do something it is also written for and by human beings. We can translate this code like this "take y, then calculate its mean while removing NA's, then take the square root, then take the log."
+
+We can find the arguments and their default values, if any, in a variety of ways in R Studio.  To estimate a regression, call the function `lm()`.  Let's find the arguments required by `lm()` to estimate a simple linear regression. 
+
+If we simply want a list of the arguments for any function call `args()` with the function name as the argument.^[Remember everything in R is an object--even a function!] `args(lm)` will return the arguments for the `lm` function.
+
+```{r lm-args}
+args(lm)
+```
+To get more detailed information on the function call and the arguments use `?function_name`. This opens the help page in the Files/Plots/Packages/Help Pane, which can also be accessed by typing "lm" in the search in the same pane.  Below we see a portion of the help on `lm`.
+
+```{r lm-help, eval=FALSE}
+?lm
+```
+
+![](figs\lm-help.png)
+
+### Estimating an OLS model
+
+Estimating a regression using `lm` requires only one argument, a formula.^[This is one of few functions that does not have the data as its first argument.] Formulas are structured with a `~`.  To estimate $y_i=\beta_0+\beta_1x_i+\epsilon_i$  the formula argument takes the form `y ~ x`.  If `x` and `y` exist in the global environment, *e.g.* not in data frame, run the regression by calling `lm(y ~ x)`. 
+
+```{r ols-x-y-no-dataframe}
+# create y and x in the global environment as follows
+
+y <- c(275, 141,  70,  75, 310,  80, 160, 263, 205, 185, 170, 155, 145)
+x <- c(14,  0,  0,  5, 20,  0.75,  0.25, 16,  3,  2,  0.80,  5,  4)
+
+# estimate the regression
+lm(y ~ x)
+```
+
+It is typically impractical to use data (variables) within the global environment.  Data sets are typically collected together in data frames.  When data "live" in data frame `lm` requires a second argument to find the data.  
+
+Let's estimate the regression $\textit{weight}_i = \beta_0+\beta_1\textit{donuts per week}_i+\epsilon_i$. The data are in a data frame named `donuts`. 
+
+```{r donuts-lm-1}
+# including the arguments by name
+lm(formula = weight ~ donuts_per_week, data = donuts)
+# including the arguments by position
+lm(weight ~ donuts_per_week, donuts)
+```
+
+
+Recall that the pipe operator ` %>% ` makes an object the first argument in a function call.  So, it appears that we are out of look if we'd like to use it to pipe the data into an `lm` call.  Appearances aside, we can use ` %>% ` any function call to insert an object into as an argument in any position in the argument list by using the "pronoun" `.`. The object will be place wherever the pronoun is.  
+
+```{r donuts-lm-1-pipe}
+donuts %>% 
+  lm(weight ~ donuts_per_week, data = .)
+#  or
+donuts %>% 
+  lm(weight ~ donuts_per_week, .)
+```
+
+There are advantages to using ` %>% `. It allows auto-completion of variable names because R knows which data frame we are using.  Later we will see that the use of ` %>% ` will simplify things like subsetting, creating new variables, etc.
+
+#### Viewing the output
+
+`lm` prints the values of the coefficients.  Where are the fitted values, residuals, statistics, etc?
+
+Since `lm` is a function call it must return an object...it does.  The object returned by `lm` is a special kind of vector called a list.  This is where the fitted values, ect. "live".  Let's look at the list.
+
+```{r}
+donuts %>% 
+  lm(weight ~ donuts_per_week, .) %>% 
+  glimpse()
+```
+
+The list contains 12 elements. Here are some we are likely to interested in:
+
+1. coefficients
+1. residuals
+1. fitted values
+1. df.residual
+
+Let's assign this list to the object `lm_donuts`
+
+
+```{r ols-donuts}
+lm_donuts <- 
+donuts %>% 
+  lm(weight ~ donuts_per_week, .)
+```
+
+We can extract any of the elements of the list with one of three operators `$` `[` `[[` and the name of the element or its position in the list.  Each of these operators returns an object `$` and `[[` return vectors while `[` returns a list.  Let's extract the residuals from `lm_donuts`
+
+```{r}
+lm_donuts$residuals
+lm_donuts[[2]]
+lm_donuts[2]
+```
+
+#### Regression output summaries
+
+There are myriad function calls to "dig out" the elements of an `lm` list in nicely formatted ways depending on our purpose.  Let's look at a few of them.  We can call these functions at the end of a pipeline without the intermediate step of naming the `lm` object or we can call them on the named object.  Let's do the former for this exercise.
+
+##### `summary`
+
+`summary` from base R extracts the coefficient estimates, their standard errors, their t-statistics, and their p-values.  We also get degrees of freedom, r-squared, adjusted r-squared, F-stat for overall significance and some summary stats on the dependent variable.
+
+```{r lm-donuts-summary}
+donuts %>% 
+  lm(weight ~ donuts_per_week, .) %>% 
   summary()
-ols_donuts %>% 
-  stargazer(type = "text")
-ols_donuts %>% 
-  tidy()
-ols_donuts %>% 
-  glance()
-ols_donuts %>% 
-  augment()
 ```
 
-## scatter Plot with Regression Line
 
-ggplot2 makes adding a fitted regression line to a scatter plot very easy.  You need only add a geometry called geom_smooth with the appropriate method to plot.  The default is to include a confidence interval estimate around the fitted line.  To remove the error band add the option `se = FALSE`.
+##### The `broom` package
 
-```{r}
+The `broom` package has three functions that extract different elements of the `lm` object and always return a tibble. Rather than loading the broom package with `library` we will use it direclty by using its name and `::`.  
+
+```{r lm-donuts-tidy}
+donuts %>% 
+  lm(weight ~ donuts_per_week, .) %>% 
+  broom::tidy() 
+```
+
+```{r lm-donuts-glance}
+donuts %>% 
+  lm(weight ~ donuts_per_week, .) %>% 
+  broom::glance()
+```
+
+```{r lm-donuts-augment}
+donuts %>% 
+  lm(weight ~ donuts_per_week, .) %>% 
+  broom::augment()
+```
+
+
+##### Publication formatted tables
+
+In addition we can also create publication ready tables. Let's look at the `gt` package and the `stargazer` package.
+
+
+```{r lm-donuts-gt}
+donuts %>% 
+  lm(weight ~ donuts_per_week, .) %>% 
+  broom::tidy() %>% 
+  gt::gt()
+```
+
+```{r lm-donuts-star, warning=FALSE}
+donuts %>% 
+  lm(weight ~ donuts_per_week, .) %>% 
+  stargazer::stargazer(type = "html")
+```
+
+There are multiple arguments for each of these function calls to change the appearance of any of the tables.  Reading the vignettes for each for guidance.
+
+
+## Scatter Plot with Regression Line
+
+`ggplot2` makes adding a fitted regression line to a scatter plot very easy.  You need only add a geometry called `geom_smooth` with the appropriate method argument to plot.  The default is to include a confidence interval estimate around the fitted line.  To remove the error band include the argument `se = FALSE`.
+
+Let's start with the scatter diagram.
+
+```{r donuts-ggplot-point}
 donuts %>%
   ggplot(aes(x = donuts_per_week, y = weight)) +
   geom_point() +
-  geom_smooth(method = "lm")
+  labs(x = "Donuts per week",
+       y = "Weight")
+```
+
+Adding the regression line means adding an additional layer.
+
+```{r donuts-lm-scatter-line}
+donuts %>%
+  ggplot(aes(x = donuts_per_week, y = weight)) +
+  geom_point() +
+  geom_smooth(method = "lm") 
 ```
 
 ## Subsetting Data for Regressions
 
-Subsetting can be directly done with the `subset` option in the `lm` call.  To run a regression that excludes the Homer record, use the option `subset = (name != "Homer")`.
+There are a few ways to subset data to use in the `lm` call: the `[` operator, the `subset` argument, or `dplyr::filter`.  
 
-```{r}
-ols_no_homer <- lm(formula = weight ~ donuts_per_week, data = donuts, subset = (name != "Homer"))
-ols_no_homer %>% 
-  tidy()
-ols_no_homer %>% 
+### The `[` operator 
+
+The `[` operator is the most basic way to subset vectors in R.  We can exclude Homer's observation directly in the `lm` call like this:
+
+```{r lm-without-homer-old-school}
+lm(weight[name != "Homer"] ~ donuts_per_week[name != "Homer"], data = donuts) %>% 
   summary()
 ```
 
-Alternatively we can make use of `filter` from the `dplyr` package.  Recall, `filter` is the data manipulation verb that chooses observations in a data frame.  I introduce the exposition operator `%$%` from the magrittr package.  `%$%` is useful at the end of a pipeline to expose your manipulated data to function.  You can use it with `subset` or `filter`. 
+Let's subset the donuts data frame to exclude Homer's record. Data frames have two dimensions rows and columns (`df[r,c]`) To subset a data frame using `[` by row, write the requirement for the row in position r and leave position c blank (means use all columns).
+
+```{r lm-without-homer-subset-data-frame}
+lm(weight ~ donuts_per_week, data = donuts[donuts$name != "Homer",]) %>% 
+  summary()
+```
+
+We can pipe this into the `lm` call.
+
+```{r lm-basic-subset}
+donuts[donuts$name != "Homer",] %>% 
+  lm(weight ~ donuts_per_week, .) 
+```
+
+### Subset argument
+
+Subsetting can be directly done with the `subset` argument in the `lm` call.  To run a regression that excludes the Homer observation, use the option `subset = (name != "Homer")`^[We will use ` %>% ` to avoid having to assign the `lm` object as an intermediate step.]
+
+```{r}
+donuts %>% 
+  lm(weight ~ donuts_per_week, data = ., 
+     subset = (name != "Homer")) 
+```
+
+### `dplyr::filter`
+
+Alternatively we can make use of `filter` from the `dplyr` package.  Recall, `filter` is the data manipulation verb that chooses observations in a data frame. `filter` is easier for human reading and auditing.   
 
 ```{r}
 donuts %>%
-  subset(name != "Homer") %$%
-  lm(weight ~ donuts_per_week)
-
-donuts %>%
-  filter(name != "Homer") %$%
-  lm(weight ~ donuts_per_week)
+  filter(name != "Homer")  %>% 
+  lm(weight ~ donuts_per_week, .) 
 ```
 
 To include those observations where weight is greater than 100:
 
 ```{r}
 donuts %>%
-  subset(weight > 100) %$%
-  lm(weight ~ donuts_per_week)
-
-donuts %>%
-  filter(weight > 100) %$%
-  lm(weight ~ donuts_per_week)
+  filter(weight > 100) %>%
+  lm(weight ~ donuts_per_week, .)
 ```
 
 ## Heteroscesdasticity-consistent standard errors.  
 
 The `estimatr` package allows you to directly calculate robust standard errors.  
 
-R Studio allows you to install packages in the Files/Plots/Packages/Help Pane by clicking on the Install icon on the Packages tab; as you type the name of the package, you will see completion suggestions.  Choose the package you wish to install and R Studio will install it.  You can load a package by checking the box next to its name in the Packages tab.  Clicking on the packages name will bring up info about the pacakge. 
+Install the package by calling `install.packages("estimatr")`
 
-Call `lm_robust()` to estimate an OLS model with robust standard errors with the `se_type = "HC0` option for the most common method of generating robust standard errors.
+R Studio allows you to install packages in the Files/Plots/Packages/Help Pane by clicking on the Install icon on the Packages tab; as you type the name of the package, you will see completion suggestions.  Choose the package you wish to install and R Studio will install it.  
+
+Call `lm_robust()` to estimate an OLS model with robust standard errors with the `se_type = "HC0` argument for the most common method of generating robust standard errors.
 
 ```{r}
 library(estimatr)
-ols_robust <- lm_robust(weight ~ donuts_per_week, donuts, se_type = "HC0")
-ols_robust %>% 
+donuts %>% 
+  lm_robust(weight ~ donuts_per_week, ., se_type = "HC0") %>% 
+  summary()
+
+donuts %>% 
+  lm_robust(weight ~ donuts_per_week, ., se_type = "HC0") %>% 
   tidy()
 ```
 
 ## Generating Random Numbers 
 
-Random numbers can be useful in variety of applications in econometrics.  One application is simulation, where we simulate observations to demonstrate properties of OLS estimators, eg.  Once you've decided the distribution from which your random numbers will be drawn and the number of draws you wish to make, you will create a vector of those observations.  The most intuitive form of random number generation is `sample`.  Suppose you wanted to simulate the role of a single die, use `sample(1:6,1)` or using the pipe operator `1:6 %>% sample(1)`.  Read the command aloud like this "from the integers 1, 2, 3, 4, 5, 6, choose a sample of size 1."  You can choose larger samples by changing the size argument.  The size argument can not be larger than the number of integers unless the default option of replace = FALSE, is changed to replace = TRUE.  To generate a simulation of 100 rolls of a single die call `1:6 %>% sample(100, replace = TRUE)`.  
+Random numbers can be useful in variety of applications in econometrics.  One application is simulation, where we simulate observations to demonstrate properties of OLS estimators, *e.g.*  Once you've decided the distribution from which your random numbers will be drawn and the number of draws you wish to make, you will create a vector of those observations.  
+
+The most intuitive form of random number generation is `sample`.  Suppose you wanted to simulate the role of a single die, use `sample(1:6,1)` or using the pipe operator `1:6 %>% sample(1)`.  Read the command aloud like this "from the integers 1, 2, 3, 4, 5, 6, choose a sample of size 1."  You can choose larger samples by changing the size argument.  The size argument can not be larger than the number of integers unless the default argument `replace = FALSE`, is changed to `replace = TRUE`.  To generate a simulation of 100 rolls of a single die call `1:6 %>% sample(100, replace = TRUE)`.  
 
 Random numbers may be generate from any probability distribution.  The random number generator function for a given probability distribution begins with the letter r followed by the name of the distribution in r.  To generate uniform random numbers between 0 and 1, use `runif`, from a normal distribution use `rnorm`, etc.  Use `args(distribution name)` or `?distribution name` to find out more about the necessary arguments for individual distributions.   
 
 ## Simulations
 
-Monte Carlo simulations are a useful tool for understanding how the value of an estimator changes as the sample data changes.  Consider the example of rolling a single die n times and calculating the average number of pips on the side up face of the die.  We know that $\bar X$ is an ubiased estimator of $\mu$.  Recall that an estimator, $\hat\theta$ is unbiased if $E(\hat\theta) = \theta$.  We can show that $E(\bar X) = \mu$.  Let $$\bar X = \frac{\sum{x_i}}{n}$$
+Monte Carlo simulations are a useful tool for understanding how the value of an estimator changes as the sample data changes.  Consider the example of rolling a single die *n* times and calculating the average number of pips on the side-up face of the die.  We know that $\bar X$ is an unbiased estimator of $\mu$.  Recall that any estimator, $\hat\theta$ is an unbiased estimator of $\theta$ if $E(\hat\theta) = \theta$.  We can show that $E(\bar X) = \mu$.  Let $$\bar X = \frac{\sum{x_i}}{n}$$
 
 Then, $$\begin{aligned}
 E(\bar{X}) &= E\left( \frac{\sum{x_i}}{n} \right)\\
@@ -120,13 +356,12 @@ E(\bar{X}) &= E\left( \frac{\sum{x_i}}{n} \right)\\
 
 So, we would expect $\bar X = 3.5$ since $\mu = 3.5$.  Simulating 100 rolls of a single die 1000 times would allow us to look at the sampling distribution of the sample mean.  This will allow us to see the range of values that $\bar X$ might take on.  
 
-Perform a Monte Carlo simulation by generating many samples, find the value of the estimator, and investigate it's distribution.  We could do this by generating a single sample, calculating the value of the estimator, and repeating the desired number of times.  This would be tedious.  We can instead make use of the concept of a loop in R.  A loop evaluates the same code repeatedly until some threshold is met. 
+Perform a Monte Carlo simulation by generating many samples, find the value of the estimator, and investigating it's distribution.  We could do this by generating a single sample, calculating the value of the estimator, and repeating the desired number of times.  This would be tedious.  We can instead make use of the concept of a loop in R.  A loop evaluates the same code repeatedly until some threshold is met. 
 
 There are two types of loops in R, for loops and while loops.  A for loop runs the code a specific number of times; a while loop runs the code until a logical condition is met.  We will use a for loop to run our simulation.  First, instruct R on the number of times to run through the loop.  The loop itself is contained between the braces {}. 
 
 ```{r}
-# library(tidyverse)
-xbar <- 1 # initialize the vector to store the observations of x bar
+xbar <- numeric() # initialize the vector to store the observations of x bar
 for(i in 1:1000) {
   x <- 1:6 %>% sample(100, replace = T)
   xbar[i] <- mean(x)
@@ -137,44 +372,54 @@ xbar %>%
   as.data.frame() %>% # coerce xbar to a data frame
   ggplot(aes(x = xbar)) + # map xbar to x
   geom_density() + # geom_density creates a "probability distribution"
-  geom_vline(xintercept = 3.5) # place a verticle line at the mean.
+  geom_vline(xintercept = 3.5) # place a vertical line at the mean.
 ```
 
 We could do the same thing with the simple linear regression $Y_i = \beta_0+\beta_1X_i+\epsilon_i$.  We know the OLS estimator of $\beta_1$ is $\hat\beta_1$.  The value of the estimator, called the estimate, depends upon the particular sample that is drawn.  Monte Carlo simulation will allows to see how the estimate changes across many samples.  
 
-For $\hat\beta_j$ to be an unbiased esitmator of $\beta_j$, $E(\hat\beta_j) = \beta_j$.  The proof is beyond the scope of this manual, but you will see or have seen the proof.  
+For $\hat\beta_j$ to be an unbiased estimator of $\beta_j$, $E(\hat\beta_j) = \beta_j$.  The proof is beyond the scope of this manual, but you will see or have seen the proof.  
 
 Suppose we perform a Monte Carlo simulation with know values of $\beta_0$ and $\beta_1$ where the error term $\epsilon_i$ is drawn from a normal distribution with a mean of zero and a constant variance, i.e., $\epsilon_i ~ N(0, \sigma^2)$, will the estimates be statistically the same as the known parameters.  Let's find out.  Suppose the population regression function is $y_i = 10 + 3x_i$,
 
-```{r}
-n <- 50
+```{r betas-monte-carlo}
+n <- 50 # sample size
 N <- 1000 # of simulations
-beta_0 <- 10
-beta_1 <- 3
-beta_hat_0 <- 0
-beta_hat_1 <- 0
-y <- 0
-x <- 1:10 %>% sample(n, replace = T) # we would determine x here if x were fixed in repeated sampling
+beta_0 <- 10 # assign the value of the intercept parameter
+beta_1 <- 3 # assign the value of the slope parameter
+beta_hat_0 <- numeric(length = N) #initialize the vector for beta0 estimates
+beta_hat_1 <- numeric(length = N) #initialize the vector for beta1 estimates
+y <- numeric(length = N) #initialize the vector for the y values
+# create x  randomly
+x <- 1:10 %>% sample(n, replace = T)  # keep it fixed in repeated samples
+# run the simulation
 for(i in 1:N) {
- x <- 0:10 %>% sample(n, replace = T)
- epsilon <- rnorm(n, 0 , 2)
+ epsilon <- rnorm(n, 0 , 2) # create the random error
  y <-  beta_0 + beta_1*x + epsilon
  beta_hat_0[i] <- lm(y ~ x)$coef[1]
  beta_hat_1[i] <- lm(y ~ x)$coef[2]
 }
-#
-beta_hat_0 %>% 
-  mean()
-beta_hat_1 %>% 
-  mean()
-beta_hat_0 %>%
-as.data.frame() %>%
+# write the betas to a tibble
+beta_hats <- tibble(beta_hat_0, beta_hat_1)
+```
+
+Let's look at the mean values of the estimators, using `dplyr::summarize`
+
+```{r beta-hats-means}
+beta_hats %>% 
+  summarize(mean_beta_hat_0 = mean(beta_hat_0),
+            mean_beta_hat_1 = mean(beta_hat_1))
+```  
+
+Let's look at the histograms.
+
+```{r histograms}
+beta_hats %>% 
 ggplot(aes(x = beta_hat_0)) +
-geom_density() +
-geom_vline(xintercept = 10)
-beta_hat_1 %>%
-as.data.frame() %>%
+geom_histogram(binwidth = .5) +
+geom_vline(xintercept = 10, color = "red", size = 1.2)
+
+beta_hats %>%
 ggplot(aes(x = beta_hat_1)) +
-geom_density() +
-geom_vline(xintercept = 3)
+geom_histogram(bins = 20) +
+geom_vline(xintercept = 3, color = "red", size = 1.2)
 ```
