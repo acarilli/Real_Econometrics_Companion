@@ -1,30 +1,30 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 17 Advanced Panel Data | R Companion to Real Econometrics</title>
-  <meta name="description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
-  <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
+  <meta name="description" content="R, RStudio IDE, and the tidyverse companion to Bailey’s Real Econometrics" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 17 Advanced Panel Data | R Companion to Real Econometrics" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  <meta property="og:description" content="R, RStudio IDE, and the tidyverse companion to Bailey’s Real Econometrics" />
   
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Chapter 17 Advanced Panel Data | R Companion to Real Econometrics" />
   
-  <meta name="twitter:description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  <meta name="twitter:description" content="R, RStudio IDE, and the tidyverse companion to Bailey’s Real Econometrics" />
   
 
 <meta name="author" content="Tony Carilli" />
 
 
-<meta name="date" content="2019-09-23" />
+<meta name="date" content="2020-08-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -40,6 +40,7 @@
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
 
 
 
@@ -47,12 +48,23 @@
 
 
 
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.15/datatables.js"></script>
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -61,14 +73,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -77,9 +91,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -128,7 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./">R Companion to *Real Econometrics*</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a></li>
 <li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a><ul>
 <li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#install-r-and-rstudio"><i class="fa fa-check"></i><b>2.1</b> Install R and RStudio</a></li>
 <li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#using-rstudio"><i class="fa fa-check"></i><b>2.2</b> Using RStudio</a><ul>
@@ -147,7 +161,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="chp2.html"><a href="chp2.html"><i class="fa fa-check"></i><b>4</b> Stats in the Wild: Good Data Practices</a><ul>
-<li class="chapter" data-level="4.1" data-path="chp2.html"><a href="chp2.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
+<li class="chapter" data-level="4.1" data-path="chp1.html"><a href="chp1.html#introduction"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
 <li class="chapter" data-level="4.2" data-path="chp2.html"><a href="chp2.html#table-and-figure-reproduction"><i class="fa fa-check"></i><b>4.2</b> Table and Figure Reproduction</a><ul>
 <li class="chapter" data-level="4.2.1" data-path="chp2.html"><a href="chp2.html#table-2.1"><i class="fa fa-check"></i><b>4.2.1</b> Table 2.1</a></li>
 <li class="chapter" data-level="4.2.2" data-path="chp2.html"><a href="chp2.html#table-2.2"><i class="fa fa-check"></i><b>4.2.2</b> Table 2.2</a></li>
@@ -158,6 +172,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.3.1" data-path="chp2.html"><a href="chp2.html#reading-data"><i class="fa fa-check"></i><b>4.3.1</b> Reading Data</a></li>
 <li class="chapter" data-level="4.3.2" data-path="chp2.html"><a href="chp2.html#manually-entering-data"><i class="fa fa-check"></i><b>4.3.2</b> Manually Entering Data</a></li>
 <li class="chapter" data-level="4.3.3" data-path="chp2.html"><a href="chp2.html#simple-statistics"><i class="fa fa-check"></i><b>4.3.3</b> Simple Statistics</a></li>
+<li class="chapter" data-level="4.3.4" data-path="chp2.html"><a href="chp2.html#subsetting"><i class="fa fa-check"></i><b>4.3.4</b> Subsetting</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="cph3.html"><a href="cph3.html"><i class="fa fa-check"></i><b>5</b> Bivariate OLS: The Foundation of Econometric Analysis</a><ul>
@@ -177,7 +192,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="chp5.html"><a href="chp5.html"><i class="fa fa-check"></i><b>7</b> Multivariate OLS: Where the Action Is</a><ul>
-<li class="chapter" data-level="7.1" data-path="chp5.html"><a href="chp5.html#computing-corner-1"><i class="fa fa-check"></i><b>7.1</b> Computing Corner</a><ul>
+<li class="chapter" data-level="7.1" data-path="chp4.html"><a href="chp4.html#computing-corner"><i class="fa fa-check"></i><b>7.1</b> Computing Corner</a><ul>
 <li class="chapter" data-level="7.1.1" data-path="chp5.html"><a href="chp5.html#multiple-regression"><i class="fa fa-check"></i><b>7.1.1</b> Multiple Regression</a></li>
 <li class="chapter" data-level="7.1.2" data-path="chp5.html"><a href="chp5.html#multicollinearity"><i class="fa fa-check"></i><b>7.1.2</b> Multicollinearity</a></li>
 <li class="chapter" data-level="7.1.3" data-path="chp5.html"><a href="chp5.html#standardized-coefficients"><i class="fa fa-check"></i><b>7.1.3</b> Standardized Coefficients</a></li>
@@ -276,9 +291,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="16.2.2" data-path="chp14.html"><a href="chp14.html#ols-estimator-is-unbiased"><i class="fa fa-check"></i><b>16.2.2</b> OLS estimator is unbiased</a></li>
 <li class="chapter" data-level="16.2.3" data-path="chp14.html"><a href="chp14.html#variance-covariance-is-a-minimum"><i class="fa fa-check"></i><b>16.2.3</b> Variance-Covariance is a minimum</a></li>
 </ul></li>
-<li class="chapter" data-level="16.3" data-path="chp14.html"><a href="chp14.html#probability-distributions-in-r-1"><i class="fa fa-check"></i><b>16.3</b> Probability Distributions in R</a><ul>
+<li class="chapter" data-level="16.3" data-path="chp4.html"><a href="chp4.html#probability-distributions-in-r"><i class="fa fa-check"></i><b>16.3</b> Probability Distributions in R</a><ul>
 <li class="chapter" data-level="16.3.1" data-path="chp14.html"><a href="chp14.html#obtaining-critical-statistics"><i class="fa fa-check"></i><b>16.3.1</b> Obtaining Critical Statistics</a></li>
-<li class="chapter" data-level="16.3.2" data-path="chp14.html"><a href="chp14.html#generating-random-numbers-1"><i class="fa fa-check"></i><b>16.3.2</b> Generating Random Numbers</a></li>
+<li class="chapter" data-level="16.3.2" data-path="cph3.html"><a href="cph3.html#generating-random-numbers"><i class="fa fa-check"></i><b>16.3.2</b> Generating Random Numbers</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="17" data-path="chp15.html"><a href="chp15.html"><i class="fa fa-check"></i><b>17</b> Advanced Panel Data</a><ul>
@@ -328,21 +343,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>sales - cigarette sales per capita in packs</li>
 <li>pimin - minimum price in adjoining states per pack of cigarettes in cents</li>
 </ul>
-<div class="sourceCode" id="cb382"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb382-1" title="1"><span class="kw">library</span>(plm)</a>
-<a class="sourceLine" id="cb382-2" title="2"><span class="kw">data</span>(<span class="st">&quot;Cigar&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb391"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb391-1"><a href="chp15.html#cb391-1"></a><span class="kw">library</span>(plm)</span>
+<span id="cb391-2"><a href="chp15.html#cb391-2"></a><span class="kw">data</span>(<span class="st">&quot;Cigar&quot;</span>)</span></code></pre></div>
 <p>The <code>plm</code> packages offers many functions to simplify the handling of advanced panel data.</p>
 </div>
 <div id="variation-within-units" class="section level2">
 <h2><span class="header-section-number">17.2</span> Variation within Units</h2>
 <p><code>dplyr</code> verbs make checking for variation within units across multiple variables relatively simple. First we use <code>group-by</code> so that any functions will be applied to each state individually. <code>summarize_all</code> will apply a function to each variable.</p>
-<div class="sourceCode" id="cb383"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb383-1" title="1"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb383-2" title="2"><span class="kw">library</span>(broom)</a>
-<a class="sourceLine" id="cb383-3" title="3"><span class="kw">library</span>(magrittr)</a>
-<a class="sourceLine" id="cb383-4" title="4"><span class="co"># Check for variaton by state.</span></a>
-<a class="sourceLine" id="cb383-5" title="5">Cigar <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb383-6" title="6"><span class="st">  </span><span class="kw">group_by</span>(state) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># ensures that subsequent functions will be performed by state</span></a>
-<a class="sourceLine" id="cb383-7" title="7"><span class="st">  </span><span class="kw">select</span>(price, pop, pop16, cpi, ndi, sales, pimin) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb383-8" title="8"><span class="st">  </span><span class="kw">summarise_all</span>(sd) <span class="co"># sd is standard deviation </span></a></code></pre></div>
+<div class="sourceCode" id="cb392"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb392-1"><a href="chp15.html#cb392-1"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb392-2"><a href="chp15.html#cb392-2"></a><span class="kw">library</span>(broom)</span>
+<span id="cb392-3"><a href="chp15.html#cb392-3"></a><span class="kw">library</span>(magrittr)</span>
+<span id="cb392-4"><a href="chp15.html#cb392-4"></a><span class="co"># Check for variaton by state.</span></span>
+<span id="cb392-5"><a href="chp15.html#cb392-5"></a>Cigar <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb392-6"><a href="chp15.html#cb392-6"></a><span class="st">  </span><span class="kw">group_by</span>(state) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># ensures that subsequent functions will be performed by state</span></span>
+<span id="cb392-7"><a href="chp15.html#cb392-7"></a><span class="st">  </span><span class="kw">select</span>(price, pop, pop16, cpi, ndi, sales, pimin) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb392-8"><a href="chp15.html#cb392-8"></a><span class="st">  </span><span class="kw">summarise_all</span>(sd) <span class="co"># sd is standard deviation </span></span></code></pre></div>
 <pre><code># A tibble: 46 x 8
    state price    pop  pop16   cpi   ndi sales pimin
    &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
@@ -357,11 +372,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
  9    11  37.6  783.   734.   37.1 4478.  10.0  35.9
 10    13  41.6  136.   113.   37.1 3900.  14.3  37.5
 # ... with 36 more rows</code></pre>
-<div class="sourceCode" id="cb385"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb385-1" title="1"><span class="co"># Check for variation by year.</span></a>
-<a class="sourceLine" id="cb385-2" title="2">Cigar <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb385-3" title="3"><span class="st">  </span><span class="kw">group_by</span>(year) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb385-4" title="4"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>year, <span class="op">-</span>state) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># the &quot;-&quot; indicates variables to be removed</span></a>
-<a class="sourceLine" id="cb385-5" title="5"><span class="st">  </span><span class="kw">summarise_all</span>(sd)</a></code></pre></div>
+<div class="sourceCode" id="cb394"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb394-1"><a href="chp15.html#cb394-1"></a><span class="co"># Check for variation by year.</span></span>
+<span id="cb394-2"><a href="chp15.html#cb394-2"></a>Cigar <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb394-3"><a href="chp15.html#cb394-3"></a><span class="st">  </span><span class="kw">group_by</span>(year) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb394-4"><a href="chp15.html#cb394-4"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>year, <span class="op">-</span>state) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># the &quot;-&quot; indicates variables to be removed</span></span>
+<span id="cb394-5"><a href="chp15.html#cb394-5"></a><span class="st">  </span><span class="kw">summarise_all</span>(sd)</span></code></pre></div>
 <pre><code># A tibble: 30 x 8
     year price   pop pop16   cpi   ndi sales pimin
    &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
@@ -378,21 +393,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 # ... with 20 more rows</code></pre>
 <p>CPI is the only variable with a standard deviation of 0 for all units. As would be expected, CPI should not vary within year.</p>
 <p><code>pvar</code> from the <code>plm</code> package will perform the task of checking for variation.</p>
-<div class="sourceCode" id="cb387"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb387-1" title="1"><span class="kw">pvar</span>(Cigar)</a></code></pre></div>
+<div class="sourceCode" id="cb396"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb396-1"><a href="chp15.html#cb396-1"></a><span class="kw">pvar</span>(Cigar)</span></code></pre></div>
 <pre><code>no time variation:       state 
 no individual variation: year cpi </code></pre>
 </div>
 <div id="two-way-fixed-effects-model" class="section level2">
 <h2><span class="header-section-number">17.3</span> Two-Way Fixed Effects Model</h2>
 <p>Let’s estimate cigarette demand as: <span class="math display">\[sales_{it}=\beta_0+\beta_1price_{it}+\beta_2pop16_{it}+\beta_3ndi_{it}+\alpha_i+\tau_t+\nu_{it}\]</span></p>
-<p>We would expect <span class="math inline">\(\beta_1&lt;0\)</span>, <span class="math inline">\(\beta_2&gt;0\)</span>, and <span class="math inline">\(\beta_3&lt;0\)</span> if cigarettes are an inferior good<a href="#fn25" class="footnote-ref" id="fnref25"><sup>25</sup></a>.</p>
-<div class="sourceCode" id="cb389"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb389-1" title="1">cigar_plm &lt;-<span class="st"> </span><span class="kw">plm</span>(sales <span class="op">~</span><span class="st"> </span>price <span class="op">+</span><span class="st"> </span>pop16 <span class="op">+</span><span class="st"> </span>ndi, </a>
-<a class="sourceLine" id="cb389-2" title="2">                 <span class="dt">data =</span> Cigar, <span class="co"># recall plm does not play nice with the expose pipe, %$%</span></a>
-<a class="sourceLine" id="cb389-3" title="3">                 <span class="dt">index =</span> <span class="kw">c</span>(<span class="st">&quot;state&quot;</span>, <span class="st">&quot;year&quot;</span>), </a>
-<a class="sourceLine" id="cb389-4" title="4">                 <span class="dt">model =</span> <span class="st">&quot;within&quot;</span>, </a>
-<a class="sourceLine" id="cb389-5" title="5">                 <span class="dt">effect =</span> <span class="st">&quot;twoways&quot;</span>)</a>
-<a class="sourceLine" id="cb389-6" title="6">cigar_plm <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb389-7" title="7"><span class="st">  </span><span class="kw">tidy</span>()</a></code></pre></div>
+<p>We would expect <span class="math inline">\(\beta_1&lt;0\)</span>, <span class="math inline">\(\beta_2&gt;0\)</span>, and <span class="math inline">\(\beta_3&lt;0\)</span> if cigarettes are an inferior good<a href="#fn29" class="footnote-ref" id="fnref29"><sup>29</sup></a>.</p>
+<div class="sourceCode" id="cb398"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb398-1"><a href="chp15.html#cb398-1"></a>cigar_plm &lt;-<span class="st"> </span><span class="kw">plm</span>(sales <span class="op">~</span><span class="st"> </span>price <span class="op">+</span><span class="st"> </span>pop16 <span class="op">+</span><span class="st"> </span>ndi, </span>
+<span id="cb398-2"><a href="chp15.html#cb398-2"></a>                 <span class="dt">data =</span> Cigar, <span class="co"># recall plm does not play nice with the expose pipe, %$%</span></span>
+<span id="cb398-3"><a href="chp15.html#cb398-3"></a>                 <span class="dt">index =</span> <span class="kw">c</span>(<span class="st">&quot;state&quot;</span>, <span class="st">&quot;year&quot;</span>), </span>
+<span id="cb398-4"><a href="chp15.html#cb398-4"></a>                 <span class="dt">model =</span> <span class="st">&quot;within&quot;</span>, </span>
+<span id="cb398-5"><a href="chp15.html#cb398-5"></a>                 <span class="dt">effect =</span> <span class="st">&quot;twoways&quot;</span>)</span>
+<span id="cb398-6"><a href="chp15.html#cb398-6"></a>cigar_plm <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb398-7"><a href="chp15.html#cb398-7"></a><span class="st">  </span><span class="kw">tidy</span>()</span></code></pre></div>
 <pre><code># A tibble: 3 x 5
   term  estimate std.error statistic  p.value
   &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
@@ -404,52 +419,52 @@ no individual variation: year cpi </code></pre>
 <div id="testing-for-autocorrelation" class="section level2">
 <h2><span class="header-section-number">17.4</span> Testing for autocorrelation</h2>
 <p>Testing for autocorrelation is done by testing the following hypothesis: <span class="math display">\[H_0:\rho=0\]</span> <span class="math display">\[H_1:\rho\ne0\]</span></p>
-<div class="sourceCode" id="cb391"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb391-1" title="1">Cigar <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb391-2" title="2"><span class="st">  </span><span class="kw">glimpse</span>()</a></code></pre></div>
-<pre><code>Observations: 1,380
-Variables: 9
-$ state &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,...
-$ year  &lt;int&gt; 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, ...
-$ price &lt;dbl&gt; 28.6, 29.8, 29.8, 31.5, 31.6, 35.6, 36.6, 39.6, 42.7, 42...
-$ pop   &lt;dbl&gt; 3383, 3431, 3486, 3524, 3533, 3522, 3531, 3444, 3481, 35...
-$ pop16 &lt;dbl&gt; 2236, 2277, 2328, 2370, 2394, 2405, 2412, 2395, 2444, 24...
-$ cpi   &lt;dbl&gt; 30.6, 31.0, 31.5, 32.4, 33.4, 34.8, 36.7, 38.8, 40.5, 41...
-$ ndi   &lt;dbl&gt; 1558, 1684, 1810, 1915, 2024, 2202, 2377, 2591, 2785, 30...
-$ sales &lt;dbl&gt; 93.9, 95.4, 98.5, 96.4, 95.5, 88.4, 90.1, 89.8, 95.4, 10...
-$ pimin &lt;dbl&gt; 26.1, 27.5, 28.9, 29.5, 29.6, 32.0, 32.8, 34.3, 35.8, 37...</code></pre>
+<div class="sourceCode" id="cb400"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb400-1"><a href="chp15.html#cb400-1"></a>Cigar <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb400-2"><a href="chp15.html#cb400-2"></a><span class="st">  </span><span class="kw">glimpse</span>()</span></code></pre></div>
+<pre><code>Rows: 1,380
+Columns: 9
+$ state &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1...
+$ year  &lt;int&gt; 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 7...
+$ price &lt;dbl&gt; 28.6, 29.8, 29.8, 31.5, 31.6, 35.6, 36.6, 39.6, 42.7, 42.3, 4...
+$ pop   &lt;dbl&gt; 3383, 3431, 3486, 3524, 3533, 3522, 3531, 3444, 3481, 3511, 3...
+$ pop16 &lt;dbl&gt; 2236, 2277, 2328, 2370, 2394, 2405, 2412, 2395, 2444, 2485, 2...
+$ cpi   &lt;dbl&gt; 30.6, 31.0, 31.5, 32.4, 33.4, 34.8, 36.7, 38.8, 40.5, 41.8, 4...
+$ ndi   &lt;dbl&gt; 1558, 1684, 1810, 1915, 2024, 2202, 2377, 2591, 2785, 3035, 3...
+$ sales &lt;dbl&gt; 93.9, 95.4, 98.5, 96.4, 95.5, 88.4, 90.1, 89.8, 95.4, 101.1, ...
+$ pimin &lt;dbl&gt; 26.1, 27.5, 28.9, 29.5, 29.6, 32.0, 32.8, 34.3, 35.8, 37.4, 3...</code></pre>
 <p>Our data are organized by unit by year, so we can estimate <span class="math inline">\(\hat\rho\)</span> directly. First, obtain the residuals, <em>e</em>, from the estimated equation. Estimate the equation <span class="math inline">\(e=\rho e_{i,t-1}+\eta_{it}\)</span>.</p>
-<div class="sourceCode" id="cb393"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb393-1" title="1"><span class="co"># Obtain the residuals</span></a>
-<a class="sourceLine" id="cb393-2" title="2">Cigar<span class="op">$</span>e &lt;-<span class="st"> </span>cigar_plm<span class="op">$</span>residuals</a>
-<a class="sourceLine" id="cb393-3" title="3"><span class="co"># test of rho hat</span></a>
-<a class="sourceLine" id="cb393-4" title="4">aux_<span class="dv">1</span> &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb393-5" title="5"><span class="st">  </span>Cigar <span class="op">%$%</span></a>
-<a class="sourceLine" id="cb393-6" title="6"><span class="st">  </span><span class="kw">lm</span>(e <span class="op">~</span><span class="st"> </span><span class="dv">-1</span> <span class="op">+</span><span class="st"> </span><span class="kw">lag</span>(e)) <span class="co"># -1 removes the constant.</span></a>
-<a class="sourceLine" id="cb393-7" title="7">aux_<span class="dv">1</span> <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb393-8" title="8"><span class="st">  </span><span class="kw">tidy</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb402"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb402-1"><a href="chp15.html#cb402-1"></a><span class="co"># Obtain the residuals</span></span>
+<span id="cb402-2"><a href="chp15.html#cb402-2"></a>Cigar<span class="op">$</span>e &lt;-<span class="st"> </span>cigar_plm<span class="op">$</span>residuals</span>
+<span id="cb402-3"><a href="chp15.html#cb402-3"></a><span class="co"># test of rho hat</span></span>
+<span id="cb402-4"><a href="chp15.html#cb402-4"></a>aux_<span class="dv">1</span> &lt;-<span class="st"> </span></span>
+<span id="cb402-5"><a href="chp15.html#cb402-5"></a><span class="st">  </span>Cigar <span class="op">%$%</span></span>
+<span id="cb402-6"><a href="chp15.html#cb402-6"></a><span class="st">  </span><span class="kw">lm</span>(e <span class="op">~</span><span class="st"> </span><span class="dv">-1</span> <span class="op">+</span><span class="st"> </span><span class="kw">lag</span>(e)) <span class="co"># -1 removes the constant.</span></span>
+<span id="cb402-7"><a href="chp15.html#cb402-7"></a>aux_<span class="dv">1</span> <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb402-8"><a href="chp15.html#cb402-8"></a><span class="st">  </span><span class="kw">tidy</span>()</span></code></pre></div>
 <pre><code># A tibble: 1 x 5
   term   estimate std.error statistic p.value
   &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
 1 lag(e)    0.888    0.0126      70.3       0</code></pre>
 <p>We can reject the null hypothesis at the 1% level.</p>
 <p>We can also check for autocorrelation with the LM test by estimating the model <span class="math display">\[\hat\epsilon_{it}=\rho\hat\epsilon_{i,t-1}+\gamma_1price_{it}+\gamma_2pop16_{it}+\gamma_3ndi_{it}+\eta_{it}\]</span> where <span class="math inline">\(nR^2\sim\chi^2_{df=1}\)</span>.</p>
-<div class="sourceCode" id="cb395"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb395-1" title="1">aux_<span class="dv">2</span> &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb395-2" title="2"><span class="kw">plm</span>(e <span class="op">~</span><span class="st"> </span><span class="kw">lag</span>(e) <span class="op">+</span><span class="st"> </span>price <span class="op">+</span><span class="st"> </span>pop16 <span class="op">+</span><span class="st"> </span>ndi,  </a>
-<a class="sourceLine" id="cb395-3" title="3">    <span class="dt">data =</span> Cigar,</a>
-<a class="sourceLine" id="cb395-4" title="4">    <span class="dt">index =</span> <span class="kw">c</span>(<span class="st">&quot;state&quot;</span>, <span class="st">&quot;year&quot;</span>), </a>
-<a class="sourceLine" id="cb395-5" title="5">    <span class="dt">model =</span> <span class="st">&quot;within&quot;</span>, </a>
-<a class="sourceLine" id="cb395-6" title="6">    <span class="dt">effect =</span> <span class="st">&quot;twoways&quot;</span>) </a>
-<a class="sourceLine" id="cb395-7" title="7">nR2 &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb395-8" title="8"><span class="st">  </span>aux_<span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb395-9" title="9"><span class="st">  </span>r.squared <span class="op">*</span></a>
-<a class="sourceLine" id="cb395-10" title="10"><span class="st">  </span>aux_<span class="dv">2</span><span class="op">$</span>df.residual </a>
-<a class="sourceLine" id="cb395-11" title="11">nR2 <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb395-12" title="12"><span class="st">  </span><span class="kw">pchisq</span>(<span class="dv">1</span>, <span class="dt">lower.tail =</span> F)</a></code></pre></div>
+<div class="sourceCode" id="cb404"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb404-1"><a href="chp15.html#cb404-1"></a>aux_<span class="dv">2</span> &lt;-<span class="st"> </span></span>
+<span id="cb404-2"><a href="chp15.html#cb404-2"></a><span class="kw">plm</span>(e <span class="op">~</span><span class="st"> </span><span class="kw">lag</span>(e) <span class="op">+</span><span class="st"> </span>price <span class="op">+</span><span class="st"> </span>pop16 <span class="op">+</span><span class="st"> </span>ndi,  </span>
+<span id="cb404-3"><a href="chp15.html#cb404-3"></a>    <span class="dt">data =</span> Cigar,</span>
+<span id="cb404-4"><a href="chp15.html#cb404-4"></a>    <span class="dt">index =</span> <span class="kw">c</span>(<span class="st">&quot;state&quot;</span>, <span class="st">&quot;year&quot;</span>), </span>
+<span id="cb404-5"><a href="chp15.html#cb404-5"></a>    <span class="dt">model =</span> <span class="st">&quot;within&quot;</span>, </span>
+<span id="cb404-6"><a href="chp15.html#cb404-6"></a>    <span class="dt">effect =</span> <span class="st">&quot;twoways&quot;</span>) </span>
+<span id="cb404-7"><a href="chp15.html#cb404-7"></a>nR2 &lt;-<span class="st"> </span></span>
+<span id="cb404-8"><a href="chp15.html#cb404-8"></a><span class="st">  </span>aux_<span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb404-9"><a href="chp15.html#cb404-9"></a><span class="st">  </span>r.squared <span class="op">*</span></span>
+<span id="cb404-10"><a href="chp15.html#cb404-10"></a><span class="st">  </span>aux_<span class="dv">2</span><span class="op">$</span>df.residual </span>
+<span id="cb404-11"><a href="chp15.html#cb404-11"></a>nR2 <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb404-12"><a href="chp15.html#cb404-12"></a><span class="st">  </span><span class="kw">pchisq</span>(<span class="dv">1</span>, <span class="dt">lower.tail =</span> F)</span></code></pre></div>
 <pre><code>[1] 0.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000103</code></pre>
 <p>Again, we can reject the null hypothesis of no autocorrelation.</p>
 <p><code>pwartest</code> from the <code>lpm</code> package allows us to test for autocorrelation (<code>?pwartest</code> for relevant arguments).</p>
-<div class="sourceCode" id="cb397"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb397-1" title="1"><span class="kw">pwartest</span>(cigar_plm)</a></code></pre></div>
+<div class="sourceCode" id="cb406"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb406-1"><a href="chp15.html#cb406-1"></a><span class="kw">pwartest</span>(cigar_plm)</span></code></pre></div>
 <pre><code>
-    Wooldridge&#39;s test for serial correlation in FE panels
+	Wooldridge&#39;s test for serial correlation in FE panels
 
 data:  cigar_plm
 F = 10212, df1 = 1, df2 = 1332, p-value &lt;0.0000000000000002
@@ -459,15 +474,15 @@ alternative hypothesis: serial correlation</code></pre>
 <div id="estimating-hatrho" class="section level2">
 <h2><span class="header-section-number">17.5</span> Estimating <span class="math inline">\(\hat\rho\)</span></h2>
 <p>To correct for autocorrelation we need an estimate of <span class="math inline">\(\hat\rho\)</span>. We can estimate <span class="math inline">\(\hat\rho\)</span> using either auxiliary regression from above.</p>
-<div class="sourceCode" id="cb399"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb399-1" title="1">aux_<span class="dv">1</span> <span class="op">%&gt;%</span><span class="st">  </span></a>
-<a class="sourceLine" id="cb399-2" title="2"><span class="st">   </span><span class="kw">tidy</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb408"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb408-1"><a href="chp15.html#cb408-1"></a>aux_<span class="dv">1</span> <span class="op">%&gt;%</span><span class="st">  </span></span>
+<span id="cb408-2"><a href="chp15.html#cb408-2"></a><span class="st">   </span><span class="kw">tidy</span>()</span></code></pre></div>
 <pre><code># A tibble: 1 x 5
   term   estimate std.error statistic p.value
   &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
 1 lag(e)    0.888    0.0126      70.3       0</code></pre>
 <p>Our estimate of <span class="math inline">\(\hat\rho\)</span> is <code>0.888</code> is 0.888.</p>
-<div class="sourceCode" id="cb401"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb401-1" title="1">aux_<span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb401-2" title="2"><span class="st">  </span><span class="kw">tidy</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb410"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb410-1"><a href="chp15.html#cb410-1"></a>aux_<span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb410-2"><a href="chp15.html#cb410-2"></a><span class="st">  </span><span class="kw">tidy</span>()</span></code></pre></div>
 <pre><code># A tibble: 4 x 5
   term    estimate std.error statistic    p.value
   &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
@@ -480,16 +495,16 @@ alternative hypothesis: serial correlation</code></pre>
 <div id="estimate-a-rho-transformed-model" class="section level2">
 <h2><span class="header-section-number">17.6</span> Estimate a <span class="math inline">\(\rho\)</span>-Transformed Model</h2>
 <p>We can manually transform the data and compare the transformed model to the non-transformed model.</p>
-<div class="sourceCode" id="cb403"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb403-1" title="1">rho_hat &lt;-<span class="st"> </span>aux_<span class="dv">2</span><span class="op">$</span>coefficients[<span class="dv">1</span>] <span class="co"># set rho_hat to the coef of lagged e in aux_2</span></a>
-<a class="sourceLine" id="cb403-2" title="2"><span class="kw">plm</span>(<span class="kw">I</span>(sales <span class="op">-</span><span class="st"> </span>rho_hat<span class="op">*</span><span class="kw">lag</span>(sales)) <span class="op">~</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb403-3" title="3"><span class="st">      </span><span class="kw">I</span>(price <span class="op">-</span><span class="st"> </span>rho_hat<span class="op">*</span><span class="kw">lag</span>(price)) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb403-4" title="4"><span class="st">      </span><span class="kw">I</span>(pop <span class="op">-</span><span class="st"> </span>rho_hat<span class="op">*</span><span class="kw">lag</span>(pop16)) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb403-5" title="5"><span class="st">      </span><span class="kw">I</span>(ndi <span class="op">-</span><span class="st"> </span>rho_hat<span class="op">*</span><span class="kw">lag</span>(ndi)), </a>
-<a class="sourceLine" id="cb403-6" title="6">    <span class="dt">data =</span> Cigar, </a>
-<a class="sourceLine" id="cb403-7" title="7">    <span class="dt">index =</span> <span class="kw">c</span>(<span class="st">&quot;state&quot;</span>, <span class="st">&quot;year&quot;</span>), </a>
-<a class="sourceLine" id="cb403-8" title="8">    <span class="dt">model =</span> <span class="st">&quot;within&quot;</span>, </a>
-<a class="sourceLine" id="cb403-9" title="9">    <span class="dt">effect =</span> <span class="st">&quot;twoways&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb403-10" title="10"><span class="st">  </span><span class="kw">summary</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb412"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb412-1"><a href="chp15.html#cb412-1"></a>rho_hat &lt;-<span class="st"> </span>aux_<span class="dv">2</span><span class="op">$</span>coefficients[<span class="dv">1</span>] <span class="co"># set rho_hat to the coef of lagged e in aux_2</span></span>
+<span id="cb412-2"><a href="chp15.html#cb412-2"></a><span class="kw">plm</span>(<span class="kw">I</span>(sales <span class="op">-</span><span class="st"> </span>rho_hat<span class="op">*</span><span class="kw">lag</span>(sales)) <span class="op">~</span><span class="st"> </span></span>
+<span id="cb412-3"><a href="chp15.html#cb412-3"></a><span class="st">      </span><span class="kw">I</span>(price <span class="op">-</span><span class="st"> </span>rho_hat<span class="op">*</span><span class="kw">lag</span>(price)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb412-4"><a href="chp15.html#cb412-4"></a><span class="st">      </span><span class="kw">I</span>(pop <span class="op">-</span><span class="st"> </span>rho_hat<span class="op">*</span><span class="kw">lag</span>(pop16)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb412-5"><a href="chp15.html#cb412-5"></a><span class="st">      </span><span class="kw">I</span>(ndi <span class="op">-</span><span class="st"> </span>rho_hat<span class="op">*</span><span class="kw">lag</span>(ndi)), </span>
+<span id="cb412-6"><a href="chp15.html#cb412-6"></a>    <span class="dt">data =</span> Cigar, </span>
+<span id="cb412-7"><a href="chp15.html#cb412-7"></a>    <span class="dt">index =</span> <span class="kw">c</span>(<span class="st">&quot;state&quot;</span>, <span class="st">&quot;year&quot;</span>), </span>
+<span id="cb412-8"><a href="chp15.html#cb412-8"></a>    <span class="dt">model =</span> <span class="st">&quot;within&quot;</span>, </span>
+<span id="cb412-9"><a href="chp15.html#cb412-9"></a>    <span class="dt">effect =</span> <span class="st">&quot;twoways&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb412-10"><a href="chp15.html#cb412-10"></a><span class="st">  </span><span class="kw">summary</span>()</span></code></pre></div>
 <pre><code>Twoways effects Within Model
 
 Call:
@@ -505,14 +520,14 @@ Residuals:
 -27.611  -1.992   0.208   1.956  61.268 
 
 Coefficients:
-                                 Estimate Std. Error t-value
-I(price - rho_hat * lag(price)) -0.329602   0.047324   -6.96
-I(pop - rho_hat * lag(pop16))   -0.000730   0.000594   -1.23
-I(ndi - rho_hat * lag(ndi))      0.000988   0.000682    1.45
-                                       Pr(&gt;|t|)    
-I(price - rho_hat * lag(price)) 0.0000000000053 ***
-I(pop - rho_hat * lag(pop16))              0.22    
-I(ndi - rho_hat * lag(ndi))                0.15    
+                                 Estimate Std. Error t-value        Pr(&gt;|t|)
+I(price - rho_hat * lag(price)) -0.329602   0.047324   -6.96 0.0000000000053
+I(pop - rho_hat * lag(pop16))   -0.000730   0.000594   -1.23            0.22
+I(ndi - rho_hat * lag(ndi))      0.000988   0.000682    1.45            0.15
+                                   
+I(price - rho_hat * lag(price)) ***
+I(pop - rho_hat * lag(pop16))      
+I(ndi - rho_hat * lag(ndi))        
 ---
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
@@ -521,8 +536,8 @@ Residual Sum of Squares: 34300
 R-Squared:      0.0414
 Adj. R-Squared: -0.0166
 F-statistic: 18.0908 on 3 and 1257 DF, p-value: 0.000000000017</code></pre>
-<div class="sourceCode" id="cb405"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb405-1" title="1">cigar_plm <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb405-2" title="2"><span class="st">  </span><span class="kw">tidy</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb414"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb414-1"><a href="chp15.html#cb414-1"></a>cigar_plm <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb414-2"><a href="chp15.html#cb414-2"></a><span class="st">  </span><span class="kw">tidy</span>()</span></code></pre></div>
 <pre><code># A tibble: 3 x 5
   term  estimate std.error statistic  p.value
   &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
@@ -530,15 +545,15 @@ F-statistic: 18.0908 on 3 and 1257 DF, p-value: 0.000000000017</code></pre>
 2 pop16  0.00114  0.000547      2.07 3.83e- 2
 3 ndi   -0.00557  0.000445    -12.5  5.72e-34</code></pre>
 <p>Now only <span class="math inline">\(\hat\beta_1\)</span> is significantly different than zero.</p>
-<p>We can use the <code>panelAR</code> package to directly estimate a corrected model<a href="#fn26" class="footnote-ref" id="fnref26"><sup>26</sup></a>. <code>?panelAR</code> for arguments necessary to estimate the corrected model.</p>
-<div class="sourceCode" id="cb407"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb407-1" title="1"><span class="kw">library</span>(panelAR)</a>
-<a class="sourceLine" id="cb407-2" title="2"><span class="kw">panelAR</span>(sales <span class="op">~</span><span class="st"> </span>price <span class="op">+</span><span class="st"> </span>pop <span class="op">+</span>ndi, </a>
-<a class="sourceLine" id="cb407-3" title="3">        <span class="dt">data =</span> Cigar, </a>
-<a class="sourceLine" id="cb407-4" title="4">        <span class="dt">panelVar =</span> <span class="st">&quot;state&quot;</span>, </a>
-<a class="sourceLine" id="cb407-5" title="5">        <span class="dt">timeVar =</span> <span class="st">&quot;year&quot;</span>,</a>
-<a class="sourceLine" id="cb407-6" title="6">        <span class="dt">autoCorr =</span> <span class="st">&quot;ar1&quot;</span>,</a>
-<a class="sourceLine" id="cb407-7" title="7">        <span class="dt">panelCorrMethod =</span> <span class="st">&quot;pcse&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb407-8" title="8"><span class="st">  </span><span class="kw">summary</span>()</a></code></pre></div>
+<p>We can use the <code>panelAR</code> package to directly estimate a corrected model<a href="#fn30" class="footnote-ref" id="fnref30"><sup>30</sup></a>. <code>?panelAR</code> for arguments necessary to estimate the corrected model.</p>
+<div class="sourceCode" id="cb416"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb416-1"><a href="chp15.html#cb416-1"></a><span class="kw">library</span>(panelAR)</span>
+<span id="cb416-2"><a href="chp15.html#cb416-2"></a><span class="kw">panelAR</span>(sales <span class="op">~</span><span class="st"> </span>price <span class="op">+</span><span class="st"> </span>pop <span class="op">+</span>ndi, </span>
+<span id="cb416-3"><a href="chp15.html#cb416-3"></a>        <span class="dt">data =</span> Cigar, </span>
+<span id="cb416-4"><a href="chp15.html#cb416-4"></a>        <span class="dt">panelVar =</span> <span class="st">&quot;state&quot;</span>, </span>
+<span id="cb416-5"><a href="chp15.html#cb416-5"></a>        <span class="dt">timeVar =</span> <span class="st">&quot;year&quot;</span>,</span>
+<span id="cb416-6"><a href="chp15.html#cb416-6"></a>        <span class="dt">autoCorr =</span> <span class="st">&quot;ar1&quot;</span>,</span>
+<span id="cb416-7"><a href="chp15.html#cb416-7"></a>        <span class="dt">panelCorrMethod =</span> <span class="st">&quot;pcse&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb416-8"><a href="chp15.html#cb416-8"></a><span class="st">  </span><span class="kw">summary</span>()</span></code></pre></div>
 <pre><code>
 Panel Regression with AR(1) Prais-Winsten correction and panel-corrected standard errors
 
@@ -562,13 +577,13 @@ Wald statistic: 57.2869, Pr(&gt;Chisq(3)): 0</code></pre>
 <div id="lagged-dependent-variable-panel-data-model" class="section level2">
 <h2><span class="header-section-number">17.7</span> Lagged Dependent Variable Panel Data Model</h2>
 <p>Let’s estimate the lagged-depdendent variable model <span class="math display">\[sales_{it} = \gamma sales_{i,t-1}+\beta_0+\beta_1price_{it}+\beta_2pop16_{it}+\beta_3ndi_{it}+\epsilon_{it}\]</span></p>
-<div class="sourceCode" id="cb409"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb409-1" title="1">cigar_lag_plm &lt;-<span class="st"> </span><span class="kw">plm</span>(sales <span class="op">~</span><span class="st"> </span><span class="kw">lag</span>(sales) <span class="op">+</span><span class="st"> </span>price <span class="op">+</span><span class="st"> </span>pop16 <span class="op">+</span><span class="st"> </span>ndi, </a>
-<a class="sourceLine" id="cb409-2" title="2">                 <span class="dt">data =</span> Cigar, <span class="co"># recall plm does not play nice with the expose pipe, %$%</span></a>
-<a class="sourceLine" id="cb409-3" title="3">                 <span class="dt">index =</span> <span class="kw">c</span>(<span class="st">&quot;state&quot;</span>, <span class="st">&quot;year&quot;</span>), </a>
-<a class="sourceLine" id="cb409-4" title="4">                 <span class="dt">model =</span> <span class="st">&quot;within&quot;</span>, </a>
-<a class="sourceLine" id="cb409-5" title="5">                 <span class="dt">effect =</span> <span class="st">&quot;twoways&quot;</span>)</a>
-<a class="sourceLine" id="cb409-6" title="6">cigar_lag_plm <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb409-7" title="7"><span class="st">  </span><span class="kw">summary</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb418"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb418-1"><a href="chp15.html#cb418-1"></a>cigar_lag_plm &lt;-<span class="st"> </span><span class="kw">plm</span>(sales <span class="op">~</span><span class="st"> </span><span class="kw">lag</span>(sales) <span class="op">+</span><span class="st"> </span>price <span class="op">+</span><span class="st"> </span>pop16 <span class="op">+</span><span class="st"> </span>ndi, </span>
+<span id="cb418-2"><a href="chp15.html#cb418-2"></a>                 <span class="dt">data =</span> Cigar, <span class="co"># recall plm does not play nice with the expose pipe, %$%</span></span>
+<span id="cb418-3"><a href="chp15.html#cb418-3"></a>                 <span class="dt">index =</span> <span class="kw">c</span>(<span class="st">&quot;state&quot;</span>, <span class="st">&quot;year&quot;</span>), </span>
+<span id="cb418-4"><a href="chp15.html#cb418-4"></a>                 <span class="dt">model =</span> <span class="st">&quot;within&quot;</span>, </span>
+<span id="cb418-5"><a href="chp15.html#cb418-5"></a>                 <span class="dt">effect =</span> <span class="st">&quot;twoways&quot;</span>)</span>
+<span id="cb418-6"><a href="chp15.html#cb418-6"></a>cigar_lag_plm <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb418-7"><a href="chp15.html#cb418-7"></a><span class="st">  </span><span class="kw">summary</span>()</span></code></pre></div>
 <pre><code>Twoways effects Within Model
 
 Call:
@@ -599,13 +614,13 @@ F-statistic: 1876.56 on 4 and 1256 DF, p-value: &lt;0.0000000000000002</code></p
 </div>
 <div id="random-effects-model" class="section level2">
 <h2><span class="header-section-number">17.8</span> Random Effects Model</h2>
-<div class="sourceCode" id="cb411"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb411-1" title="1"><span class="kw">plm</span>(sales <span class="op">~</span><span class="st"> </span>price <span class="op">+</span><span class="st"> </span>pop16 <span class="op">+</span><span class="st"> </span>ndi,</a>
-<a class="sourceLine" id="cb411-2" title="2">    <span class="dt">data =</span> Cigar,</a>
-<a class="sourceLine" id="cb411-3" title="3">    <span class="dt">index =</span> <span class="kw">c</span>(<span class="st">&quot;state&quot;</span>, <span class="st">&quot;year&quot;</span>),</a>
-<a class="sourceLine" id="cb411-4" title="4">    <span class="dt">model =</span> <span class="st">&quot;random&quot;</span>,</a>
-<a class="sourceLine" id="cb411-5" title="5">    <span class="dt">effect =</span> <span class="st">&quot;twoways&quot;</span> </a>
-<a class="sourceLine" id="cb411-6" title="6">    ) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb411-7" title="7"><span class="st">  </span><span class="kw">summary</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb420"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb420-1"><a href="chp15.html#cb420-1"></a><span class="kw">plm</span>(sales <span class="op">~</span><span class="st"> </span>price <span class="op">+</span><span class="st"> </span>pop16 <span class="op">+</span><span class="st"> </span>ndi,</span>
+<span id="cb420-2"><a href="chp15.html#cb420-2"></a>    <span class="dt">data =</span> Cigar,</span>
+<span id="cb420-3"><a href="chp15.html#cb420-3"></a>    <span class="dt">index =</span> <span class="kw">c</span>(<span class="st">&quot;state&quot;</span>, <span class="st">&quot;year&quot;</span>),</span>
+<span id="cb420-4"><a href="chp15.html#cb420-4"></a>    <span class="dt">model =</span> <span class="st">&quot;random&quot;</span>,</span>
+<span id="cb420-5"><a href="chp15.html#cb420-5"></a>    <span class="dt">effect =</span> <span class="st">&quot;twoways&quot;</span> </span>
+<span id="cb420-6"><a href="chp15.html#cb420-6"></a>    ) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb420-7"><a href="chp15.html#cb420-7"></a><span class="st">  </span><span class="kw">summary</span>()</span></code></pre></div>
 <pre><code>Twoways effects Random Effect Model 
    (Swamy-Arora&#39;s transformation)
 
@@ -675,11 +690,15 @@ Chisq: 220.089 on 3 DF, p-value: &lt;0.0000000000000002</code></pre>
 
 
 
+
+
+
+
 <div class="footnotes">
 <hr />
-<ol start="25">
-<li id="fn25"><p>If cigarettes are a normal good we’d expect <span class="math inline">\(\beta_3&gt;0\)</span><a href="chp15.html#fnref25" class="footnote-back">↩</a></p></li>
-<li id="fn26"><p>Note the slight differences, because <code>panelAR</code> also corrects for heteroscedasticity.<a href="chp15.html#fnref26" class="footnote-back">↩</a></p></li>
+<ol start="29">
+<li id="fn29"><p>If cigarettes are a normal good we’d expect <span class="math inline">\(\beta_3&gt;0\)</span><a href="chp15.html#fnref29" class="footnote-back">↩︎</a></p></li>
+<li id="fn30"><p>Note the slight differences, because <code>panelAR</code> also corrects for heteroscedasticity.<a href="chp15.html#fnref30" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>
@@ -693,11 +712,13 @@ Chisq: 220.089 on 3 DF, p-value: &lt;0.0000000000000002</code></pre>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -705,12 +726,11 @@ gitbook.start({
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -722,6 +742,10 @@ gitbook.start({
 "text": null
 },
 "history": {
+"link": null,
+"text": null
+},
+"view": {
 "link": null,
 "text": null
 },

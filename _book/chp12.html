@@ -1,30 +1,30 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 14 Dummy Dependent Variables | R Companion to Real Econometrics</title>
-  <meta name="description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
-  <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
+  <meta name="description" content="R, RStudio IDE, and the tidyverse companion to Bailey’s Real Econometrics" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 14 Dummy Dependent Variables | R Companion to Real Econometrics" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  <meta property="og:description" content="R, RStudio IDE, and the tidyverse companion to Bailey’s Real Econometrics" />
   
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Chapter 14 Dummy Dependent Variables | R Companion to Real Econometrics" />
   
-  <meta name="twitter:description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  <meta name="twitter:description" content="R, RStudio IDE, and the tidyverse companion to Bailey’s Real Econometrics" />
   
 
 <meta name="author" content="Tony Carilli" />
 
 
-<meta name="date" content="2019-09-23" />
+<meta name="date" content="2020-08-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -40,6 +40,7 @@
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
 
 
 
@@ -47,12 +48,23 @@
 
 
 
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.15/datatables.js"></script>
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -61,14 +73,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -77,9 +91,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -128,7 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./">R Companion to *Real Econometrics*</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a></li>
 <li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a><ul>
 <li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#install-r-and-rstudio"><i class="fa fa-check"></i><b>2.1</b> Install R and RStudio</a></li>
 <li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#using-rstudio"><i class="fa fa-check"></i><b>2.2</b> Using RStudio</a><ul>
@@ -147,7 +161,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="chp2.html"><a href="chp2.html"><i class="fa fa-check"></i><b>4</b> Stats in the Wild: Good Data Practices</a><ul>
-<li class="chapter" data-level="4.1" data-path="chp2.html"><a href="chp2.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
+<li class="chapter" data-level="4.1" data-path="chp1.html"><a href="chp1.html#introduction"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
 <li class="chapter" data-level="4.2" data-path="chp2.html"><a href="chp2.html#table-and-figure-reproduction"><i class="fa fa-check"></i><b>4.2</b> Table and Figure Reproduction</a><ul>
 <li class="chapter" data-level="4.2.1" data-path="chp2.html"><a href="chp2.html#table-2.1"><i class="fa fa-check"></i><b>4.2.1</b> Table 2.1</a></li>
 <li class="chapter" data-level="4.2.2" data-path="chp2.html"><a href="chp2.html#table-2.2"><i class="fa fa-check"></i><b>4.2.2</b> Table 2.2</a></li>
@@ -158,6 +172,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.3.1" data-path="chp2.html"><a href="chp2.html#reading-data"><i class="fa fa-check"></i><b>4.3.1</b> Reading Data</a></li>
 <li class="chapter" data-level="4.3.2" data-path="chp2.html"><a href="chp2.html#manually-entering-data"><i class="fa fa-check"></i><b>4.3.2</b> Manually Entering Data</a></li>
 <li class="chapter" data-level="4.3.3" data-path="chp2.html"><a href="chp2.html#simple-statistics"><i class="fa fa-check"></i><b>4.3.3</b> Simple Statistics</a></li>
+<li class="chapter" data-level="4.3.4" data-path="chp2.html"><a href="chp2.html#subsetting"><i class="fa fa-check"></i><b>4.3.4</b> Subsetting</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="cph3.html"><a href="cph3.html"><i class="fa fa-check"></i><b>5</b> Bivariate OLS: The Foundation of Econometric Analysis</a><ul>
@@ -177,7 +192,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="chp5.html"><a href="chp5.html"><i class="fa fa-check"></i><b>7</b> Multivariate OLS: Where the Action Is</a><ul>
-<li class="chapter" data-level="7.1" data-path="chp5.html"><a href="chp5.html#computing-corner-1"><i class="fa fa-check"></i><b>7.1</b> Computing Corner</a><ul>
+<li class="chapter" data-level="7.1" data-path="chp4.html"><a href="chp4.html#computing-corner"><i class="fa fa-check"></i><b>7.1</b> Computing Corner</a><ul>
 <li class="chapter" data-level="7.1.1" data-path="chp5.html"><a href="chp5.html#multiple-regression"><i class="fa fa-check"></i><b>7.1.1</b> Multiple Regression</a></li>
 <li class="chapter" data-level="7.1.2" data-path="chp5.html"><a href="chp5.html#multicollinearity"><i class="fa fa-check"></i><b>7.1.2</b> Multicollinearity</a></li>
 <li class="chapter" data-level="7.1.3" data-path="chp5.html"><a href="chp5.html#standardized-coefficients"><i class="fa fa-check"></i><b>7.1.3</b> Standardized Coefficients</a></li>
@@ -276,9 +291,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="16.2.2" data-path="chp14.html"><a href="chp14.html#ols-estimator-is-unbiased"><i class="fa fa-check"></i><b>16.2.2</b> OLS estimator is unbiased</a></li>
 <li class="chapter" data-level="16.2.3" data-path="chp14.html"><a href="chp14.html#variance-covariance-is-a-minimum"><i class="fa fa-check"></i><b>16.2.3</b> Variance-Covariance is a minimum</a></li>
 </ul></li>
-<li class="chapter" data-level="16.3" data-path="chp14.html"><a href="chp14.html#probability-distributions-in-r-1"><i class="fa fa-check"></i><b>16.3</b> Probability Distributions in R</a><ul>
+<li class="chapter" data-level="16.3" data-path="chp4.html"><a href="chp4.html#probability-distributions-in-r"><i class="fa fa-check"></i><b>16.3</b> Probability Distributions in R</a><ul>
 <li class="chapter" data-level="16.3.1" data-path="chp14.html"><a href="chp14.html#obtaining-critical-statistics"><i class="fa fa-check"></i><b>16.3.1</b> Obtaining Critical Statistics</a></li>
-<li class="chapter" data-level="16.3.2" data-path="chp14.html"><a href="chp14.html#generating-random-numbers-1"><i class="fa fa-check"></i><b>16.3.2</b> Generating Random Numbers</a></li>
+<li class="chapter" data-level="16.3.2" data-path="cph3.html"><a href="cph3.html#generating-random-numbers"><i class="fa fa-check"></i><b>16.3.2</b> Generating Random Numbers</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="17" data-path="chp15.html"><a href="chp15.html"><i class="fa fa-check"></i><b>17</b> Advanced Panel Data</a><ul>
@@ -314,33 +329,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="chp12" class="section level1">
 <h1><span class="header-section-number">Chapter 14</span> Dummy Dependent Variables</h1>
 <p>We will learn techniques in R to estimate and interpret models in which the dependent variable is categorical. In particular we will learn to estimate linear probability models, probit models, and logit models. We will use the libraries below.</p>
-<div class="sourceCode" id="cb308"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb308-1" title="1"><span class="kw">data</span>(mtcars)</a>
-<a class="sourceLine" id="cb308-2" title="2"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb308-3" title="3"><span class="kw">library</span>(magrittr)</a>
-<a class="sourceLine" id="cb308-4" title="4"><span class="kw">library</span>(broom)</a></code></pre></div>
+<div class="sourceCode" id="cb317"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb317-1"><a href="chp12.html#cb317-1"></a><span class="kw">data</span>(mtcars)</span>
+<span id="cb317-2"><a href="chp12.html#cb317-2"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb317-3"><a href="chp12.html#cb317-3"></a><span class="kw">library</span>(magrittr)</span>
+<span id="cb317-4"><a href="chp12.html#cb317-4"></a><span class="kw">library</span>(broom)</span></code></pre></div>
 <div id="probit-estimation" class="section level2">
 <h2><span class="header-section-number">14.1</span> Probit Estimation</h2>
-<p>The probit model is given by <span class="math display">\[Pr(Y_i=1)=\Phi(\beta_0+\beta_1X_{1i})\]</span> where <span class="math inline">\(\Phi()\)</span> is the standard normal CDF. Let’s make use of the <code>mtcars</code><a href="#fn19" class="footnote-ref" id="fnref19"><sup>19</sup></a> data set to estimate a probit model to determine engine type as a function of mpg. Engine type, <em>vs</em>, is coded as 0 for V-shaped and 1 for straight.</p>
+<p>The probit model is given by <span class="math display">\[Pr(Y_i=1)=\Phi(\beta_0+\beta_1X_{1i})\]</span> where <span class="math inline">\(\Phi()\)</span> is the standard normal CDF. Let’s make use of the <code>mtcars</code><a href="#fn23" class="footnote-ref" id="fnref23"><sup>23</sup></a> data set to estimate a probit model to determine engine type as a function of mpg. Engine type, <em>vs</em>, is coded as 0 for V-shaped and 1 for straight.</p>
 <div id="eda" class="section level3">
 <h3><span class="header-section-number">14.1.1</span> EDA</h3>
 <p>Let’s look at a scatter plot and a box plot of <em>mpg</em> vs <em>vs</em>.</p>
-<div class="sourceCode" id="cb309"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb309-1" title="1">mtcars <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb309-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mpg, <span class="dt">y =</span> vs)) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb309-3" title="3"><span class="st">  </span><span class="kw">geom_point</span>()</a></code></pre></div>
-<p><img src="bailey_files/figure-html/unnamed-chunk-125-1.png" width="672" /></p>
-<div class="sourceCode" id="cb310"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb310-1" title="1">mtcars <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb310-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">vs =</span> <span class="kw">as.factor</span>(vs)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb310-3" title="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> vs, <span class="dt">y =</span> mpg)) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb310-4" title="4"><span class="st">  </span><span class="kw">geom_boxplot</span>()</a></code></pre></div>
-<p><img src="bailey_files/figure-html/unnamed-chunk-125-2.png" width="672" /></p>
+<div class="sourceCode" id="cb318"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb318-1"><a href="chp12.html#cb318-1"></a>mtcars <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb318-2"><a href="chp12.html#cb318-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mpg, <span class="dt">y =</span> vs)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb318-3"><a href="chp12.html#cb318-3"></a><span class="st">  </span><span class="kw">geom_point</span>()</span></code></pre></div>
+<p><img src="bailey_files/figure-html/unnamed-chunk-126-1.png" width="672" /></p>
+<div class="sourceCode" id="cb319"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb319-1"><a href="chp12.html#cb319-1"></a>mtcars <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb319-2"><a href="chp12.html#cb319-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">vs =</span> <span class="kw">as.factor</span>(vs)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb319-3"><a href="chp12.html#cb319-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> vs, <span class="dt">y =</span> mpg)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb319-4"><a href="chp12.html#cb319-4"></a><span class="st">  </span><span class="kw">geom_boxplot</span>()</span></code></pre></div>
+<p><img src="bailey_files/figure-html/unnamed-chunk-126-2.png" width="672" /></p>
 <p>The boxplot indicates that there is difference in mpg between straight vs v-shaped engines. Note the difference in the code between the two similar calls. We need to treat <em>vs</em> as a factor in the boxplot but not in the scatter diagram.</p>
 </div>
 <div id="estimate-the-model" class="section level3">
 <h3><span class="header-section-number">14.1.2</span> Estimate the model</h3>
-<p>Let’s estimate the probit model <span class="math inline">\(Pr(vs_i=1)=\Phi(\beta_0+\beta_1mpg_i)\)</span>. <code>glm</code> is used to fit dummy dependent variable models.<a href="#fn20" class="footnote-ref" id="fnref20"><sup>20</sup></a> To estimate the probit model <code>glm</code> requires three arguments: <code>formula</code>, <code>family</code>, and <code>data</code>. You are familiar with the data and formula arguments. The family argument is description of the error distribution. In this case our family argument will be <code>binomial(link = "probit")</code>.</p>
-<div class="sourceCode" id="cb311"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb311-1" title="1">mtcars <span class="op">%$%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb311-2" title="2"><span class="st">  </span><span class="kw">glm</span>(vs <span class="op">~</span><span class="st"> </span>mpg, <span class="dt">family =</span> <span class="kw">binomial</span>(<span class="dt">link =</span> <span class="st">&quot;probit&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb311-3" title="3"><span class="st">  </span><span class="kw">tidy</span>()</a></code></pre></div>
+<p>Let’s estimate the probit model <span class="math inline">\(Pr(vs_i=1)=\Phi(\beta_0+\beta_1mpg_i)\)</span>. <code>glm</code> is used to fit dummy dependent variable models.<a href="#fn24" class="footnote-ref" id="fnref24"><sup>24</sup></a> To estimate the probit model <code>glm</code> requires three arguments: <code>formula</code>, <code>family</code>, and <code>data</code>. You are familiar with the data and formula arguments. The family argument is description of the error distribution. In this case our family argument will be <code>binomial(link = "probit")</code>.</p>
+<div class="sourceCode" id="cb320"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb320-1"><a href="chp12.html#cb320-1"></a>mtcars <span class="op">%$%</span><span class="st"> </span></span>
+<span id="cb320-2"><a href="chp12.html#cb320-2"></a><span class="st">  </span><span class="kw">glm</span>(vs <span class="op">~</span><span class="st"> </span>mpg, <span class="dt">family =</span> <span class="kw">binomial</span>(<span class="dt">link =</span> <span class="st">&quot;probit&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb320-3"><a href="chp12.html#cb320-3"></a><span class="st">  </span><span class="kw">tidy</span>()</span></code></pre></div>
 <pre><code># A tibble: 2 x 5
   term        estimate std.error statistic p.value
   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
@@ -355,31 +370,31 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h5><span class="header-section-number">14.1.3.1.1</span> <span class="math inline">\(X_1\)</span> is Continuous</h5>
 <p>To estimate the effect of a change in the independent variable on the probability of observing the dependent variable we need to calculate the average difference between the fitted values of the model, <em>P1</em>, and the predicted values of the model when the independent variable we are interested in is changed by one standard deviation, <em>P2</em>.</p>
 <p>Fitted values, <em>P1</em>, are easily obtained from the glm object as follows:</p>
-<div class="sourceCode" id="cb313"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb313-1" title="1">vs_glm &lt;-</a>
-<a class="sourceLine" id="cb313-2" title="2"><span class="st">  </span>mtcars <span class="op">%$%</span></a>
-<a class="sourceLine" id="cb313-3" title="3"><span class="st">  </span><span class="kw">glm</span>(vs <span class="op">~</span><span class="st"> </span>mpg, <span class="dt">family =</span> <span class="kw">binomial</span>(<span class="dt">link =</span> <span class="st">&quot;probit&quot;</span>))</a>
-<a class="sourceLine" id="cb313-4" title="4">P1 &lt;-<span class="st"> </span>vs_glm<span class="op">$</span>fitted</a></code></pre></div>
+<div class="sourceCode" id="cb322"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb322-1"><a href="chp12.html#cb322-1"></a>vs_glm &lt;-</span>
+<span id="cb322-2"><a href="chp12.html#cb322-2"></a><span class="st">  </span>mtcars <span class="op">%$%</span></span>
+<span id="cb322-3"><a href="chp12.html#cb322-3"></a><span class="st">  </span><span class="kw">glm</span>(vs <span class="op">~</span><span class="st"> </span>mpg, <span class="dt">family =</span> <span class="kw">binomial</span>(<span class="dt">link =</span> <span class="st">&quot;probit&quot;</span>))</span>
+<span id="cb322-4"><a href="chp12.html#cb322-4"></a>P1 &lt;-<span class="st"> </span>vs_glm<span class="op">$</span>fitted</span></code></pre></div>
 <p>The fitted variables have had <code>pnorm()</code> applied to the linear estimates, so they are <em>P1</em>.</p>
-<p>To obtain marginal effects, we need to let <em>mpg</em> vary by one standard deviation and obtain the predicted values from the estimated equation. To find <em>P2</em>, the predicted values resulting from a one standard deviation change in the independent variable, we will make use of <code>predict.glm</code>. <code>predict.glm</code><a href="#fn21" class="footnote-ref" id="fnref21"><sup>21</sup></a> will require two arguments to estimate <em>P2</em>, the equation object and the newdata <code>predict.glm(object, newdata = df</code>. Unfortunately the expose pipe <code>%$%</code> does not function with <code>predict.glm</code>, so we will have to create a data frame of the changed independent variable. We will use the <code>dplyr</code> verbs <code>select</code> and <code>mutate</code> to create the new data frame. We calculate <em>P2</em> below:</p>
-<div class="sourceCode" id="cb314"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb314-1" title="1"><span class="co"># Create the new data</span></a>
-<a class="sourceLine" id="cb314-2" title="2">newdata &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb314-3" title="3">mtcars <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb314-4" title="4"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(mpg) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#I used this form to avoid the conflict with select in the MASS package</span></a>
-<a class="sourceLine" id="cb314-5" title="5"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mpg =</span> mpg <span class="op">+</span><span class="st"> </span><span class="kw">sd</span>(mpg))</a>
-<a class="sourceLine" id="cb314-6" title="6"><span class="co"># Create P2</span></a>
-<a class="sourceLine" id="cb314-7" title="7">P2 &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb314-8" title="8"><span class="st">  </span><span class="kw">predict.glm</span>(vs_glm, newdata) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb314-9" title="9"><span class="st">  </span><span class="kw">pnorm</span>()</a>
-<a class="sourceLine" id="cb314-10" title="10"><span class="co"># Marginal Effect</span></a>
-<a class="sourceLine" id="cb314-11" title="11"><span class="kw">mean</span>(P2<span class="op">-</span>P1)</a></code></pre></div>
+<p>To obtain marginal effects, we need to let <em>mpg</em> vary by one standard deviation and obtain the predicted values from the estimated equation. To find <em>P2</em>, the predicted values resulting from a one standard deviation change in the independent variable, we will make use of <code>predict.glm</code>. <code>predict.glm</code><a href="#fn25" class="footnote-ref" id="fnref25"><sup>25</sup></a> will require two arguments to estimate <em>P2</em>, the equation object and the newdata <code>predict.glm(object, newdata = df</code>. Unfortunately the expose pipe <code>%$%</code> does not function with <code>predict.glm</code>, so we will have to create a data frame of the changed independent variable. We will use the <code>dplyr</code> verbs <code>select</code> and <code>mutate</code> to create the new data frame. We calculate <em>P2</em> below:</p>
+<div class="sourceCode" id="cb323"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb323-1"><a href="chp12.html#cb323-1"></a><span class="co"># Create the new data</span></span>
+<span id="cb323-2"><a href="chp12.html#cb323-2"></a>newdata &lt;-<span class="st"> </span></span>
+<span id="cb323-3"><a href="chp12.html#cb323-3"></a>mtcars <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb323-4"><a href="chp12.html#cb323-4"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(mpg) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#I used this form to avoid the conflict with select in the MASS package</span></span>
+<span id="cb323-5"><a href="chp12.html#cb323-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mpg =</span> mpg <span class="op">+</span><span class="st"> </span><span class="kw">sd</span>(mpg))</span>
+<span id="cb323-6"><a href="chp12.html#cb323-6"></a><span class="co"># Create P2</span></span>
+<span id="cb323-7"><a href="chp12.html#cb323-7"></a>P2 &lt;-<span class="st"> </span></span>
+<span id="cb323-8"><a href="chp12.html#cb323-8"></a><span class="st">  </span><span class="kw">predict.glm</span>(vs_glm, newdata) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb323-9"><a href="chp12.html#cb323-9"></a><span class="st">  </span><span class="kw">pnorm</span>()</span>
+<span id="cb323-10"><a href="chp12.html#cb323-10"></a><span class="co"># Marginal Effect</span></span>
+<span id="cb323-11"><a href="chp12.html#cb323-11"></a><span class="kw">mean</span>(P2<span class="op">-</span>P1)</span></code></pre></div>
 <pre><code>[1] 0.339</code></pre>
 <p>So, a one standard deviation increase in <em>mpg</em> will yield a 33.89% increase in the probability that the car has straight engine.</p>
 </div>
 <div id="independent-variable-is-a-dummy." class="section level5">
 <h5><span class="header-section-number">14.1.3.1.2</span> Independent variable is a dummy.</h5>
 <p>Let’s add <em>am</em>, transmission type, to the model. <em>am</em> is coded as 0 if the car has an automatic transmission and 1 if it has a manual transmission. First, estimate the model <span class="math inline">\(Pr(vs_i=1)=\Phi(\beta_0+\beta_1am+\beta_2mpg_i)\)</span>.</p>
-<div class="sourceCode" id="cb316"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb316-1" title="1">mtcars <span class="op">%$%</span></a>
-<a class="sourceLine" id="cb316-2" title="2"><span class="st">  </span><span class="kw">glm</span>(vs <span class="op">~</span><span class="st"> </span>am <span class="op">+</span><span class="st"> </span>mpg, <span class="dt">family =</span> <span class="kw">binomial</span>(<span class="dt">link =</span> <span class="st">&quot;probit&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb325"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb325-1"><a href="chp12.html#cb325-1"></a>mtcars <span class="op">%$%</span></span>
+<span id="cb325-2"><a href="chp12.html#cb325-2"></a><span class="st">  </span><span class="kw">glm</span>(vs <span class="op">~</span><span class="st"> </span>am <span class="op">+</span><span class="st"> </span>mpg, <span class="dt">family =</span> <span class="kw">binomial</span>(<span class="dt">link =</span> <span class="st">&quot;probit&quot;</span>))</span></code></pre></div>
 <pre><code>
 Call:  glm(formula = vs ~ am + mpg, family = binomial(link = &quot;probit&quot;))
 
@@ -388,30 +403,30 @@ Coefficients:
       -7.47        -1.84         0.40  
 
 Degrees of Freedom: 31 Total (i.e. Null);  29 Residual
-Null Deviance:      43.9 
-Residual Deviance: 20.3     AIC: 26.3</code></pre>
+Null Deviance:	    43.9 
+Residual Deviance: 20.3 	AIC: 26.3</code></pre>
 <p>We will follow similar steps as those above to interpret a change from automatic to manual transmission on the probability that the engine is straight. We will estimate <em>P0</em>, the fitted values, when <em>am</em> = 0, and <em>P1</em>, the fitted values when <em>am</em> = 1.</p>
-<div class="sourceCode" id="cb318"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb318-1" title="1"><span class="co"># Estimate the model</span></a>
-<a class="sourceLine" id="cb318-2" title="2">vs_am_glm &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb318-3" title="3"><span class="st">  </span>mtcars <span class="op">%$%</span></a>
-<a class="sourceLine" id="cb318-4" title="4"><span class="st">  </span><span class="kw">glm</span>(vs <span class="op">~</span><span class="st"> </span>am <span class="op">+</span><span class="st"> </span>mpg, <span class="dt">family =</span> <span class="kw">binomial</span>(<span class="dt">link =</span> <span class="st">&quot;probit&quot;</span>))</a>
-<a class="sourceLine" id="cb318-5" title="5"><span class="co"># P0</span></a>
-<a class="sourceLine" id="cb318-6" title="6">newdata &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb318-7" title="7"><span class="st">  </span>mtcars <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb318-8" title="8"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(am, mpg) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb318-9" title="9"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">am =</span> <span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb318-10" title="10">P0 &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb318-11" title="11"><span class="st">  </span><span class="kw">predict.glm</span>(vs_am_glm, newdata) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb318-12" title="12"><span class="st">  </span><span class="kw">pnorm</span>()</a>
-<a class="sourceLine" id="cb318-13" title="13"><span class="co"># P1</span></a>
-<a class="sourceLine" id="cb318-14" title="14">newdata &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb318-15" title="15"><span class="st">  </span>mtcars <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb318-16" title="16"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(am, mpg) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb318-17" title="17"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">am =</span> <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb318-18" title="18">P1 &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb318-19" title="19"><span class="st">  </span><span class="kw">predict.glm</span>(vs_am_glm, newdata) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb318-20" title="20"><span class="st">  </span><span class="kw">pnorm</span>()</a>
-<a class="sourceLine" id="cb318-21" title="21"><span class="kw">mean</span>(P1<span class="op">-</span>P0)</a></code></pre></div>
+<div class="sourceCode" id="cb327"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb327-1"><a href="chp12.html#cb327-1"></a><span class="co"># Estimate the model</span></span>
+<span id="cb327-2"><a href="chp12.html#cb327-2"></a>vs_am_glm &lt;-<span class="st"> </span></span>
+<span id="cb327-3"><a href="chp12.html#cb327-3"></a><span class="st">  </span>mtcars <span class="op">%$%</span></span>
+<span id="cb327-4"><a href="chp12.html#cb327-4"></a><span class="st">  </span><span class="kw">glm</span>(vs <span class="op">~</span><span class="st"> </span>am <span class="op">+</span><span class="st"> </span>mpg, <span class="dt">family =</span> <span class="kw">binomial</span>(<span class="dt">link =</span> <span class="st">&quot;probit&quot;</span>))</span>
+<span id="cb327-5"><a href="chp12.html#cb327-5"></a><span class="co"># P0</span></span>
+<span id="cb327-6"><a href="chp12.html#cb327-6"></a>newdata &lt;-<span class="st"> </span></span>
+<span id="cb327-7"><a href="chp12.html#cb327-7"></a><span class="st">  </span>mtcars <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb327-8"><a href="chp12.html#cb327-8"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(am, mpg) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb327-9"><a href="chp12.html#cb327-9"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">am =</span> <span class="dv">0</span>)</span>
+<span id="cb327-10"><a href="chp12.html#cb327-10"></a>P0 &lt;-<span class="st"> </span></span>
+<span id="cb327-11"><a href="chp12.html#cb327-11"></a><span class="st">  </span><span class="kw">predict.glm</span>(vs_am_glm, newdata) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb327-12"><a href="chp12.html#cb327-12"></a><span class="st">  </span><span class="kw">pnorm</span>()</span>
+<span id="cb327-13"><a href="chp12.html#cb327-13"></a><span class="co"># P1</span></span>
+<span id="cb327-14"><a href="chp12.html#cb327-14"></a>newdata &lt;-<span class="st"> </span></span>
+<span id="cb327-15"><a href="chp12.html#cb327-15"></a><span class="st">  </span>mtcars <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb327-16"><a href="chp12.html#cb327-16"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(am, mpg) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb327-17"><a href="chp12.html#cb327-17"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">am =</span> <span class="dv">1</span>)</span>
+<span id="cb327-18"><a href="chp12.html#cb327-18"></a>P1 &lt;-<span class="st"> </span></span>
+<span id="cb327-19"><a href="chp12.html#cb327-19"></a><span class="st">  </span><span class="kw">predict.glm</span>(vs_am_glm, newdata) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb327-20"><a href="chp12.html#cb327-20"></a><span class="st">  </span><span class="kw">pnorm</span>()</span>
+<span id="cb327-21"><a href="chp12.html#cb327-21"></a><span class="kw">mean</span>(P1<span class="op">-</span>P0)</span></code></pre></div>
 <pre><code>[1] -0.269</code></pre>
 <p>A car with an manual transmission is 26.9% less likely, on average, to have a straight engine, <em>ceteris paribus</em>.</p>
 </div>
@@ -419,16 +434,16 @@ Residual Deviance: 20.3     AIC: 26.3</code></pre>
 <div id="marginal-effects" class="section level4">
 <h4><span class="header-section-number">14.1.3.2</span> Marginal Effects</h4>
 <p>If <span class="math inline">\(X_1\)</span> is continuous we can estimate the marginal effects of a change in <span class="math inline">\(X_1\)</span> as <span class="math inline">\(\phi(\hat\beta_0+\hat\beta_1X_{1i}+\hat\beta_2X_{2i})\hat\beta_1\)</span>. Where <span class="math inline">\(\phi()\)</span> is the normal PDF. Let’s estimate the marginal effect of <em>mpg</em> on <em>vs</em> using the model above.</p>
-<div class="sourceCode" id="cb320"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb320-1" title="1">marg_effect &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb320-2" title="2"><span class="kw">dnorm</span>(vs_am_glm<span class="op">$</span>coef[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>vs_am_glm<span class="op">$</span>coef[<span class="dv">2</span>]<span class="op">*</span>mtcars<span class="op">$</span>am <span class="op">+</span><span class="st"> </span>vs_am_glm<span class="op">$</span>coef[<span class="dv">3</span>]<span class="op">*</span>mtcars<span class="op">$</span>mpg) <span class="op">*</span><span class="st"> </span>vs_am_glm<span class="op">$</span>coef[<span class="dv">3</span>]</a>
-<a class="sourceLine" id="cb320-3" title="3"><span class="kw">mean</span>(marg_effect)</a></code></pre></div>
+<div class="sourceCode" id="cb329"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb329-1"><a href="chp12.html#cb329-1"></a>marg_effect &lt;-<span class="st"> </span></span>
+<span id="cb329-2"><a href="chp12.html#cb329-2"></a><span class="kw">dnorm</span>(vs_am_glm<span class="op">$</span>coef[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>vs_am_glm<span class="op">$</span>coef[<span class="dv">2</span>]<span class="op">*</span>mtcars<span class="op">$</span>am <span class="op">+</span><span class="st"> </span>vs_am_glm<span class="op">$</span>coef[<span class="dv">3</span>]<span class="op">*</span>mtcars<span class="op">$</span>mpg) <span class="op">*</span><span class="st"> </span>vs_am_glm<span class="op">$</span>coef[<span class="dv">3</span>]</span>
+<span id="cb329-3"><a href="chp12.html#cb329-3"></a><span class="kw">mean</span>(marg_effect)</span></code></pre></div>
 <pre><code>[1] 0.0692</code></pre>
 <p>The marginal effect of <em>mpg</em> on type of engine is 0.069.</p>
 <div id="mfx-and-margins-packages" class="section level5">
 <h5><span class="header-section-number">14.1.3.2.1</span> <code>mfx</code> and <code>margins</code> Packages</h5>
 <p>We can use the <code>mfx</code> and <code>margins</code> packages to estimate the marginal effect of a continuous variable directly from the model we estimate. <code>mfx::probitmfx(formula, data, atmean = F)</code> and <code>margins::margins(model)</code> are the respective function calls to estimate marginal effects from the two packages.</p>
-<div class="sourceCode" id="cb322"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb322-1" title="1"><span class="co"># mfx</span></a>
-<a class="sourceLine" id="cb322-2" title="2">mfx<span class="op">::</span><span class="kw">probitmfx</span>(vs_am_glm, mtcars, <span class="dt">atmean =</span> F)</a></code></pre></div>
+<div class="sourceCode" id="cb331"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb331-1"><a href="chp12.html#cb331-1"></a><span class="co"># mfx</span></span>
+<span id="cb331-2"><a href="chp12.html#cb331-2"></a>mfx<span class="op">::</span><span class="kw">probitmfx</span>(vs_am_glm, mtcars, <span class="dt">atmean =</span> F)</span></code></pre></div>
 <pre><code>Call:
 mfx::probitmfx(formula = vs_am_glm, data = mtcars, atmean = F)
 
@@ -443,8 +458,8 @@ dF/dx is for discrete change for the following variables:
 
 [1] &quot;am&quot;</code></pre>
 <p>Note that these values are identically to the ones calculated by hand above.</p>
-<div class="sourceCode" id="cb324"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb324-1" title="1"><span class="co"># margins</span></a>
-<a class="sourceLine" id="cb324-2" title="2">margins<span class="op">::</span><span class="kw">margins</span>(vs_am_glm, <span class="dt">data =</span> mtcars)</a></code></pre></div>
+<div class="sourceCode" id="cb333"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb333-1"><a href="chp12.html#cb333-1"></a><span class="co"># margins</span></span>
+<span id="cb333-2"><a href="chp12.html#cb333-2"></a>margins<span class="op">::</span><span class="kw">margins</span>(vs_am_glm, <span class="dt">data =</span> mtcars)</span></code></pre></div>
 <pre><code>      am     mpg
  -0.3185 0.06925</code></pre>
 <p>The marginal effect of <em>mpg</em> is the same, while the effect of <em>am</em> is similar. <code>?margins</code> or <a href="https://cran.r-project.org/web/packages/margins/vignettes/Introduction.html#references">An Introduction to ‘margins’</a> for more on the <code>margins</code> package.</p>
@@ -456,8 +471,8 @@ dF/dx is for discrete change for the following variables:
 <h2><span class="header-section-number">14.2</span> Logit Estimation</h2>
 <p>The logit model takes the form <span class="math inline">\(Pr(Y_i=1)=\frac{e^{\beta_0+\beta_1X_{1i}}}{1+e^{\beta_0+\beta_1X_{1i}}}\)</span> An alternative form of the logit model might be easier to interpret. With appropriate algebraic gymnastics we can write the logistic model as <span class="math inline">\(\ln(\frac{p_i}{1-p_i})=\beta_0+\beta_1X_{1i}\)</span>, where <span class="math inline">\(\ln(\frac{p_1}{1-p_i})\)</span> is the log of the odds ratio.</p>
 <p>Let’s estimate the model from above as a logit rather than a probit. All we need to do is change the link argument to logit to estimate the model.</p>
-<div class="sourceCode" id="cb326"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb326-1" title="1">mtcars <span class="op">%$%</span></a>
-<a class="sourceLine" id="cb326-2" title="2"><span class="st">  </span><span class="kw">glm</span>(vs <span class="op">~</span><span class="st"> </span>mpg <span class="op">+</span><span class="st"> </span>am, <span class="dt">family =</span> <span class="kw">binomial</span>(<span class="dt">link =</span> <span class="st">&quot;logit&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb335"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb335-1"><a href="chp12.html#cb335-1"></a>mtcars <span class="op">%$%</span></span>
+<span id="cb335-2"><a href="chp12.html#cb335-2"></a><span class="st">  </span><span class="kw">glm</span>(vs <span class="op">~</span><span class="st"> </span>mpg <span class="op">+</span><span class="st"> </span>am, <span class="dt">family =</span> <span class="kw">binomial</span>(<span class="dt">link =</span> <span class="st">&quot;logit&quot;</span>))</span></code></pre></div>
 <pre><code>
 Call:  glm(formula = vs ~ mpg + am, family = binomial(link = &quot;logit&quot;))
 
@@ -466,34 +481,34 @@ Coefficients:
     -12.705        0.681       -3.007  
 
 Degrees of Freedom: 31 Total (i.e. Null);  29 Residual
-Null Deviance:      43.9 
-Residual Deviance: 20.6     AIC: 26.6</code></pre>
+Null Deviance:	    43.9 
+Residual Deviance: 20.6 	AIC: 26.6</code></pre>
 <p>Suppose we’d like to know the probability that a vehicle with automatic transmission that gets 25 mpg has a straight engine. Calculate the odds ratio as <span class="math inline">\(\ln(\frac{p_1}{1-p_i})=-12.7051+0.6809*25-3.0073*0 = 4.9474\)</span>. Exponentiate both sides and solve for <em>p</em>. <span class="math inline">\(e^{\ln(\frac{p_i}{1-p_i})} = e^{4.9474}\)</span>. We know that an exponentiated natural log is just itself so we have <span class="math inline">\(\frac{p_i}{1-p_i}=140.808\)</span>. Solving for <em>p</em> yields <span class="math inline">\(p_i=\frac{140.808}{141.808}=.9925\)</span>. The probability we are looking for is 99.25%. So,
 <span class="math inline">\(\hat p=\frac{e^{\hat\beta_0+\hat\beta_1X_1}}{1 + e^{\hat\beta_0+\hat\beta_1X_1}}\)</span>.</p>
 <div id="discrete-differences" class="section level3">
 <h3><span class="header-section-number">14.2.1</span> Discrete Differences</h3>
 <p>The discrete-difference can be calculated as the difference in two probabilities. We can estimate the mean change in probability from an increase in <em>mpg</em> of 1.</p>
-<div class="sourceCode" id="cb328"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb328-1" title="1">vs_logit &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb328-2" title="2"><span class="st">  </span>mtcars <span class="op">%$%</span></a>
-<a class="sourceLine" id="cb328-3" title="3"><span class="st">  </span><span class="kw">glm</span>(vs <span class="op">~</span><span class="st"> </span>mpg <span class="op">+</span><span class="st"> </span>am, <span class="dt">family =</span> <span class="kw">binomial</span>(<span class="dt">link =</span> <span class="st">&quot;logit&quot;</span>))</a>
-<a class="sourceLine" id="cb328-4" title="4"><span class="co"># p1 are the fitted values of the regression</span></a>
-<a class="sourceLine" id="cb328-5" title="5">p1 &lt;-<span class="st"> </span>vs_logit<span class="op">$</span>fitted</a>
-<a class="sourceLine" id="cb328-6" title="6"><span class="co"># to calculate p2 add one to mpg and find the predicted values</span></a>
-<a class="sourceLine" id="cb328-7" title="7">newdata &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb328-8" title="8"><span class="st">  </span>mtcars <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb328-9" title="9"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(mpg, am) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb328-10" title="10"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mpg =</span> mpg <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb328-11" title="11">p2 &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="kw">predict</span>(vs_logit, newdata))<span class="op">/</span>(<span class="dv">1</span><span class="op">+</span><span class="kw">exp</span>(<span class="kw">predict</span>(vs_logit, newdata)))</a>
-<a class="sourceLine" id="cb328-12" title="12"><span class="co"># calcualte the mean difference between the p2 and p1</span></a>
-<a class="sourceLine" id="cb328-13" title="13"><span class="kw">mean</span>(p2<span class="op">-</span>p1)</a></code></pre></div>
+<div class="sourceCode" id="cb337"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb337-1"><a href="chp12.html#cb337-1"></a>vs_logit &lt;-<span class="st"> </span></span>
+<span id="cb337-2"><a href="chp12.html#cb337-2"></a><span class="st">  </span>mtcars <span class="op">%$%</span></span>
+<span id="cb337-3"><a href="chp12.html#cb337-3"></a><span class="st">  </span><span class="kw">glm</span>(vs <span class="op">~</span><span class="st"> </span>mpg <span class="op">+</span><span class="st"> </span>am, <span class="dt">family =</span> <span class="kw">binomial</span>(<span class="dt">link =</span> <span class="st">&quot;logit&quot;</span>))</span>
+<span id="cb337-4"><a href="chp12.html#cb337-4"></a><span class="co"># p1 are the fitted values of the regression</span></span>
+<span id="cb337-5"><a href="chp12.html#cb337-5"></a>p1 &lt;-<span class="st"> </span>vs_logit<span class="op">$</span>fitted</span>
+<span id="cb337-6"><a href="chp12.html#cb337-6"></a><span class="co"># to calculate p2 add one to mpg and find the predicted values</span></span>
+<span id="cb337-7"><a href="chp12.html#cb337-7"></a>newdata &lt;-<span class="st"> </span></span>
+<span id="cb337-8"><a href="chp12.html#cb337-8"></a><span class="st">  </span>mtcars <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb337-9"><a href="chp12.html#cb337-9"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(mpg, am) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb337-10"><a href="chp12.html#cb337-10"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mpg =</span> mpg <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)</span>
+<span id="cb337-11"><a href="chp12.html#cb337-11"></a>p2 &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="kw">predict</span>(vs_logit, newdata))<span class="op">/</span>(<span class="dv">1</span><span class="op">+</span><span class="kw">exp</span>(<span class="kw">predict</span>(vs_logit, newdata)))</span>
+<span id="cb337-12"><a href="chp12.html#cb337-12"></a><span class="co"># calcualte the mean difference between the p2 and p1</span></span>
+<span id="cb337-13"><a href="chp12.html#cb337-13"></a><span class="kw">mean</span>(p2<span class="op">-</span>p1)</span></code></pre></div>
 <pre><code>[1] 0.0727</code></pre>
 <p>On average an increase of 1 <em>mpg</em> will increase the probability the car has straight engine by 7.3%.</p>
 </div>
 <div id="marginal-effects-1" class="section level3">
 <h3><span class="header-section-number">14.2.2</span> Marginal Effects</h3>
 <p>Use the <code>mfx</code> or <code>margins</code> package to estimate the marginal effects of a change in an independent variable.</p>
-<div class="sourceCode" id="cb330"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb330-1" title="1"><span class="co"># mfx </span></a>
-<a class="sourceLine" id="cb330-2" title="2">mfx<span class="op">::</span><span class="kw">logitmfx</span>(vs_logit, mtcars, <span class="dt">atmean =</span> F)</a></code></pre></div>
+<div class="sourceCode" id="cb339"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb339-1"><a href="chp12.html#cb339-1"></a><span class="co"># mfx </span></span>
+<span id="cb339-2"><a href="chp12.html#cb339-2"></a>mfx<span class="op">::</span><span class="kw">logitmfx</span>(vs_logit, mtcars, <span class="dt">atmean =</span> F)</span></code></pre></div>
 <pre><code>Call:
 mfx::logitmfx(formula = vs_logit, data = mtcars, atmean = F)
 
@@ -507,8 +522,8 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 dF/dx is for discrete change for the following variables:
 
 [1] &quot;am&quot;</code></pre>
-<div class="sourceCode" id="cb332"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb332-1" title="1"><span class="co"># margins</span></a>
-<a class="sourceLine" id="cb332-2" title="2">margins<span class="op">::</span><span class="kw">margins</span>(vs_logit, mtcars)</a></code></pre></div>
+<div class="sourceCode" id="cb341"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb341-1"><a href="chp12.html#cb341-1"></a><span class="co"># margins</span></span>
+<span id="cb341-2"><a href="chp12.html#cb341-2"></a>margins<span class="op">::</span><span class="kw">margins</span>(vs_logit, mtcars)</span></code></pre></div>
 <pre><code>     mpg      am
  0.06923 -0.3057</code></pre>
 </div>
@@ -518,18 +533,18 @@ dF/dx is for discrete change for the following variables:
 <p>Let’s estimate a new probit model <span class="math inline">\(Pr(vs_i=1)=\Phi(\beta_0+\beta_1am+\beta_2mpg_i+\beta_3hp_i)\)</span> using the <code>mtcars</code> data set and test the hypothesis that our model has overall explanatory power. <span class="math display">\[H_0:\beta_1=\beta_2=\beta_3=0\]</span>
 vs. <span class="math display">\[\text{@ least one }\beta\ne0\]</span>
 We an estimate a restricted model and compare the likelihood ratios to the likelihood ratio of the unrestricted model and perform the LR test where <span class="math inline">\(LR = 2(\log L_{UR}-\log L_R)\text{~}\chi^2_{df}\)</span>. Where the <em>df</em> is equal to the number of restrictions or number of equal signs in <span class="math inline">\(H_0\)</span>.</p>
-<div class="sourceCode" id="cb334"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb334-1" title="1">ur_model &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb334-2" title="2"><span class="st">  </span>mtcars <span class="op">%$%</span></a>
-<a class="sourceLine" id="cb334-3" title="3"><span class="st">  </span><span class="kw">glm</span>(vs <span class="op">~</span><span class="st"> </span>am <span class="op">+</span><span class="st"> </span>mpg <span class="op">+</span><span class="st"> </span>hp, <span class="dt">family =</span> <span class="kw">binomial</span>(<span class="dt">link =</span> <span class="st">&quot;probit&quot;</span>))</a>
-<a class="sourceLine" id="cb334-4" title="4">r_model &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb334-5" title="5"><span class="st">  </span>mtcars <span class="op">%$%</span></a>
-<a class="sourceLine" id="cb334-6" title="6"><span class="st">  </span><span class="kw">glm</span>(vs <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">family =</span> <span class="kw">binomial</span>(<span class="dt">link =</span> <span class="st">&quot;probit&quot;</span>))</a>
-<a class="sourceLine" id="cb334-7" title="7">lr &lt;-<span class="st"> </span><span class="dv">2</span><span class="op">*</span>(<span class="kw">logLik</span>(ur_model)[<span class="dv">1</span>]<span class="op">-</span><span class="kw">logLik</span>(r_model)[<span class="dv">1</span>])</a>
-<a class="sourceLine" id="cb334-8" title="8"><span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">pchisq</span>(lr, <span class="dv">3</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb343"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb343-1"><a href="chp12.html#cb343-1"></a>ur_model &lt;-<span class="st"> </span></span>
+<span id="cb343-2"><a href="chp12.html#cb343-2"></a><span class="st">  </span>mtcars <span class="op">%$%</span></span>
+<span id="cb343-3"><a href="chp12.html#cb343-3"></a><span class="st">  </span><span class="kw">glm</span>(vs <span class="op">~</span><span class="st"> </span>am <span class="op">+</span><span class="st"> </span>mpg <span class="op">+</span><span class="st"> </span>hp, <span class="dt">family =</span> <span class="kw">binomial</span>(<span class="dt">link =</span> <span class="st">&quot;probit&quot;</span>))</span>
+<span id="cb343-4"><a href="chp12.html#cb343-4"></a>r_model &lt;-<span class="st"> </span></span>
+<span id="cb343-5"><a href="chp12.html#cb343-5"></a><span class="st">  </span>mtcars <span class="op">%$%</span></span>
+<span id="cb343-6"><a href="chp12.html#cb343-6"></a><span class="st">  </span><span class="kw">glm</span>(vs <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">family =</span> <span class="kw">binomial</span>(<span class="dt">link =</span> <span class="st">&quot;probit&quot;</span>))</span>
+<span id="cb343-7"><a href="chp12.html#cb343-7"></a>lr &lt;-<span class="st"> </span><span class="dv">2</span><span class="op">*</span>(<span class="kw">logLik</span>(ur_model)[<span class="dv">1</span>]<span class="op">-</span><span class="kw">logLik</span>(r_model)[<span class="dv">1</span>])</span>
+<span id="cb343-8"><a href="chp12.html#cb343-8"></a><span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">pchisq</span>(lr, <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>[1] 0.000000302</code></pre>
 <p>We can reject <span class="math inline">\(H_0\)</span>.</p>
 <p>Instead, let’s use <code>lrtest</code> from the <code>lmtest</code> package to test hypotheses about our limited dependent variable models. We can specify the restrictions as an argument in the call.</p>
-<div class="sourceCode" id="cb336"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb336-1" title="1">lmtest<span class="op">::</span><span class="kw">lrtest</span>(ur_model, <span class="kw">c</span>(<span class="st">&quot;am&quot;</span>, <span class="st">&quot;mpg&quot;</span>, <span class="st">&quot;hp&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb345"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb345-1"><a href="chp12.html#cb345-1"></a>lmtest<span class="op">::</span><span class="kw">lrtest</span>(ur_model, <span class="kw">c</span>(<span class="st">&quot;am&quot;</span>, <span class="st">&quot;mpg&quot;</span>, <span class="st">&quot;hp&quot;</span>))</span></code></pre></div>
 <pre><code>Likelihood ratio test
 
 Model 1: vs ~ am + mpg + hp
@@ -541,10 +556,10 @@ Model 2: vs ~ 1
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <p>Let’s test the null hypothesis <span class="math display">\[H_0:\beta_2=\beta_3\]</span> <span class="math display">\[H_1: \beta_2\ne\beta_3\]</span>
 The restricted model becomes <span class="math inline">\(Pr(vs_i=1)=\Phi(\beta_0+\beta_1am+\beta_2(mpg_i+hp_i))\)</span></p>
-<div class="sourceCode" id="cb338"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb338-1" title="1">r_model &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb338-2" title="2"><span class="st">  </span>mtcars <span class="op">%$%</span></a>
-<a class="sourceLine" id="cb338-3" title="3"><span class="st">  </span><span class="kw">glm</span>(vs <span class="op">~</span><span class="st"> </span>am <span class="op">+</span><span class="st"> </span><span class="kw">I</span>(mpg <span class="op">+</span><span class="st"> </span>hp), <span class="dt">family =</span> <span class="kw">binomial</span>(<span class="dt">link =</span> <span class="st">&quot;probit&quot;</span>))</a>
-<a class="sourceLine" id="cb338-4" title="4">lmtest<span class="op">::</span><span class="kw">lrtest</span>(ur_model, r_model)</a></code></pre></div>
+<div class="sourceCode" id="cb347"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb347-1"><a href="chp12.html#cb347-1"></a>r_model &lt;-<span class="st"> </span></span>
+<span id="cb347-2"><a href="chp12.html#cb347-2"></a><span class="st">  </span>mtcars <span class="op">%$%</span></span>
+<span id="cb347-3"><a href="chp12.html#cb347-3"></a><span class="st">  </span><span class="kw">glm</span>(vs <span class="op">~</span><span class="st"> </span>am <span class="op">+</span><span class="st"> </span><span class="kw">I</span>(mpg <span class="op">+</span><span class="st"> </span>hp), <span class="dt">family =</span> <span class="kw">binomial</span>(<span class="dt">link =</span> <span class="st">&quot;probit&quot;</span>))</span>
+<span id="cb347-4"><a href="chp12.html#cb347-4"></a>lmtest<span class="op">::</span><span class="kw">lrtest</span>(ur_model, r_model)</span></code></pre></div>
 <pre><code>Likelihood ratio test
 
 Model 1: vs ~ am + mpg + hp
@@ -557,27 +572,27 @@ Model 2: vs ~ am + I(mpg + hp)
 </div>
 <div id="graphing-probit-and-logit-models" class="section level2">
 <h2><span class="header-section-number">14.4</span> Graphing Probit and Logit Models</h2>
-<div class="sourceCode" id="cb340"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb340-1" title="1">mtcars <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb340-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mpg, <span class="dt">y =</span> vs)) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb340-3" title="3"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb340-4" title="4"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;glm&quot;</span>, <span class="dt">method.args=</span><span class="kw">list</span>(<span class="dt">family=</span><span class="kw">binomial</span>(<span class="dt">link =</span> <span class="st">&quot;probit&quot;</span>)), <span class="dt">se =</span> F) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb340-5" title="5"><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Probit&quot;</span>)</a></code></pre></div>
-<p><img src="bailey_files/figure-html/unnamed-chunk-140-1.png" width="672" /></p>
-<div class="sourceCode" id="cb341"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb341-1" title="1">mtcars <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb341-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mpg, <span class="dt">y =</span> vs)) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb341-3" title="3"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb341-4" title="4"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;glm&quot;</span>, <span class="dt">method.args=</span><span class="kw">list</span>(<span class="dt">family=</span><span class="kw">binomial</span>(<span class="dt">link =</span> <span class="st">&quot;logit&quot;</span>)), <span class="dt">se =</span> F) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb341-5" title="5"><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Logit&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb349"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb349-1"><a href="chp12.html#cb349-1"></a>mtcars <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb349-2"><a href="chp12.html#cb349-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mpg, <span class="dt">y =</span> vs)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb349-3"><a href="chp12.html#cb349-3"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb349-4"><a href="chp12.html#cb349-4"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;glm&quot;</span>, <span class="dt">method.args=</span><span class="kw">list</span>(<span class="dt">family=</span><span class="kw">binomial</span>(<span class="dt">link =</span> <span class="st">&quot;probit&quot;</span>)), <span class="dt">se =</span> F) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb349-5"><a href="chp12.html#cb349-5"></a><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Probit&quot;</span>)</span></code></pre></div>
 <p><img src="bailey_files/figure-html/unnamed-chunk-141-1.png" width="672" /></p>
+<div class="sourceCode" id="cb350"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb350-1"><a href="chp12.html#cb350-1"></a>mtcars <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb350-2"><a href="chp12.html#cb350-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mpg, <span class="dt">y =</span> vs)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb350-3"><a href="chp12.html#cb350-3"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb350-4"><a href="chp12.html#cb350-4"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;glm&quot;</span>, <span class="dt">method.args=</span><span class="kw">list</span>(<span class="dt">family=</span><span class="kw">binomial</span>(<span class="dt">link =</span> <span class="st">&quot;logit&quot;</span>)), <span class="dt">se =</span> F) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb350-5"><a href="chp12.html#cb350-5"></a><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Logit&quot;</span>)</span></code></pre></div>
+<p><img src="bailey_files/figure-html/unnamed-chunk-142-1.png" width="672" /></p>
 
 </div>
 </div>
 <div class="footnotes">
 <hr />
-<ol start="19">
-<li id="fn19"><p><code>?mtcars</code> for a reminder.<a href="chp12.html#fnref19" class="footnote-back">↩</a></p></li>
-<li id="fn20"><p>These models are also known as limited dependent variable models or limdep models.<a href="chp12.html#fnref20" class="footnote-back">↩</a></p></li>
-<li id="fn21"><p><code>?predict.glm</code> for more information.<a href="chp12.html#fnref21" class="footnote-back">↩</a></p></li>
+<ol start="23">
+<li id="fn23"><p><code>?mtcars</code> for a reminder.<a href="chp12.html#fnref23" class="footnote-back">↩︎</a></p></li>
+<li id="fn24"><p>These models are also known as limited dependent variable models or limdep models.<a href="chp12.html#fnref24" class="footnote-back">↩︎</a></p></li>
+<li id="fn25"><p><code>?predict.glm</code> for more information.<a href="chp12.html#fnref25" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>
@@ -591,11 +606,13 @@ Model 2: vs ~ am + I(mpg + hp)
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -603,12 +620,11 @@ gitbook.start({
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -620,6 +636,10 @@ gitbook.start({
 "text": null
 },
 "history": {
+"link": null,
+"text": null
+},
+"view": {
 "link": null,
 "text": null
 },

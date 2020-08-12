@@ -1,30 +1,30 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 5 Bivariate OLS: The Foundation of Econometric Analysis | R Companion to Real Econometrics</title>
-  <meta name="description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
-  <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
+  <meta name="description" content="R, RStudio IDE, and the tidyverse companion to Bailey’s Real Econometrics" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 5 Bivariate OLS: The Foundation of Econometric Analysis | R Companion to Real Econometrics" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  <meta property="og:description" content="R, RStudio IDE, and the tidyverse companion to Bailey’s Real Econometrics" />
   
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Chapter 5 Bivariate OLS: The Foundation of Econometric Analysis | R Companion to Real Econometrics" />
   
-  <meta name="twitter:description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  <meta name="twitter:description" content="R, RStudio IDE, and the tidyverse companion to Bailey’s Real Econometrics" />
   
 
 <meta name="author" content="Tony Carilli" />
 
 
-<meta name="date" content="2019-09-23" />
+<meta name="date" content="2020-08-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -40,6 +40,7 @@
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
 
 
 
@@ -47,12 +48,15 @@
 
 
 
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -61,14 +65,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -77,9 +83,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -128,7 +134,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./">R Companion to *Real Econometrics*</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a></li>
 <li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a><ul>
 <li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#install-r-and-rstudio"><i class="fa fa-check"></i><b>2.1</b> Install R and RStudio</a></li>
 <li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#using-rstudio"><i class="fa fa-check"></i><b>2.2</b> Using RStudio</a><ul>
@@ -147,7 +153,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="chp2.html"><a href="chp2.html"><i class="fa fa-check"></i><b>4</b> Stats in the Wild: Good Data Practices</a><ul>
-<li class="chapter" data-level="4.1" data-path="chp2.html"><a href="chp2.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
+<li class="chapter" data-level="4.1" data-path="chp1.html"><a href="chp1.html#introduction"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
 <li class="chapter" data-level="4.2" data-path="chp2.html"><a href="chp2.html#table-and-figure-reproduction"><i class="fa fa-check"></i><b>4.2</b> Table and Figure Reproduction</a><ul>
 <li class="chapter" data-level="4.2.1" data-path="chp2.html"><a href="chp2.html#table-2.1"><i class="fa fa-check"></i><b>4.2.1</b> Table 2.1</a></li>
 <li class="chapter" data-level="4.2.2" data-path="chp2.html"><a href="chp2.html#table-2.2"><i class="fa fa-check"></i><b>4.2.2</b> Table 2.2</a></li>
@@ -158,12 +164,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.3.1" data-path="chp2.html"><a href="chp2.html#reading-data"><i class="fa fa-check"></i><b>4.3.1</b> Reading Data</a></li>
 <li class="chapter" data-level="4.3.2" data-path="chp2.html"><a href="chp2.html#manually-entering-data"><i class="fa fa-check"></i><b>4.3.2</b> Manually Entering Data</a></li>
 <li class="chapter" data-level="4.3.3" data-path="chp2.html"><a href="chp2.html#simple-statistics"><i class="fa fa-check"></i><b>4.3.3</b> Simple Statistics</a></li>
+<li class="chapter" data-level="4.3.4" data-path="chp2.html"><a href="chp2.html#subsetting"><i class="fa fa-check"></i><b>4.3.4</b> Subsetting</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="cph3.html"><a href="cph3.html"><i class="fa fa-check"></i><b>5</b> Bivariate OLS: The Foundation of Econometric Analysis</a><ul>
-<li class="chapter" data-level="5.1" data-path="cph3.html"><a href="cph3.html#estimating-a-simple-regression"><i class="fa fa-check"></i><b>5.1</b> Estimating a simple regression</a></li>
-<li class="chapter" data-level="5.2" data-path="cph3.html"><a href="cph3.html#scatter-plot-with-regression-line"><i class="fa fa-check"></i><b>5.2</b> scatter Plot with Regression Line</a></li>
-<li class="chapter" data-level="5.3" data-path="cph3.html"><a href="cph3.html#subsetting-data-for-regressions"><i class="fa fa-check"></i><b>5.3</b> Subsetting Data for Regressions</a></li>
+<li class="chapter" data-level="5.1" data-path="cph3.html"><a href="cph3.html#estimating-a-simple-regression"><i class="fa fa-check"></i><b>5.1</b> Estimating a simple regression</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="cph3.html"><a href="cph3.html#a-short-detour-on-some-r-basics."><i class="fa fa-check"></i><b>5.1.1</b> A short detour on some R basics.</a></li>
+<li class="chapter" data-level="5.1.2" data-path="cph3.html"><a href="cph3.html#estimating-an-ols-model"><i class="fa fa-check"></i><b>5.1.2</b> Estimating an OLS model</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="cph3.html"><a href="cph3.html#scatter-plot-with-regression-line"><i class="fa fa-check"></i><b>5.2</b> Scatter Plot with Regression Line</a></li>
+<li class="chapter" data-level="5.3" data-path="cph3.html"><a href="cph3.html#subsetting-data-for-regressions"><i class="fa fa-check"></i><b>5.3</b> Subsetting Data for Regressions</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="cph3.html"><a href="cph3.html#the-operator"><i class="fa fa-check"></i><b>5.3.1</b> The <code>[</code> operator</a></li>
+<li class="chapter" data-level="5.3.2" data-path="cph3.html"><a href="cph3.html#subset-argument"><i class="fa fa-check"></i><b>5.3.2</b> Subset argument</a></li>
+<li class="chapter" data-level="5.3.3" data-path="cph3.html"><a href="cph3.html#dplyrfilter"><i class="fa fa-check"></i><b>5.3.3</b> <code>dplyr::filter</code></a></li>
+</ul></li>
 <li class="chapter" data-level="5.4" data-path="cph3.html"><a href="cph3.html#heteroscesdasticity-consistent-standard-errors."><i class="fa fa-check"></i><b>5.4</b> Heteroscesdasticity-consistent standard errors.</a></li>
 <li class="chapter" data-level="5.5" data-path="cph3.html"><a href="cph3.html#generating-random-numbers"><i class="fa fa-check"></i><b>5.5</b> Generating Random Numbers</a></li>
 <li class="chapter" data-level="5.6" data-path="cph3.html"><a href="cph3.html#simulations"><i class="fa fa-check"></i><b>5.6</b> Simulations</a></li>
@@ -177,7 +191,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="chp5.html"><a href="chp5.html"><i class="fa fa-check"></i><b>7</b> Multivariate OLS: Where the Action Is</a><ul>
-<li class="chapter" data-level="7.1" data-path="chp5.html"><a href="chp5.html#computing-corner-1"><i class="fa fa-check"></i><b>7.1</b> Computing Corner</a><ul>
+<li class="chapter" data-level="7.1" data-path="chp4.html"><a href="chp4.html#computing-corner"><i class="fa fa-check"></i><b>7.1</b> Computing Corner</a><ul>
 <li class="chapter" data-level="7.1.1" data-path="chp5.html"><a href="chp5.html#multiple-regression"><i class="fa fa-check"></i><b>7.1.1</b> Multiple Regression</a></li>
 <li class="chapter" data-level="7.1.2" data-path="chp5.html"><a href="chp5.html#multicollinearity"><i class="fa fa-check"></i><b>7.1.2</b> Multicollinearity</a></li>
 <li class="chapter" data-level="7.1.3" data-path="chp5.html"><a href="chp5.html#standardized-coefficients"><i class="fa fa-check"></i><b>7.1.3</b> Standardized Coefficients</a></li>
@@ -276,9 +290,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="16.2.2" data-path="chp14.html"><a href="chp14.html#ols-estimator-is-unbiased"><i class="fa fa-check"></i><b>16.2.2</b> OLS estimator is unbiased</a></li>
 <li class="chapter" data-level="16.2.3" data-path="chp14.html"><a href="chp14.html#variance-covariance-is-a-minimum"><i class="fa fa-check"></i><b>16.2.3</b> Variance-Covariance is a minimum</a></li>
 </ul></li>
-<li class="chapter" data-level="16.3" data-path="chp14.html"><a href="chp14.html#probability-distributions-in-r-1"><i class="fa fa-check"></i><b>16.3</b> Probability Distributions in R</a><ul>
+<li class="chapter" data-level="16.3" data-path="chp4.html"><a href="chp4.html#probability-distributions-in-r"><i class="fa fa-check"></i><b>16.3</b> Probability Distributions in R</a><ul>
 <li class="chapter" data-level="16.3.1" data-path="chp14.html"><a href="chp14.html#obtaining-critical-statistics"><i class="fa fa-check"></i><b>16.3.1</b> Obtaining Critical Statistics</a></li>
-<li class="chapter" data-level="16.3.2" data-path="chp14.html"><a href="chp14.html#generating-random-numbers-1"><i class="fa fa-check"></i><b>16.3.2</b> Generating Random Numbers</a></li>
+<li class="chapter" data-level="16.3.2" data-path="cph3.html"><a href="cph3.html#generating-random-numbers"><i class="fa fa-check"></i><b>16.3.2</b> Generating Random Numbers</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="17" data-path="chp15.html"><a href="chp15.html"><i class="fa fa-check"></i><b>17</b> Advanced Panel Data</a><ul>
@@ -313,15 +327,135 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="cph3" class="section level1">
 <h1><span class="header-section-number">Chapter 5</span> Bivariate OLS: The Foundation of Econometric Analysis</h1>
-<p>We will work through <em>Computing Corner</em>.</p>
+<p>We will work through the <em>Computing Corner</em>.</p>
 <div id="estimating-a-simple-regression" class="section level2">
 <h2><span class="header-section-number">5.1</span> Estimating a simple regression</h2>
-<p>To run a simple regression in R, make us of the function <code>lm</code>. Like all functions <code>lm</code> requires and argument list. You can see the arguments required and the defaualt values, if any, in a variety of ways in R Studio. <code>args(lm)</code> will return the arguments for the lm function. <code>?lm</code> will open the help page in the Files/Plots/Packages/Help Pane, which can also be accessed by typing lm in the search in the same pane. Estimating a regression using <code>lm</code> requires only two arguments: the formula and data arguments. If you provide those arguments in that order, R doesn’t require that you use the argument’s name. This is true for all functions in R, the default is that the arguments appear in order. We can see by calling <code>str</code> on ols_donuts that <code>lm</code> creates a list object which contains 12 elements. A list is an object that contains elements of several different types like, strings, vectors, matrices, lists, etc. Each of those elements can be extracted from the list in much the same way as accessing pieces of a data frame.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(magrittr)</a>
-<a class="sourceLine" id="cb1-2" title="2"><span class="kw">load</span>(<span class="st">&quot;donuts.RData&quot;</span>)</a>
-<a class="sourceLine" id="cb1-3" title="3">ols_donuts &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">formula =</span> weight <span class="op">~</span><span class="st"> </span>donuts_per_week, <span class="dt">data =</span> donuts)</a>
-<a class="sourceLine" id="cb1-4" title="4">ols_donuts <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb1-5" title="5"><span class="st">  </span><span class="kw">str</span>()</a></code></pre></div>
+<p>To run a simple regression in R, call the function <code>lm()</code>.</p>
+<div id="a-short-detour-on-some-r-basics." class="section level3">
+<h3><span class="header-section-number">5.1.1</span> A short detour on some R basics.</h3>
+<p>Some basic principles of R.</p>
+<ol style="list-style-type: decimal">
+<li>Everything in R is an <strong>object</strong> including functions.</li>
+<li>Everything that happens in R is a <strong>function call</strong>.</li>
+</ol>
+<ol style="list-style-type: lower-roman">
+<li><em>function calls</em> act on objects</li>
+<li><em>function calls</em> return objects</li>
+<li>objects returned by <em>function calls</em> may be used in <em>function calls</em></li>
+</ol>
+<p>It may help to think of <em>objects</em> as nouns and <em>function calls</em> as verbs.</p>
+<p><em>Objects</em> are created with the assignment operator <code>&lt;-</code> (keyboard shortcut: <code>Alt + -</code>). We can name an object almost anything we’d like.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> It is good practice to avoid function names like <code>c</code>, <code>T</code>, <code>mean</code>, etc., to not avoid starting a name with a number, to putting spaces in names. See <a href="https://style.tidyverse.org/">The tidyverse style guide</a> for an example of a consistent philosophy. We advocate the use of snake case when naming objects with longer names, <em>e.g.</em>, we might name GDP per capita as <code>gpd_per_capita</code>. So we might assign 95 to the current temperature like this:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="cph3.html#cb1-1"></a>current_temp &lt;-<span class="st"> </span><span class="dv">95</span></span></code></pre></div>
+<p><em>Functions</em> act on objects and return objects. Calling a function means to “run” it. All functions have two broad categories of arguments one that supplies the <strong>data</strong> (object) to be acted on and another to control the <strong>details</strong> of the computation. Let’s look at the function call <code>mean()</code> as an example.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="cph3.html#cb2-1"></a><span class="kw">mean</span>(x, <span class="dt">trim =</span> <span class="dv">0</span>, <span class="dt">na.rm =</span> <span class="ot">FALSE</span>, ...)</span></code></pre></div>
+<p><code>mean</code> has a data argument <em>x</em> and two control arguments <em>trim</em> and <em>na.rm</em>.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> <em>x</em> is an R object, typically a vector. <em>trim</em> is argument that controls the fraction of observations to be ignored on each end of <em>x</em> when calculating the mean. <em>trim</em> has default value of 0 (<code>trim = 0</code>). The <em>na.rm</em> argument controls whether mean ignores <code>NAs</code> in the data. The default value is FALSE (<code>na.rm = FALSE</code>). Since the control arguments have default values, the mean requires you give it only one argument to run, <em>x</em>. Of course, you can change the default values of any control arguments.</p>
+<p>R evaluates (looks for arguments in) functions in 3 steps. First it uses <strong>exact matching</strong> of the argument name. If the arguments aren’t named exactly, it uses <strong>partial matching</strong> of the argument name. Finally, it uses the <strong>position</strong> of the argument. All arguments <em>do not</em> have to be specified. Arguments not specified will use default values. If an argument necessary to the function call is not used R will <em>throw</em> an error.</p>
+<p>Good practice in calling functions requires that we specify non-optional arguments first in our function calls and that we specify the names of all optional arguments. Good practice yields easier code auditing and editing and replicability.</p>
+<p>Let’s look at the ways we can call <code>mean()</code></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="cph3.html#cb3-1"></a><span class="co"># let&#39;s assign an object y.</span></span>
+<span id="cb3-2"><a href="cph3.html#cb3-2"></a>y &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="ot">NA</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="ot">NA</span>)</span>
+<span id="cb3-3"><a href="cph3.html#cb3-3"></a></span>
+<span id="cb3-4"><a href="cph3.html#cb3-4"></a><span class="co"># we can name the arguments exactly</span></span>
+<span id="cb3-5"><a href="cph3.html#cb3-5"></a></span>
+<span id="cb3-6"><a href="cph3.html#cb3-6"></a><span class="kw">mean</span>(<span class="dt">x =</span> y, <span class="dt">trim =</span> <span class="dv">0</span>, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<pre><code>[1] 5.5</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="cph3.html#cb5-1"></a><span class="co"># or we could use the position of the argument</span></span>
+<span id="cb5-2"><a href="cph3.html#cb5-2"></a></span>
+<span id="cb5-3"><a href="cph3.html#cb5-3"></a><span class="kw">mean</span>(y, <span class="dv">0</span>, <span class="ot">TRUE</span>) </span></code></pre></div>
+<pre><code>[1] 5.5</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="cph3.html#cb7-1"></a><span class="co"># we could use a combination of the two</span></span>
+<span id="cb7-2"><a href="cph3.html#cb7-2"></a></span>
+<span id="cb7-3"><a href="cph3.html#cb7-3"></a><span class="kw">mean</span>(y, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<pre><code>[1] 5.5</code></pre>
+<p>Notice in each case <code>mean()</code> returned a vector of length 1, that’s why the [1] precedes the value of the mean. The object returned by a function call can be used as an argument in subsequent function call. For example, suppose we’d like to take the square root of the mean we just calculated. We can pass the object returned by the mean to the function <code>sqrt()</code> as an argument like this:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="cph3.html#cb9-1"></a><span class="kw">sqrt</span>(<span class="kw">mean</span>(y, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</span></code></pre></div>
+<pre><code>[1] 2.35</code></pre>
+<p>We could do this repeatedly. Let’s take the log of that.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="cph3.html#cb11-1"></a><span class="kw">log</span>(<span class="kw">sqrt</span>(<span class="kw">mean</span>(y, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)))</span></code></pre></div>
+<pre><code>[1] 0.852</code></pre>
+<p>As you might imagine, after a while this “nesting” process get’s ugly and difficult to follow fast. This is where the pipe operator <code>%&gt;%</code> (keyboard short-cut <code>Ctrl-Shift-M</code>) shines. The pipe operator <code>%&gt;%</code> works by making the object preceding it the first argument in the function call following it. Let the <code>bar</code> be the firs argument in the function call <code>foo</code>, we could call the function like this <code>foo(bar)</code> or using the pipe operator like this <code>bar %&gt;%  foo()</code>. In simple cases like this there isn’t much to gained from the pipe operator.<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> The pipe operator shines when multiple function calls are performed in a sequence. It prevents ugly nesting or having to create assign intermediate objects to call functions on later. Below is the code from above using the <code>%&gt;%</code> operator.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="cph3.html#cb13-1"></a>y <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb13-2"><a href="cph3.html#cb13-2"></a><span class="st">  </span><span class="kw">mean</span>(<span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb13-3"><a href="cph3.html#cb13-3"></a><span class="st">  </span><span class="kw">sqrt</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb13-4"><a href="cph3.html#cb13-4"></a><span class="st">  </span><span class="kw">log</span>()</span></code></pre></div>
+<pre><code>[1] 0.852</code></pre>
+<p>While code is written to get R to do something it is also written for and by human beings. We can translate this code like this “take y, then calculate its mean while removing NA’s, then take the square root, then take the log.”</p>
+<p>We can find the arguments and their default values, if any, in a variety of ways in R Studio. To estimate a regression, call the function <code>lm()</code>. Let’s find the arguments required by <code>lm()</code> to estimate a simple linear regression.</p>
+<p>If we simply want a list of the arguments for any function call <code>args()</code> with the function name as the argument.<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> <code>args(lm)</code> will return the arguments for the <code>lm</code> function.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="cph3.html#cb15-1"></a><span class="kw">args</span>(lm)</span></code></pre></div>
+<pre><code>function (formula, data, subset, weights, na.action, method = &quot;qr&quot;, 
+    model = TRUE, x = FALSE, y = FALSE, qr = TRUE, singular.ok = TRUE, 
+    contrasts = NULL, offset, ...) 
+NULL</code></pre>
+<p>To get more detailed information on the function call and the arguments use <code>?function_name</code>. This opens the help page in the Files/Plots/Packages/Help Pane, which can also be accessed by typing “lm” in the search in the same pane. Below we see a portion of the help on <code>lm</code>.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="cph3.html#cb17-1"></a>?lm</span></code></pre></div>
+<p><img src="figs/lm-help.png" /></p>
+</div>
+<div id="estimating-an-ols-model" class="section level3">
+<h3><span class="header-section-number">5.1.2</span> Estimating an OLS model</h3>
+<p>Estimating a regression using <code>lm</code> requires only one argument, a formula.<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a> Formulas are structured with a <code>~</code>. To estimate <span class="math inline">\(y_i=\beta_0+\beta_1x_i+\epsilon_i\)</span> the formula argument takes the form <code>y ~ x</code>. If <code>x</code> and <code>y</code> exist in the global environment, <em>e.g.</em> not in data frame, run the regression by calling <code>lm(y ~ x)</code>.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="cph3.html#cb18-1"></a><span class="co"># create y and x in the global environment as follows</span></span>
+<span id="cb18-2"><a href="cph3.html#cb18-2"></a></span>
+<span id="cb18-3"><a href="cph3.html#cb18-3"></a>y &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">275</span>, <span class="dv">141</span>,  <span class="dv">70</span>,  <span class="dv">75</span>, <span class="dv">310</span>,  <span class="dv">80</span>, <span class="dv">160</span>, <span class="dv">263</span>, <span class="dv">205</span>, <span class="dv">185</span>, <span class="dv">170</span>, <span class="dv">155</span>, <span class="dv">145</span>)</span>
+<span id="cb18-4"><a href="cph3.html#cb18-4"></a>x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">14</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">5</span>, <span class="dv">20</span>,  <span class="fl">0.75</span>,  <span class="fl">0.25</span>, <span class="dv">16</span>,  <span class="dv">3</span>,  <span class="dv">2</span>,  <span class="fl">0.80</span>,  <span class="dv">5</span>,  <span class="dv">4</span>)</span>
+<span id="cb18-5"><a href="cph3.html#cb18-5"></a></span>
+<span id="cb18-6"><a href="cph3.html#cb18-6"></a><span class="co"># estimate the regression</span></span>
+<span id="cb18-7"><a href="cph3.html#cb18-7"></a><span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x)</span></code></pre></div>
+<pre><code>
+Call:
+lm(formula = y ~ x)
+
+Coefficients:
+(Intercept)            x  
+     121.61         9.22  </code></pre>
+<p>It is typically impractical to use data (variables) within the global environment. Data sets are typically collected together in data frames. When data “live” in data frame <code>lm</code> requires a second argument to find the data.</p>
+<p>Let’s estimate the regression <span class="math inline">\(\textit{weight}_i = \beta_0+\beta_1\textit{donuts per week}_i+\epsilon_i\)</span>. The data are in a data frame named <code>donuts</code>.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="cph3.html#cb20-1"></a><span class="co"># including the arguments by name</span></span>
+<span id="cb20-2"><a href="cph3.html#cb20-2"></a><span class="kw">lm</span>(<span class="dt">formula =</span> weight <span class="op">~</span><span class="st"> </span>donuts_per_week, <span class="dt">data =</span> donuts)</span></code></pre></div>
+<pre><code>
+Call:
+lm(formula = weight ~ donuts_per_week, data = donuts)
+
+Coefficients:
+    (Intercept)  donuts_per_week  
+         121.61             9.22  </code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="cph3.html#cb22-1"></a><span class="co"># including the arguments by position</span></span>
+<span id="cb22-2"><a href="cph3.html#cb22-2"></a><span class="kw">lm</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week, donuts)</span></code></pre></div>
+<pre><code>
+Call:
+lm(formula = weight ~ donuts_per_week, data = donuts)
+
+Coefficients:
+    (Intercept)  donuts_per_week  
+         121.61             9.22  </code></pre>
+<p>Recall that the pipe operator <code>%&gt;%</code> makes an object the first argument in a function call. So, it appears that we are out of look if we’d like to use it to pipe the data into an <code>lm</code> call. Appearances aside, we can use <code>%&gt;%</code> any function call to insert an object into as an argument in any position in the argument list by using the “pronoun” <code>.</code>. The object will be place wherever the pronoun is.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="cph3.html#cb24-1"></a>donuts <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb24-2"><a href="cph3.html#cb24-2"></a><span class="st">  </span><span class="kw">lm</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week, <span class="dt">data =</span> .)</span></code></pre></div>
+<pre><code>
+Call:
+lm(formula = weight ~ donuts_per_week, data = .)
+
+Coefficients:
+    (Intercept)  donuts_per_week  
+         121.61             9.22  </code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="cph3.html#cb26-1"></a><span class="co">#  or</span></span>
+<span id="cb26-2"><a href="cph3.html#cb26-2"></a>donuts <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb26-3"><a href="cph3.html#cb26-3"></a><span class="st">  </span><span class="kw">lm</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week, .)</span></code></pre></div>
+<pre><code>
+Call:
+lm(formula = weight ~ donuts_per_week, data = .)
+
+Coefficients:
+    (Intercept)  donuts_per_week  
+         121.61             9.22  </code></pre>
+<p>There are advantages to using <code>%&gt;%</code>. It allows auto-completion of variable names because R knows which data frame we are using. Later we will see that the use of <code>%&gt;%</code> will simplify things like subsetting, creating new variables, etc.</p>
+<div id="viewing-the-output" class="section level4">
+<h4><span class="header-section-number">5.1.2.1</span> Viewing the output</h4>
+<p><code>lm</code> prints the values of the coefficients. Where are the fitted values, residuals, statistics, etc?</p>
+<p>Since <code>lm</code> is a function call it must return an object…it does. The object returned by <code>lm</code> is a special kind of vector called a list. This is where the fitted values, ect. “live”. Let’s look at the list.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="cph3.html#cb28-1"></a>donuts <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb28-2"><a href="cph3.html#cb28-2"></a><span class="st">  </span><span class="kw">lm</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week, .) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb28-3"><a href="cph3.html#cb28-3"></a><span class="st">  </span><span class="kw">glimpse</span>()</span></code></pre></div>
 <pre><code>List of 12
  $ coefficients : Named num [1:2] 121.61 9.22
   ..- attr(*, &quot;names&quot;)= chr [1:2] &quot;(Intercept)&quot; &quot;donuts_per_week&quot;
@@ -336,8 +470,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
  $ qr           :List of 5
   ..$ qr   : num [1:13, 1:2] -3.606 0.277 0.277 0.277 0.277 ...
   .. ..- attr(*, &quot;dimnames&quot;)=List of 2
-  .. .. ..$ : chr [1:13] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...
-  .. .. ..$ : chr [1:2] &quot;(Intercept)&quot; &quot;donuts_per_week&quot;
   .. ..- attr(*, &quot;assign&quot;)= int [1:2] 0 1
   ..$ qraux: num [1:2] 1.28 1.31
   ..$ pivot: int [1:2] 1 2
@@ -346,48 +478,76 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   ..- attr(*, &quot;class&quot;)= chr &quot;qr&quot;
  $ df.residual  : int 11
  $ xlevels      : Named list()
- $ call         : language lm(formula = weight ~ donuts_per_week, data = donuts)
+ $ call         : language lm(formula = weight ~ donuts_per_week, data = .)
  $ terms        :Classes &#39;terms&#39;, &#39;formula&#39;  language weight ~ donuts_per_week
   .. ..- attr(*, &quot;variables&quot;)= language list(weight, donuts_per_week)
   .. ..- attr(*, &quot;factors&quot;)= int [1:2, 1] 0 1
   .. .. ..- attr(*, &quot;dimnames&quot;)=List of 2
-  .. .. .. ..$ : chr [1:2] &quot;weight&quot; &quot;donuts_per_week&quot;
-  .. .. .. ..$ : chr &quot;donuts_per_week&quot;
   .. ..- attr(*, &quot;term.labels&quot;)= chr &quot;donuts_per_week&quot;
   .. ..- attr(*, &quot;order&quot;)= int 1
   .. ..- attr(*, &quot;intercept&quot;)= int 1
   .. ..- attr(*, &quot;response&quot;)= int 1
-  .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: R_GlobalEnv&gt; 
+  .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x000000001dabcc28&gt; 
   .. ..- attr(*, &quot;predvars&quot;)= language list(weight, donuts_per_week)
   .. ..- attr(*, &quot;dataClasses&quot;)= Named chr [1:2] &quot;numeric&quot; &quot;numeric&quot;
   .. .. ..- attr(*, &quot;names&quot;)= chr [1:2] &quot;weight&quot; &quot;donuts_per_week&quot;
- $ model        :&#39;data.frame&#39;:  13 obs. of  2 variables:
+ $ model        :&#39;data.frame&#39;:	13 obs. of  2 variables:
   ..$ weight         : num [1:13] 275 141 70 75 310 80 160 263 205 185 ...
   ..$ donuts_per_week: num [1:13] 14 0 0 5 20 0.75 0.25 16 3 2 ...
   ..- attr(*, &quot;terms&quot;)=Classes &#39;terms&#39;, &#39;formula&#39;  language weight ~ donuts_per_week
   .. .. ..- attr(*, &quot;variables&quot;)= language list(weight, donuts_per_week)
   .. .. ..- attr(*, &quot;factors&quot;)= int [1:2, 1] 0 1
   .. .. .. ..- attr(*, &quot;dimnames&quot;)=List of 2
-  .. .. .. .. ..$ : chr [1:2] &quot;weight&quot; &quot;donuts_per_week&quot;
-  .. .. .. .. ..$ : chr &quot;donuts_per_week&quot;
   .. .. ..- attr(*, &quot;term.labels&quot;)= chr &quot;donuts_per_week&quot;
   .. .. ..- attr(*, &quot;order&quot;)= int 1
   .. .. ..- attr(*, &quot;intercept&quot;)= int 1
   .. .. ..- attr(*, &quot;response&quot;)= int 1
-  .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: R_GlobalEnv&gt; 
+  .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x000000001dabcc28&gt; 
   .. .. ..- attr(*, &quot;predvars&quot;)= language list(weight, donuts_per_week)
   .. .. ..- attr(*, &quot;dataClasses&quot;)= Named chr [1:2] &quot;numeric&quot; &quot;numeric&quot;
   .. .. .. ..- attr(*, &quot;names&quot;)= chr [1:2] &quot;weight&quot; &quot;donuts_per_week&quot;
  - attr(*, &quot;class&quot;)= chr &quot;lm&quot;</code></pre>
-<p>You can see the type for each of the 12 elements in the list. Each of those elements can be extracted by using the $ convention you use to get variables from a data frame (which is a type of list) as describe in the text. In addition, there are many commands that will extract a standard set of elements and present them in conventional ways. For example, to get the regression results, <code>summary</code> from base R, <code>stargazer</code> from the stargazer package, and <code>tidy</code> and <code>glance</code> from the <code>broom</code> package provide the output in useful ways. <code>augment</code> from the broom package creates a tibble of actual, fitted, residuals, etc. In fact, all of the commands in the <code>broom</code> package create tibbles which can useful for further analysis. <code>stargazer</code> can be modified to include a variety of statistics. So, you can extract fitted values or residuals, e.g., in the same way you retrieve any data from a data frame or tibble.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb3-2" title="2"><span class="kw">library</span>(broom)</a>
-<a class="sourceLine" id="cb3-3" title="3"><span class="kw">library</span>(stargazer)</a>
-<a class="sourceLine" id="cb3-4" title="4">ols_donuts <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb3-5" title="5"><span class="st">  </span><span class="kw">summary</span>()</a></code></pre></div>
+<p>The list contains 12 elements. Here are some we are likely to interested in:</p>
+<ol style="list-style-type: decimal">
+<li>coefficients</li>
+<li>residuals</li>
+<li>fitted values</li>
+<li>df.residual</li>
+</ol>
+<p>Let’s assign this list to the object <code>lm_donuts</code></p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="cph3.html#cb30-1"></a>lm_donuts &lt;-<span class="st"> </span></span>
+<span id="cb30-2"><a href="cph3.html#cb30-2"></a>donuts <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb30-3"><a href="cph3.html#cb30-3"></a><span class="st">  </span><span class="kw">lm</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week, .)</span></code></pre></div>
+<p>We can extract any of the elements of the list with one of three operators <code>$</code> <code>[</code> <code>[[</code> and the name of the element or its position in the list. Each of these operators returns an object <code>$</code> and <code>[[</code> return vectors while <code>[</code> returns a list. Let’s extract the residuals from <code>lm_donuts</code></p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="cph3.html#cb31-1"></a>lm_donuts<span class="op">$</span>residuals</span></code></pre></div>
+<pre><code>     1      2      3      4      5      6      7      8      9     10     11 
+ 24.26  19.39 -51.61 -92.73   3.92 -48.53  36.08  -6.19  55.72  44.94  41.01 
+    12     13 
+-12.73 -13.51 </code></pre>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="cph3.html#cb33-1"></a>lm_donuts[[<span class="dv">2</span>]]</span></code></pre></div>
+<pre><code>     1      2      3      4      5      6      7      8      9     10     11 
+ 24.26  19.39 -51.61 -92.73   3.92 -48.53  36.08  -6.19  55.72  44.94  41.01 
+    12     13 
+-12.73 -13.51 </code></pre>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="cph3.html#cb35-1"></a>lm_donuts[<span class="dv">2</span>]</span></code></pre></div>
+<pre><code>$residuals
+     1      2      3      4      5      6      7      8      9     10     11 
+ 24.26  19.39 -51.61 -92.73   3.92 -48.53  36.08  -6.19  55.72  44.94  41.01 
+    12     13 
+-12.73 -13.51 </code></pre>
+</div>
+<div id="regression-output-summaries" class="section level4">
+<h4><span class="header-section-number">5.1.2.2</span> Regression output summaries</h4>
+<p>There are myriad function calls to “dig out” the elements of an <code>lm</code> list in nicely formatted ways depending on our purpose. Let’s look at a few of them. We can call these functions at the end of a pipeline without the intermediate step of naming the <code>lm</code> object or we can call them on the named object. Let’s do the former for this exercise.</p>
+<div id="summary" class="section level5">
+<h5><span class="header-section-number">5.1.2.2.1</span> <code>summary</code></h5>
+<p><code>summary</code> from base R extracts the coefficient estimates, their standard errors, their t-statistics, and their p-values. We also get degrees of freedom, r-squared, adjusted r-squared, F-stat for overall significance and some summary stats on the dependent variable.</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="cph3.html#cb37-1"></a>donuts <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb37-2"><a href="cph3.html#cb37-2"></a><span class="st">  </span><span class="kw">lm</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week, .) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb37-3"><a href="cph3.html#cb37-3"></a><span class="st">  </span><span class="kw">summary</span>()</span></code></pre></div>
 <pre><code>
 Call:
-lm(formula = weight ~ donuts_per_week, data = donuts)
+lm(formula = weight ~ donuts_per_week, data = .)
 
 Residuals:
    Min     1Q Median     3Q    Max 
@@ -401,90 +561,495 @@ donuts_per_week     9.22       1.96    4.71  0.00064 ***
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
 Residual standard error: 45.8 on 11 degrees of freedom
-Multiple R-squared:  0.668, Adjusted R-squared:  0.638 
+Multiple R-squared:  0.668,	Adjusted R-squared:  0.638 
 F-statistic: 22.2 on 1 and 11 DF,  p-value: 0.000643</code></pre>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">ols_donuts <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb5-2" title="2"><span class="st">  </span><span class="kw">stargazer</span>(<span class="dt">type =</span> <span class="st">&quot;text&quot;</span>)</a></code></pre></div>
-<pre><code>
-===============================================
-                        Dependent variable:    
-                    ---------------------------
-                              weight           
------------------------------------------------
-donuts_per_week              9.220***          
-                              (1.960)          
-                                               
-Constant                    122.000***         
-                             (16.600)          
-                                               
------------------------------------------------
-Observations                    13             
-R2                             0.668           
-Adjusted R2                    0.638           
-Residual Std. Error      45.800 (df = 11)      
-F Statistic           22.200*** (df = 1; 11)   
-===============================================
-Note:               *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">ols_donuts <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb7-2" title="2"><span class="st">  </span><span class="kw">tidy</span>()</a></code></pre></div>
+</div>
+<div id="the-broom-package" class="section level5">
+<h5><span class="header-section-number">5.1.2.2.2</span> The <code>broom</code> package</h5>
+<p>The <code>broom</code> package has three functions that extract different elements of the <code>lm</code> object and always return a tibble. Rather than loading the broom package with <code>library</code> we will use it direclty by using its name and <code>::</code>.</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="cph3.html#cb39-1"></a>donuts <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb39-2"><a href="cph3.html#cb39-2"></a><span class="st">  </span><span class="kw">lm</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week, .) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb39-3"><a href="cph3.html#cb39-3"></a><span class="st">  </span>broom<span class="op">::</span><span class="kw">tidy</span>() </span></code></pre></div>
 <pre><code># A tibble: 2 x 5
   term            estimate std.error statistic   p.value
   &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
 1 (Intercept)       122.       16.6       7.33 0.0000149
 2 donuts_per_week     9.22      1.96      4.71 0.000643 </code></pre>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">ols_donuts <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb9-2" title="2"><span class="st">  </span><span class="kw">glance</span>()</a></code></pre></div>
-<pre><code># A tibble: 1 x 11
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="cph3.html#cb41-1"></a>donuts <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb41-2"><a href="cph3.html#cb41-2"></a><span class="st">  </span><span class="kw">lm</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week, .) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb41-3"><a href="cph3.html#cb41-3"></a><span class="st">  </span>broom<span class="op">::</span><span class="kw">glance</span>()</span></code></pre></div>
+<pre><code># A tibble: 1 x 12
   r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC
-      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1     0.668         0.638  45.8      22.2 6.43e-4     2  -67.1  140.  142.
-# ... with 2 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">ols_donuts <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb11-2" title="2"><span class="st">  </span><span class="kw">augment</span>()</a></code></pre></div>
-<pre><code># A tibble: 13 x 9
-   weight donuts_per_week .fitted .se.fit .resid   .hat .sigma .cooksd
-    &lt;dbl&gt;           &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
- 1    275           14       251.    21.0  24.3  0.211    47.3 0.0474 
- 2    141            0       122.    16.6  19.4  0.131    47.6 0.0156 
- 3     70            0       122.    16.6 -51.6  0.131    44.7 0.110  
- 4     75            5       168.    12.7 -92.7  0.0773   37.1 0.186  
- 5    310           20       306.    31.2   3.92 0.464    48.0 0.00591
- 6     80            0.75    129.    15.7 -48.5  0.117    45.2 0.0844 
- 7    160            0.25    124.    16.3  36.1  0.126    46.5 0.0513 
- 8    263           16       269.    24.3  -6.19 0.281    48.0 0.00495
- 9    205            3       149.    13.6  55.7  0.0879   44.4 0.0781 
-10    185            2       140.    14.4  44.9  0.0986   45.7 0.0584 
-11    170            0.8     129.    15.6  41.0  0.116    46.0 0.0597 
-12    155            5       168.    12.7 -12.7  0.0773   47.9 0.00350
-13    145            4       159.    13.0 -13.5  0.0807   47.8 0.00415
-# ... with 1 more variable: .std.resid &lt;dbl&gt;</code></pre>
+      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1     0.668         0.638  45.8      22.2 6.43e-4     1  -67.1  140.  142.
+# ... with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="cph3.html#cb43-1"></a>donuts <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb43-2"><a href="cph3.html#cb43-2"></a><span class="st">  </span><span class="kw">lm</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week, .) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb43-3"><a href="cph3.html#cb43-3"></a><span class="st">  </span>broom<span class="op">::</span><span class="kw">augment</span>()</span></code></pre></div>
+<pre><code># A tibble: 13 x 8
+   weight donuts_per_week .fitted .resid .std.resid   .hat .sigma .cooksd
+    &lt;dbl&gt;           &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+ 1    275           14       251.  24.3       0.596 0.211    47.3 0.0474 
+ 2    141            0       122.  19.4       0.454 0.131    47.6 0.0156 
+ 3     70            0       122. -51.6      -1.21  0.131    44.7 0.110  
+ 4     75            5       168. -92.7      -2.11  0.0773   37.1 0.186  
+ 5    310           20       306.   3.92      0.117 0.464    48.0 0.00591
+ 6     80            0.75    129. -48.5      -1.13  0.117    45.2 0.0844 
+ 7    160            0.25    124.  36.1       0.843 0.126    46.5 0.0513 
+ 8    263           16       269.  -6.19     -0.159 0.281    48.0 0.00495
+ 9    205            3       149.  55.7       1.27  0.0879   44.4 0.0781 
+10    185            2       140.  44.9       1.03  0.0986   45.7 0.0584 
+11    170            0.8     129.  41.0       0.952 0.116    46.0 0.0597 
+12    155            5       168. -12.7      -0.289 0.0773   47.9 0.00350
+13    145            4       159. -13.5      -0.308 0.0807   47.8 0.00415</code></pre>
+</div>
+<div id="publication-formatted-tables" class="section level5">
+<h5><span class="header-section-number">5.1.2.2.3</span> Publication formatted tables</h5>
+<p>In addition we can also create publication ready tables. Let’s look at the <code>gt</code> package and the <code>stargazer</code> package.</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="cph3.html#cb45-1"></a>donuts <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb45-2"><a href="cph3.html#cb45-2"></a><span class="st">  </span><span class="kw">lm</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week, .) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb45-3"><a href="cph3.html#cb45-3"></a><span class="st">  </span>broom<span class="op">::</span><span class="kw">tidy</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb45-4"><a href="cph3.html#cb45-4"></a><span class="st">  </span>gt<span class="op">::</span><span class="kw">gt</span>()</span></code></pre></div>
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#lxlmiqyfjn .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#lxlmiqyfjn .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#lxlmiqyfjn .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#lxlmiqyfjn .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 4px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#lxlmiqyfjn .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#lxlmiqyfjn .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#lxlmiqyfjn .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#lxlmiqyfjn .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#lxlmiqyfjn .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#lxlmiqyfjn .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#lxlmiqyfjn .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#lxlmiqyfjn .gt_group_heading {
+  padding: 8px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#lxlmiqyfjn .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#lxlmiqyfjn .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#lxlmiqyfjn .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#lxlmiqyfjn .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#lxlmiqyfjn .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#lxlmiqyfjn .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#lxlmiqyfjn .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#lxlmiqyfjn .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#lxlmiqyfjn .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#lxlmiqyfjn .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#lxlmiqyfjn .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#lxlmiqyfjn .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#lxlmiqyfjn .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#lxlmiqyfjn .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#lxlmiqyfjn .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#lxlmiqyfjn .gt_left {
+  text-align: left;
+}
+
+#lxlmiqyfjn .gt_center {
+  text-align: center;
+}
+
+#lxlmiqyfjn .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#lxlmiqyfjn .gt_font_normal {
+  font-weight: normal;
+}
+
+#lxlmiqyfjn .gt_font_bold {
+  font-weight: bold;
+}
+
+#lxlmiqyfjn .gt_font_italic {
+  font-style: italic;
+}
+
+#lxlmiqyfjn .gt_super {
+  font-size: 65%;
+}
+
+#lxlmiqyfjn .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+</style>
+<div id="lxlmiqyfjn" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">term</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">estimate</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">std.error</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">statistic</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">p.value</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr>
+      <td class="gt_row gt_left">(Intercept)</td>
+      <td class="gt_row gt_right">121.61</td>
+      <td class="gt_row gt_right">16.59</td>
+      <td class="gt_row gt_right">7.33</td>
+      <td class="gt_row gt_right">0.0000149</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">donuts_per_week</td>
+      <td class="gt_row gt_right">9.22</td>
+      <td class="gt_row gt_right">1.96</td>
+      <td class="gt_row gt_right">4.71</td>
+      <td class="gt_row gt_right">0.0006426</td>
+    </tr>
+  </tbody>
+  
+  
+</table></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="cph3.html#cb46-1"></a>donuts <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb46-2"><a href="cph3.html#cb46-2"></a><span class="st">  </span><span class="kw">lm</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week, .) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb46-3"><a href="cph3.html#cb46-3"></a><span class="st">  </span>stargazer<span class="op">::</span><span class="kw">stargazer</span>(<span class="dt">type =</span> <span class="st">&quot;html&quot;</span>)</span></code></pre></div>
+<pre><code>
+&lt;table style=&quot;text-align:center&quot;&gt;&lt;tr&gt;&lt;td colspan=&quot;2&quot; style=&quot;border-bottom: 1px solid black&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left&quot;&gt;&lt;/td&gt;&lt;td&gt;&lt;em&gt;Dependent variable:&lt;/em&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;/td&gt;&lt;td colspan=&quot;1&quot; style=&quot;border-bottom: 1px solid black&quot;&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align:left&quot;&gt;&lt;/td&gt;&lt;td&gt;weight&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td colspan=&quot;2&quot; style=&quot;border-bottom: 1px solid black&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left&quot;&gt;donuts_per_week&lt;/td&gt;&lt;td&gt;9.220&lt;sup&gt;***&lt;/sup&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align:left&quot;&gt;&lt;/td&gt;&lt;td&gt;(1.960)&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align:left&quot;&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align:left&quot;&gt;Constant&lt;/td&gt;&lt;td&gt;122.000&lt;sup&gt;***&lt;/sup&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align:left&quot;&gt;&lt;/td&gt;&lt;td&gt;(16.600)&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align:left&quot;&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td colspan=&quot;2&quot; style=&quot;border-bottom: 1px solid black&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left&quot;&gt;Observations&lt;/td&gt;&lt;td&gt;13&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align:left&quot;&gt;R&lt;sup&gt;2&lt;/sup&gt;&lt;/td&gt;&lt;td&gt;0.668&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align:left&quot;&gt;Adjusted R&lt;sup&gt;2&lt;/sup&gt;&lt;/td&gt;&lt;td&gt;0.638&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align:left&quot;&gt;Residual Std. Error&lt;/td&gt;&lt;td&gt;45.800 (df = 11)&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align:left&quot;&gt;F Statistic&lt;/td&gt;&lt;td&gt;22.200&lt;sup&gt;***&lt;/sup&gt; (df = 1; 11)&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td colspan=&quot;2&quot; style=&quot;border-bottom: 1px solid black&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left&quot;&gt;&lt;em&gt;Note:&lt;/em&gt;&lt;/td&gt;&lt;td style=&quot;text-align:right&quot;&gt;&lt;sup&gt;*&lt;/sup&gt;p&lt;0.1; &lt;sup&gt;**&lt;/sup&gt;p&lt;0.05; &lt;sup&gt;***&lt;/sup&gt;p&lt;0.01&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;</code></pre>
+<p>There are multiple arguments for each of these function calls to change the appearance of any of the tables. Reading the vignettes for each for guidance.</p>
+</div>
+</div>
+</div>
 </div>
 <div id="scatter-plot-with-regression-line" class="section level2">
-<h2><span class="header-section-number">5.2</span> scatter Plot with Regression Line</h2>
-<p>ggplot2 makes adding a fitted regression line to a scatter plot very easy. You need only add a geometry called geom_smooth with the appropriate method to plot. The default is to include a confidence interval estimate around the fitted line. To remove the error band add the option <code>se = FALSE</code>.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">donuts <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb13-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> donuts_per_week, <span class="dt">y =</span> weight)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb13-3" title="3"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb13-4" title="4"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)</a></code></pre></div>
-<p><img src="bailey_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<h2><span class="header-section-number">5.2</span> Scatter Plot with Regression Line</h2>
+<p><code>ggplot2</code> makes adding a fitted regression line to a scatter plot very easy. You need only add a geometry called <code>geom_smooth</code> with the appropriate method argument to plot. The default is to include a confidence interval estimate around the fitted line. To remove the error band include the argument <code>se = FALSE</code>.</p>
+<p>Let’s start with the scatter diagram.</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="cph3.html#cb48-1"></a>donuts <span class="op">%&gt;%</span></span>
+<span id="cb48-2"><a href="cph3.html#cb48-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> donuts_per_week, <span class="dt">y =</span> weight)) <span class="op">+</span></span>
+<span id="cb48-3"><a href="cph3.html#cb48-3"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb48-4"><a href="cph3.html#cb48-4"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Donuts per week&quot;</span>,</span>
+<span id="cb48-5"><a href="cph3.html#cb48-5"></a>       <span class="dt">y =</span> <span class="st">&quot;Weight&quot;</span>)</span></code></pre></div>
+<p><img src="bailey_files/figure-html/donuts-ggplot-point-1.png" width="672" /></p>
+<p>Adding the regression line means adding an additional layer.</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="cph3.html#cb49-1"></a>donuts <span class="op">%&gt;%</span></span>
+<span id="cb49-2"><a href="cph3.html#cb49-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> donuts_per_week, <span class="dt">y =</span> weight)) <span class="op">+</span></span>
+<span id="cb49-3"><a href="cph3.html#cb49-3"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb49-4"><a href="cph3.html#cb49-4"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>) </span></code></pre></div>
+<p><img src="bailey_files/figure-html/donuts-lm-scatter-line-1.png" width="672" /></p>
 </div>
 <div id="subsetting-data-for-regressions" class="section level2">
 <h2><span class="header-section-number">5.3</span> Subsetting Data for Regressions</h2>
-<p>Subsetting can be directly done with the <code>subset</code> option in the <code>lm</code> call. To run a regression that excludes the Homer record, use the option <code>subset = (name != "Homer")</code>.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">ols_no_homer &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">formula =</span> weight <span class="op">~</span><span class="st"> </span>donuts_per_week, <span class="dt">data =</span> donuts, <span class="dt">subset =</span> (name <span class="op">!=</span><span class="st"> &quot;Homer&quot;</span>))</a>
-<a class="sourceLine" id="cb14-2" title="2">ols_no_homer <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb14-3" title="3"><span class="st">  </span><span class="kw">tidy</span>()</a></code></pre></div>
-<pre><code># A tibble: 2 x 5
-  term            estimate std.error statistic   p.value
-  &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-1 (Intercept)       122.       17.1       7.12 0.0000323
-2 donuts_per_week     8.74      2.19      4.00 0.00252  </code></pre>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">ols_no_homer <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb16-2" title="2"><span class="st">  </span><span class="kw">summary</span>()</a></code></pre></div>
+<p>There are a few ways to subset data to use in the <code>lm</code> call: the <code>[</code> operator, the <code>subset</code> argument, or <code>dplyr::filter</code>.</p>
+<div id="the-operator" class="section level3">
+<h3><span class="header-section-number">5.3.1</span> The <code>[</code> operator</h3>
+<p>The <code>[</code> operator is the most basic way to subset vectors in R. We can exclude Homer’s observation directly in the <code>lm</code> call like this:</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="cph3.html#cb50-1"></a><span class="kw">lm</span>(weight[name <span class="op">!=</span><span class="st"> &quot;Homer&quot;</span>] <span class="op">~</span><span class="st"> </span>donuts_per_week[name <span class="op">!=</span><span class="st"> &quot;Homer&quot;</span>], <span class="dt">data =</span> donuts) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb50-2"><a href="cph3.html#cb50-2"></a><span class="st">  </span><span class="kw">summary</span>()</span></code></pre></div>
 <pre><code>
 Call:
-lm(formula = weight ~ donuts_per_week, data = donuts, subset = (name != 
-    &quot;Homer&quot;))
+lm(formula = weight[name != &quot;Homer&quot;] ~ donuts_per_week[name != 
+    &quot;Homer&quot;], data = donuts)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-90.58 -20.99   7.26  37.24  56.90 
+
+Coefficients:
+                                 Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)                        121.87      17.13    7.12 0.000032 ***
+donuts_per_week[name != &quot;Homer&quot;]     8.74       2.19    4.00   0.0025 ** 
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 47.3 on 10 degrees of freedom
+Multiple R-squared:  0.615,	Adjusted R-squared:  0.577 
+F-statistic:   16 on 1 and 10 DF,  p-value: 0.00252</code></pre>
+<p>Let’s subset the donuts data frame to exclude Homer’s record. Data frames have two dimensions rows and columns (<code>df[r,c]</code>) To subset a data frame using <code>[</code> by row, write the requirement for the row in position r and leave position c blank (means use all columns).</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="cph3.html#cb52-1"></a><span class="kw">lm</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week, <span class="dt">data =</span> donuts[donuts<span class="op">$</span>name <span class="op">!=</span><span class="st"> &quot;Homer&quot;</span>,]) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb52-2"><a href="cph3.html#cb52-2"></a><span class="st">  </span><span class="kw">summary</span>()</span></code></pre></div>
+<pre><code>
+Call:
+lm(formula = weight ~ donuts_per_week, data = donuts[donuts$name != 
+    &quot;Homer&quot;, ])
 
 Residuals:
    Min     1Q Median     3Q    Max 
@@ -498,75 +1063,102 @@ donuts_per_week     8.74       2.19    4.00   0.0025 **
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
 Residual standard error: 47.3 on 10 degrees of freedom
-Multiple R-squared:  0.615, Adjusted R-squared:  0.577 
+Multiple R-squared:  0.615,	Adjusted R-squared:  0.577 
 F-statistic:   16 on 1 and 10 DF,  p-value: 0.00252</code></pre>
-<p>Alternatively we can make use of <code>filter</code> from the <code>dplyr</code> package. Recall, <code>filter</code> is the data manipulation verb that chooses observations in a data frame. I introduce the exposition operator <code>%$%</code> from the magrittr package. <code>%$%</code> is useful at the end of a pipeline to expose your manipulated data to function. You can use it with <code>subset</code> or <code>filter</code>.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1">donuts <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb18-2" title="2"><span class="st">  </span><span class="kw">subset</span>(name <span class="op">!=</span><span class="st"> &quot;Homer&quot;</span>) <span class="op">%$%</span></a>
-<a class="sourceLine" id="cb18-3" title="3"><span class="st">  </span><span class="kw">lm</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week)</a></code></pre></div>
+<p>We can pipe this into the <code>lm</code> call.</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="cph3.html#cb54-1"></a>donuts[donuts<span class="op">$</span>name <span class="op">!=</span><span class="st"> &quot;Homer&quot;</span>,] <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb54-2"><a href="cph3.html#cb54-2"></a><span class="st">  </span><span class="kw">lm</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week, .) </span></code></pre></div>
 <pre><code>
 Call:
-lm(formula = weight ~ donuts_per_week)
+lm(formula = weight ~ donuts_per_week, data = .)
 
 Coefficients:
     (Intercept)  donuts_per_week  
          121.87             8.74  </code></pre>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">donuts <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb20-2" title="2"><span class="st">  </span><span class="kw">filter</span>(name <span class="op">!=</span><span class="st"> &quot;Homer&quot;</span>) <span class="op">%$%</span></a>
-<a class="sourceLine" id="cb20-3" title="3"><span class="st">  </span><span class="kw">lm</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week)</a></code></pre></div>
+</div>
+<div id="subset-argument" class="section level3">
+<h3><span class="header-section-number">5.3.2</span> Subset argument</h3>
+<p>Subsetting can be directly done with the <code>subset</code> argument in the <code>lm</code> call. To run a regression that excludes the Homer observation, use the option <code>subset = (name != "Homer")</code><a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a></p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="cph3.html#cb56-1"></a>donuts <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb56-2"><a href="cph3.html#cb56-2"></a><span class="st">  </span><span class="kw">lm</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week, <span class="dt">data =</span> ., </span>
+<span id="cb56-3"><a href="cph3.html#cb56-3"></a>     <span class="dt">subset =</span> (name <span class="op">!=</span><span class="st"> &quot;Homer&quot;</span>)) </span></code></pre></div>
 <pre><code>
 Call:
-lm(formula = weight ~ donuts_per_week)
+lm(formula = weight ~ donuts_per_week, data = ., subset = (name != 
+    &quot;Homer&quot;))
+
+Coefficients:
+    (Intercept)  donuts_per_week  
+         121.87             8.74  </code></pre>
+</div>
+<div id="dplyrfilter" class="section level3">
+<h3><span class="header-section-number">5.3.3</span> <code>dplyr::filter</code></h3>
+<p>Alternatively we can make use of <code>filter</code> from the <code>dplyr</code> package. Recall, <code>filter</code> is the data manipulation verb that chooses observations in a data frame. <code>filter</code> is easier for human reading and auditing.</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="cph3.html#cb58-1"></a>donuts <span class="op">%&gt;%</span></span>
+<span id="cb58-2"><a href="cph3.html#cb58-2"></a><span class="st">  </span><span class="kw">filter</span>(name <span class="op">!=</span><span class="st"> &quot;Homer&quot;</span>)  <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb58-3"><a href="cph3.html#cb58-3"></a><span class="st">  </span><span class="kw">lm</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week, .) </span></code></pre></div>
+<pre><code>
+Call:
+lm(formula = weight ~ donuts_per_week, data = .)
 
 Coefficients:
     (Intercept)  donuts_per_week  
          121.87             8.74  </code></pre>
 <p>To include those observations where weight is greater than 100:</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1">donuts <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb22-2" title="2"><span class="st">  </span><span class="kw">subset</span>(weight <span class="op">&gt;</span><span class="st"> </span><span class="dv">100</span>) <span class="op">%$%</span></a>
-<a class="sourceLine" id="cb22-3" title="3"><span class="st">  </span><span class="kw">lm</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week)</a></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="cph3.html#cb60-1"></a>donuts <span class="op">%&gt;%</span></span>
+<span id="cb60-2"><a href="cph3.html#cb60-2"></a><span class="st">  </span><span class="kw">filter</span>(weight <span class="op">&gt;</span><span class="st"> </span><span class="dv">100</span>) <span class="op">%&gt;%</span></span>
+<span id="cb60-3"><a href="cph3.html#cb60-3"></a><span class="st">  </span><span class="kw">lm</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week, .)</span></code></pre></div>
 <pre><code>
 Call:
-lm(formula = weight ~ donuts_per_week)
+lm(formula = weight ~ donuts_per_week, data = .)
 
 Coefficients:
     (Intercept)  donuts_per_week  
          151.05             7.66  </code></pre>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1">donuts <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb24-2" title="2"><span class="st">  </span><span class="kw">filter</span>(weight <span class="op">&gt;</span><span class="st"> </span><span class="dv">100</span>) <span class="op">%$%</span></a>
-<a class="sourceLine" id="cb24-3" title="3"><span class="st">  </span><span class="kw">lm</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week)</a></code></pre></div>
-<pre><code>
-Call:
-lm(formula = weight ~ donuts_per_week)
-
-Coefficients:
-    (Intercept)  donuts_per_week  
-         151.05             7.66  </code></pre>
+</div>
 </div>
 <div id="heteroscesdasticity-consistent-standard-errors." class="section level2">
 <h2><span class="header-section-number">5.4</span> Heteroscesdasticity-consistent standard errors.</h2>
 <p>The <code>estimatr</code> package allows you to directly calculate robust standard errors.</p>
-<p>R Studio allows you to install packages in the Files/Plots/Packages/Help Pane by clicking on the Install icon on the Packages tab; as you type the name of the package, you will see completion suggestions. Choose the package you wish to install and R Studio will install it. You can load a package by checking the box next to its name in the Packages tab. Clicking on the packages name will bring up info about the pacakge.</p>
-<p>Call <code>lm_robust()</code> to estimate an OLS model with robust standard errors with the <code>se_type = "HC0</code> option for the most common method of generating robust standard errors.</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1"><span class="kw">library</span>(estimatr)</a>
-<a class="sourceLine" id="cb26-2" title="2">ols_robust &lt;-<span class="st"> </span><span class="kw">lm_robust</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week, donuts, <span class="dt">se_type =</span> <span class="st">&quot;HC0&quot;</span>)</a>
-<a class="sourceLine" id="cb26-3" title="3">ols_robust <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb26-4" title="4"><span class="st">  </span><span class="kw">tidy</span>()</a></code></pre></div>
-<pre><code>             term estimate std.error statistic    p.value conf.low
-1     (Intercept)   121.61     15.87      7.66 0.00000983    86.68
-2 donuts_per_week     9.22      1.02      9.07 0.00000194     6.99
-  conf.high df outcome
-1     156.5 11  weight
-2      11.5 11  weight</code></pre>
+<p>Install the package by calling <code>install.packages("estimatr")</code></p>
+<p>R Studio allows you to install packages in the Files/Plots/Packages/Help Pane by clicking on the Install icon on the Packages tab; as you type the name of the package, you will see completion suggestions. Choose the package you wish to install and R Studio will install it.</p>
+<p>Call <code>lm_robust()</code> to estimate an OLS model with robust standard errors with the <code>se_type = "HC0</code> argument for the most common method of generating robust standard errors.</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="cph3.html#cb62-1"></a><span class="kw">library</span>(estimatr)</span>
+<span id="cb62-2"><a href="cph3.html#cb62-2"></a>donuts <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb62-3"><a href="cph3.html#cb62-3"></a><span class="st">  </span><span class="kw">lm_robust</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week, ., <span class="dt">se_type =</span> <span class="st">&quot;HC0&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb62-4"><a href="cph3.html#cb62-4"></a><span class="st">  </span><span class="kw">summary</span>()</span></code></pre></div>
+<pre><code>
+Call:
+lm_robust(formula = weight ~ donuts_per_week, data = ., se_type = &quot;HC0&quot;)
+
+Standard error type:  HC0 
+
+Coefficients:
+                Estimate Std. Error t value   Pr(&gt;|t|) CI Lower CI Upper DF
+(Intercept)       121.61      15.87    7.66 0.00000983    86.68    156.5 11
+donuts_per_week     9.22       1.02    9.07 0.00000194     6.99     11.5 11
+
+Multiple R-squared:  0.668 ,	Adjusted R-squared:  0.638 
+F-statistic: 82.3 on 1 and 11 DF,  p-value: 0.00000194</code></pre>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="cph3.html#cb64-1"></a>donuts <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb64-2"><a href="cph3.html#cb64-2"></a><span class="st">  </span><span class="kw">lm_robust</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week, ., <span class="dt">se_type =</span> <span class="st">&quot;HC0&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb64-3"><a href="cph3.html#cb64-3"></a><span class="st">  </span><span class="kw">tidy</span>()</span></code></pre></div>
+<pre><code>             term estimate std.error statistic    p.value conf.low conf.high df
+1     (Intercept)   121.61     15.87      7.66 0.00000983    86.68     156.5 11
+2 donuts_per_week     9.22      1.02      9.07 0.00000194     6.99      11.5 11
+  outcome
+1  weight
+2  weight</code></pre>
 </div>
 <div id="generating-random-numbers" class="section level2">
 <h2><span class="header-section-number">5.5</span> Generating Random Numbers</h2>
-<p>Random numbers can be useful in variety of applications in econometrics. One application is simulation, where we simulate observations to demonstrate properties of OLS estimators, eg. Once you’ve decided the distribution from which your random numbers will be drawn and the number of draws you wish to make, you will create a vector of those observations. The most intuitive form of random number generation is <code>sample</code>. Suppose you wanted to simulate the role of a single die, use <code>sample(1:6,1)</code> or using the pipe operator <code>1:6 %&gt;% sample(1)</code>. Read the command aloud like this “from the integers 1, 2, 3, 4, 5, 6, choose a sample of size 1.” You can choose larger samples by changing the size argument. The size argument can not be larger than the number of integers unless the default option of replace = FALSE, is changed to replace = TRUE. To generate a simulation of 100 rolls of a single die call <code>1:6 %&gt;% sample(100, replace = TRUE)</code>.</p>
+<p>Random numbers can be useful in variety of applications in econometrics. One application is simulation, where we simulate observations to demonstrate properties of OLS estimators, <em>e.g.</em> Once you’ve decided the distribution from which your random numbers will be drawn and the number of draws you wish to make, you will create a vector of those observations.</p>
+<p>The most intuitive form of random number generation is <code>sample</code>. Suppose you wanted to simulate the role of a single die, use <code>sample(1:6,1)</code> or using the pipe operator <code>1:6 %&gt;% sample(1)</code>. Read the command aloud like this “from the integers 1, 2, 3, 4, 5, 6, choose a sample of size 1.” You can choose larger samples by changing the size argument. The size argument can not be larger than the number of integers unless the default argument <code>replace = FALSE</code>, is changed to <code>replace = TRUE</code>. To generate a simulation of 100 rolls of a single die call <code>1:6 %&gt;% sample(100, replace = TRUE)</code>.</p>
 <p>Random numbers may be generate from any probability distribution. The random number generator function for a given probability distribution begins with the letter r followed by the name of the distribution in r. To generate uniform random numbers between 0 and 1, use <code>runif</code>, from a normal distribution use <code>rnorm</code>, etc. Use <code>args(distribution name)</code> or <code>?distribution name</code> to find out more about the necessary arguments for individual distributions.</p>
 </div>
 <div id="simulations" class="section level2">
 <h2><span class="header-section-number">5.6</span> Simulations</h2>
-<p>Monte Carlo simulations are a useful tool for understanding how the value of an estimator changes as the sample data changes. Consider the example of rolling a single die n times and calculating the average number of pips on the side up face of the die. We know that <span class="math inline">\(\bar X\)</span> is an ubiased estimator of <span class="math inline">\(\mu\)</span>. Recall that an estimator, <span class="math inline">\(\hat\theta\)</span> is unbiased if <span class="math inline">\(E(\hat\theta) = \theta\)</span>. We can show that <span class="math inline">\(E(\bar X) = \mu\)</span>. Let <span class="math display">\[\bar X = \frac{\sum{x_i}}{n}\]</span></p>
+<p>Monte Carlo simulations are a useful tool for understanding how the value of an estimator changes as the sample data changes. Consider the example of rolling a single die <em>n</em> times and calculating the average number of pips on the side-up face of the die. We know that <span class="math inline">\(\bar X\)</span> is an unbiased estimator of <span class="math inline">\(\mu\)</span>. Recall that any estimator, <span class="math inline">\(\hat\theta\)</span> is an unbiased estimator of <span class="math inline">\(\theta\)</span> if <span class="math inline">\(E(\hat\theta) = \theta\)</span>. We can show that <span class="math inline">\(E(\bar X) = \mu\)</span>. Let <span class="math display">\[\bar X = \frac{\sum{x_i}}{n}\]</span></p>
 <p>Then, <span class="math display">\[\begin{aligned}
 E(\bar{X}) &amp;= E\left( \frac{\sum{x_i}}{n} \right)\\
 &amp;= \frac{1}{n}\sum{E(x_i)} \\
@@ -575,62 +1167,75 @@ E(\bar{X}) &amp;= E\left( \frac{\sum{x_i}}{n} \right)\\
 &amp;= \mu
 \end{aligned}\]</span></p>
 <p>So, we would expect <span class="math inline">\(\bar X = 3.5\)</span> since <span class="math inline">\(\mu = 3.5\)</span>. Simulating 100 rolls of a single die 1000 times would allow us to look at the sampling distribution of the sample mean. This will allow us to see the range of values that <span class="math inline">\(\bar X\)</span> might take on.</p>
-<p>Perform a Monte Carlo simulation by generating many samples, find the value of the estimator, and investigate it’s distribution. We could do this by generating a single sample, calculating the value of the estimator, and repeating the desired number of times. This would be tedious. We can instead make use of the concept of a loop in R. A loop evaluates the same code repeatedly until some threshold is met.</p>
+<p>Perform a Monte Carlo simulation by generating many samples, find the value of the estimator, and investigating it’s distribution. We could do this by generating a single sample, calculating the value of the estimator, and repeating the desired number of times. This would be tedious. We can instead make use of the concept of a loop in R. A loop evaluates the same code repeatedly until some threshold is met.</p>
 <p>There are two types of loops in R, for loops and while loops. A for loop runs the code a specific number of times; a while loop runs the code until a logical condition is met. We will use a for loop to run our simulation. First, instruct R on the number of times to run through the loop. The loop itself is contained between the braces {}.</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1"><span class="co"># library(tidyverse)</span></a>
-<a class="sourceLine" id="cb28-2" title="2">xbar &lt;-<span class="st"> </span><span class="dv">1</span> <span class="co"># initialize the vector to store the observations of x bar</span></a>
-<a class="sourceLine" id="cb28-3" title="3"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">1000</span>) {</a>
-<a class="sourceLine" id="cb28-4" title="4">  x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">6</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample</span>(<span class="dv">100</span>, <span class="dt">replace =</span> T)</a>
-<a class="sourceLine" id="cb28-5" title="5">  xbar[i] &lt;-<span class="st"> </span><span class="kw">mean</span>(x)</a>
-<a class="sourceLine" id="cb28-6" title="6">}</a>
-<a class="sourceLine" id="cb28-7" title="7">xbar <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb28-8" title="8"><span class="st">  </span><span class="kw">mean</span>() <span class="co"># find the mean of the 1000</span></a></code></pre></div>
-<pre><code>[1] 3.49</code></pre>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1">xbar <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb30-2" title="2"><span class="st">  </span><span class="kw">as.data.frame</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># coerce xbar to a data frame</span></a>
-<a class="sourceLine" id="cb30-3" title="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> xbar)) <span class="op">+</span><span class="st"> </span><span class="co"># map xbar to x</span></a>
-<a class="sourceLine" id="cb30-4" title="4"><span class="st">  </span><span class="kw">geom_density</span>() <span class="op">+</span><span class="st"> </span><span class="co"># geom_density creates a &quot;probability distribution&quot;</span></a>
-<a class="sourceLine" id="cb30-5" title="5"><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="fl">3.5</span>) <span class="co"># place a verticle line at the mean.</span></a></code></pre></div>
-<p><img src="bailey_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
-<p>We could do the same thing with the simple linear regression <span class="math inline">\(Y_i = \beta_0+\beta_1X_i+\epsilon_i\)</span>. We know the OLS estimator of <span class="math inline">\(\beta_1\)</span> is <span class="math inline">\(\hat\beta_1\)</span>. The value of the estimator, called the estimate, depends upon the particular sample that is drawn. Monte Carlo simulation will allows to see how the estimate changes across many samples.</p>
-<p>For <span class="math inline">\(\hat\beta_j\)</span> to be an unbiased esitmator of <span class="math inline">\(\beta_j\)</span>, <span class="math inline">\(E(\hat\beta_j) = \beta_j\)</span>. The proof is beyond the scope of this manual, but you will see or have seen the proof.</p>
-<p>Suppose we perform a Monte Carlo simulation with know values of <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> where the error term <span class="math inline">\(\epsilon_i\)</span> is drawn from a normal distribution with a mean of zero and a constant variance, i.e., <span class="math inline">\(\epsilon_i ~ N(0, \sigma^2)\)</span>, will the estimates be statistically the same as the known parameters. Let’s find out. Suppose the population regression function is <span class="math inline">\(y_i = 10 + 3x_i\)</span>,</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" title="1">n &lt;-<span class="st"> </span><span class="dv">50</span></a>
-<a class="sourceLine" id="cb31-2" title="2">N &lt;-<span class="st"> </span><span class="dv">1000</span> <span class="co"># of simulations</span></a>
-<a class="sourceLine" id="cb31-3" title="3">beta_<span class="dv">0</span> &lt;-<span class="st"> </span><span class="dv">10</span></a>
-<a class="sourceLine" id="cb31-4" title="4">beta_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="dv">3</span></a>
-<a class="sourceLine" id="cb31-5" title="5">beta_hat_<span class="dv">0</span> &lt;-<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb31-6" title="6">beta_hat_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb31-7" title="7">y &lt;-<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb31-8" title="8">x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">10</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample</span>(n, <span class="dt">replace =</span> T) <span class="co"># we would determine x here if x were fixed in repeated sampling</span></a>
-<a class="sourceLine" id="cb31-9" title="9"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>N) {</a>
-<a class="sourceLine" id="cb31-10" title="10"> x &lt;-<span class="st"> </span><span class="dv">0</span><span class="op">:</span><span class="dv">10</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample</span>(n, <span class="dt">replace =</span> T)</a>
-<a class="sourceLine" id="cb31-11" title="11"> epsilon &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n, <span class="dv">0</span> , <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb31-12" title="12"> y &lt;-<span class="st">  </span>beta_<span class="dv">0</span> <span class="op">+</span><span class="st"> </span>beta_<span class="dv">1</span><span class="op">*</span>x <span class="op">+</span><span class="st"> </span>epsilon</a>
-<a class="sourceLine" id="cb31-13" title="13"> beta_hat_<span class="dv">0</span>[i] &lt;-<span class="st"> </span><span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x)<span class="op">$</span>coef[<span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb31-14" title="14"> beta_hat_<span class="dv">1</span>[i] &lt;-<span class="st"> </span><span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x)<span class="op">$</span>coef[<span class="dv">2</span>]</a>
-<a class="sourceLine" id="cb31-15" title="15">}</a>
-<a class="sourceLine" id="cb31-16" title="16"><span class="co">#</span></a>
-<a class="sourceLine" id="cb31-17" title="17">beta_hat_<span class="dv">0</span> <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb31-18" title="18"><span class="st">  </span><span class="kw">mean</span>()</a></code></pre></div>
-<pre><code>[1] 10.1</code></pre>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1">beta_hat_<span class="dv">1</span> <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb33-2" title="2"><span class="st">  </span><span class="kw">mean</span>()</a></code></pre></div>
-<pre><code>[1] 2.99</code></pre>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" title="1">beta_hat_<span class="dv">0</span> <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb35-2" title="2"><span class="kw">as.data.frame</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb35-3" title="3"><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> beta_hat_<span class="dv">0</span>)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb35-4" title="4"><span class="kw">geom_density</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb35-5" title="5"><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">10</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="cph3.html#cb66-1"></a>xbar &lt;-<span class="st"> </span><span class="kw">numeric</span>() <span class="co"># initialize the vector to store the observations of x bar</span></span>
+<span id="cb66-2"><a href="cph3.html#cb66-2"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">1000</span>) {</span>
+<span id="cb66-3"><a href="cph3.html#cb66-3"></a>  x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">6</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample</span>(<span class="dv">100</span>, <span class="dt">replace =</span> T)</span>
+<span id="cb66-4"><a href="cph3.html#cb66-4"></a>  xbar[i] &lt;-<span class="st"> </span><span class="kw">mean</span>(x)</span>
+<span id="cb66-5"><a href="cph3.html#cb66-5"></a>}</span>
+<span id="cb66-6"><a href="cph3.html#cb66-6"></a>xbar <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb66-7"><a href="cph3.html#cb66-7"></a><span class="st">  </span><span class="kw">mean</span>() <span class="co"># find the mean of the 1000</span></span></code></pre></div>
+<pre><code>[1] 3.5</code></pre>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="cph3.html#cb68-1"></a>xbar <span class="op">%&gt;%</span></span>
+<span id="cb68-2"><a href="cph3.html#cb68-2"></a><span class="st">  </span><span class="kw">as.data.frame</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># coerce xbar to a data frame</span></span>
+<span id="cb68-3"><a href="cph3.html#cb68-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> xbar)) <span class="op">+</span><span class="st"> </span><span class="co"># map xbar to x</span></span>
+<span id="cb68-4"><a href="cph3.html#cb68-4"></a><span class="st">  </span><span class="kw">geom_density</span>() <span class="op">+</span><span class="st"> </span><span class="co"># geom_density creates a &quot;probability distribution&quot;</span></span>
+<span id="cb68-5"><a href="cph3.html#cb68-5"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="fl">3.5</span>) <span class="co"># place a vertical line at the mean.</span></span></code></pre></div>
 <p><img src="bailey_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" title="1">beta_hat_<span class="dv">1</span> <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb36-2" title="2"><span class="kw">as.data.frame</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb36-3" title="3"><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> beta_hat_<span class="dv">1</span>)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb36-4" title="4"><span class="kw">geom_density</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb36-5" title="5"><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">3</span>)</a></code></pre></div>
-<p><img src="bailey_files/figure-html/unnamed-chunk-11-2.png" width="672" /></p>
+<p>We could do the same thing with the simple linear regression <span class="math inline">\(Y_i = \beta_0+\beta_1X_i+\epsilon_i\)</span>. We know the OLS estimator of <span class="math inline">\(\beta_1\)</span> is <span class="math inline">\(\hat\beta_1\)</span>. The value of the estimator, called the estimate, depends upon the particular sample that is drawn. Monte Carlo simulation will allows to see how the estimate changes across many samples.</p>
+<p>For <span class="math inline">\(\hat\beta_j\)</span> to be an unbiased estimator of <span class="math inline">\(\beta_j\)</span>, <span class="math inline">\(E(\hat\beta_j) = \beta_j\)</span>. The proof is beyond the scope of this manual, but you will see or have seen the proof.</p>
+<p>Suppose we perform a Monte Carlo simulation with know values of <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> where the error term <span class="math inline">\(\epsilon_i\)</span> is drawn from a normal distribution with a mean of zero and a constant variance, i.e., <span class="math inline">\(\epsilon_i ~ N(0, \sigma^2)\)</span>, will the estimates be statistically the same as the known parameters. Let’s find out. Suppose the population regression function is <span class="math inline">\(y_i = 10 + 3x_i\)</span>,</p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="cph3.html#cb69-1"></a>n &lt;-<span class="st"> </span><span class="dv">50</span> <span class="co"># sample size</span></span>
+<span id="cb69-2"><a href="cph3.html#cb69-2"></a>N &lt;-<span class="st"> </span><span class="dv">1000</span> <span class="co"># of simulations</span></span>
+<span id="cb69-3"><a href="cph3.html#cb69-3"></a>beta_<span class="dv">0</span> &lt;-<span class="st"> </span><span class="dv">10</span> <span class="co"># assign the value of the intercept parameter</span></span>
+<span id="cb69-4"><a href="cph3.html#cb69-4"></a>beta_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="dv">3</span> <span class="co"># assign the value of the slope parameter</span></span>
+<span id="cb69-5"><a href="cph3.html#cb69-5"></a>beta_hat_<span class="dv">0</span> &lt;-<span class="st"> </span><span class="kw">numeric</span>(<span class="dt">length =</span> N) <span class="co">#initialize the vector for beta0 estimates</span></span>
+<span id="cb69-6"><a href="cph3.html#cb69-6"></a>beta_hat_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">numeric</span>(<span class="dt">length =</span> N) <span class="co">#initialize the vector for beta1 estimates</span></span>
+<span id="cb69-7"><a href="cph3.html#cb69-7"></a>y &lt;-<span class="st"> </span><span class="kw">numeric</span>(<span class="dt">length =</span> N) <span class="co">#initialize the vector for the y values</span></span>
+<span id="cb69-8"><a href="cph3.html#cb69-8"></a><span class="co"># create x  randomly</span></span>
+<span id="cb69-9"><a href="cph3.html#cb69-9"></a>x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">10</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample</span>(n, <span class="dt">replace =</span> T)  <span class="co"># keep it fixed in repeated samples</span></span>
+<span id="cb69-10"><a href="cph3.html#cb69-10"></a><span class="co"># run the simulation</span></span>
+<span id="cb69-11"><a href="cph3.html#cb69-11"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>N) {</span>
+<span id="cb69-12"><a href="cph3.html#cb69-12"></a> epsilon &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n, <span class="dv">0</span> , <span class="dv">2</span>) <span class="co"># create the random error</span></span>
+<span id="cb69-13"><a href="cph3.html#cb69-13"></a> y &lt;-<span class="st">  </span>beta_<span class="dv">0</span> <span class="op">+</span><span class="st"> </span>beta_<span class="dv">1</span><span class="op">*</span>x <span class="op">+</span><span class="st"> </span>epsilon</span>
+<span id="cb69-14"><a href="cph3.html#cb69-14"></a> beta_hat_<span class="dv">0</span>[i] &lt;-<span class="st"> </span><span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x)<span class="op">$</span>coef[<span class="dv">1</span>]</span>
+<span id="cb69-15"><a href="cph3.html#cb69-15"></a> beta_hat_<span class="dv">1</span>[i] &lt;-<span class="st"> </span><span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x)<span class="op">$</span>coef[<span class="dv">2</span>]</span>
+<span id="cb69-16"><a href="cph3.html#cb69-16"></a>}</span>
+<span id="cb69-17"><a href="cph3.html#cb69-17"></a><span class="co"># write the betas to a tibble</span></span>
+<span id="cb69-18"><a href="cph3.html#cb69-18"></a>beta_hats &lt;-<span class="st"> </span><span class="kw">tibble</span>(beta_hat_<span class="dv">0</span>, beta_hat_<span class="dv">1</span>)</span></code></pre></div>
+<p>Let’s look at the mean values of the estimators, using <code>dplyr::summarize</code></p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="cph3.html#cb70-1"></a>beta_hats <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb70-2"><a href="cph3.html#cb70-2"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean_beta_hat_0 =</span> <span class="kw">mean</span>(beta_hat_<span class="dv">0</span>),</span>
+<span id="cb70-3"><a href="cph3.html#cb70-3"></a>            <span class="dt">mean_beta_hat_1 =</span> <span class="kw">mean</span>(beta_hat_<span class="dv">1</span>))</span></code></pre></div>
+<pre><code># A tibble: 1 x 2
+  mean_beta_hat_0 mean_beta_hat_1
+            &lt;dbl&gt;           &lt;dbl&gt;
+1            10.0            3.00</code></pre>
+<p>Let’s look at the histograms.</p>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="cph3.html#cb72-1"></a>beta_hats <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb72-2"><a href="cph3.html#cb72-2"></a><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> beta_hat_<span class="dv">0</span>)) <span class="op">+</span></span>
+<span id="cb72-3"><a href="cph3.html#cb72-3"></a><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="fl">.5</span>) <span class="op">+</span></span>
+<span id="cb72-4"><a href="cph3.html#cb72-4"></a><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">10</span>, <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="fl">1.2</span>)</span></code></pre></div>
+<p><img src="bailey_files/figure-html/histograms-1.png" width="672" /></p>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="cph3.html#cb73-1"></a>beta_hats <span class="op">%&gt;%</span></span>
+<span id="cb73-2"><a href="cph3.html#cb73-2"></a><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> beta_hat_<span class="dv">1</span>)) <span class="op">+</span></span>
+<span id="cb73-3"><a href="cph3.html#cb73-3"></a><span class="kw">geom_histogram</span>(<span class="dt">bins =</span> <span class="dv">20</span>) <span class="op">+</span></span>
+<span id="cb73-4"><a href="cph3.html#cb73-4"></a><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">3</span>, <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="fl">1.2</span>)</span></code></pre></div>
+<p><img src="bailey_files/figure-html/histograms-2.png" width="672" /></p>
 
 </div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="1">
+<li id="fn1"><p>Call <code>?Reserved</code> to see names that you can’t use.<a href="cph3.html#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>The … represent further arguments passed to or from other methods.<a href="cph3.html#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>Possibly it is clear to say take <code>bar</code> and do <code>foo</code> to it than to say do <code>foo</code> on <code>bar</code>.<a href="cph3.html#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p>Remember everything in R is an object–even a function!<a href="cph3.html#fnref4" class="footnote-back">↩︎</a></p></li>
+<li id="fn5"><p>This is one of few functions that does not have the data as its first argument.<a href="cph3.html#fnref5" class="footnote-back">↩︎</a></p></li>
+<li id="fn6"><p>We will use <code>%&gt;%</code> to avoid having to assign the <code>lm</code> object as an intermediate step.<a href="cph3.html#fnref6" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
             </section>
 
@@ -643,11 +1248,13 @@ E(\bar{X}) &amp;= E\left( \frac{\sum{x_i}}{n} \right)\\
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -655,12 +1262,11 @@ gitbook.start({
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -672,6 +1278,10 @@ gitbook.start({
 "text": null
 },
 "history": {
+"link": null,
+"text": null
+},
+"view": {
 "link": null,
 "text": null
 },

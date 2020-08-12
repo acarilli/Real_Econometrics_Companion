@@ -1,30 +1,30 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 11 Instrumental Variables: Using Exogenous Variation to Fight Endogeneity | R Companion to Real Econometrics</title>
-  <meta name="description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
-  <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
+  <meta name="description" content="R, RStudio IDE, and the tidyverse companion to Bailey’s Real Econometrics" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 11 Instrumental Variables: Using Exogenous Variation to Fight Endogeneity | R Companion to Real Econometrics" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  <meta property="og:description" content="R, RStudio IDE, and the tidyverse companion to Bailey’s Real Econometrics" />
   
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Chapter 11 Instrumental Variables: Using Exogenous Variation to Fight Endogeneity | R Companion to Real Econometrics" />
   
-  <meta name="twitter:description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  <meta name="twitter:description" content="R, RStudio IDE, and the tidyverse companion to Bailey’s Real Econometrics" />
   
 
 <meta name="author" content="Tony Carilli" />
 
 
-<meta name="date" content="2019-09-23" />
+<meta name="date" content="2020-08-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -40,6 +40,7 @@
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
 
 
 
@@ -47,12 +48,23 @@
 
 
 
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.15/datatables.js"></script>
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -61,14 +73,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -77,9 +91,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -128,7 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./">R Companion to *Real Econometrics*</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a></li>
 <li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a><ul>
 <li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#install-r-and-rstudio"><i class="fa fa-check"></i><b>2.1</b> Install R and RStudio</a></li>
 <li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#using-rstudio"><i class="fa fa-check"></i><b>2.2</b> Using RStudio</a><ul>
@@ -147,7 +161,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="chp2.html"><a href="chp2.html"><i class="fa fa-check"></i><b>4</b> Stats in the Wild: Good Data Practices</a><ul>
-<li class="chapter" data-level="4.1" data-path="chp2.html"><a href="chp2.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
+<li class="chapter" data-level="4.1" data-path="chp1.html"><a href="chp1.html#introduction"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
 <li class="chapter" data-level="4.2" data-path="chp2.html"><a href="chp2.html#table-and-figure-reproduction"><i class="fa fa-check"></i><b>4.2</b> Table and Figure Reproduction</a><ul>
 <li class="chapter" data-level="4.2.1" data-path="chp2.html"><a href="chp2.html#table-2.1"><i class="fa fa-check"></i><b>4.2.1</b> Table 2.1</a></li>
 <li class="chapter" data-level="4.2.2" data-path="chp2.html"><a href="chp2.html#table-2.2"><i class="fa fa-check"></i><b>4.2.2</b> Table 2.2</a></li>
@@ -158,6 +172,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.3.1" data-path="chp2.html"><a href="chp2.html#reading-data"><i class="fa fa-check"></i><b>4.3.1</b> Reading Data</a></li>
 <li class="chapter" data-level="4.3.2" data-path="chp2.html"><a href="chp2.html#manually-entering-data"><i class="fa fa-check"></i><b>4.3.2</b> Manually Entering Data</a></li>
 <li class="chapter" data-level="4.3.3" data-path="chp2.html"><a href="chp2.html#simple-statistics"><i class="fa fa-check"></i><b>4.3.3</b> Simple Statistics</a></li>
+<li class="chapter" data-level="4.3.4" data-path="chp2.html"><a href="chp2.html#subsetting"><i class="fa fa-check"></i><b>4.3.4</b> Subsetting</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="cph3.html"><a href="cph3.html"><i class="fa fa-check"></i><b>5</b> Bivariate OLS: The Foundation of Econometric Analysis</a><ul>
@@ -177,7 +192,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="chp5.html"><a href="chp5.html"><i class="fa fa-check"></i><b>7</b> Multivariate OLS: Where the Action Is</a><ul>
-<li class="chapter" data-level="7.1" data-path="chp5.html"><a href="chp5.html#computing-corner-1"><i class="fa fa-check"></i><b>7.1</b> Computing Corner</a><ul>
+<li class="chapter" data-level="7.1" data-path="chp4.html"><a href="chp4.html#computing-corner"><i class="fa fa-check"></i><b>7.1</b> Computing Corner</a><ul>
 <li class="chapter" data-level="7.1.1" data-path="chp5.html"><a href="chp5.html#multiple-regression"><i class="fa fa-check"></i><b>7.1.1</b> Multiple Regression</a></li>
 <li class="chapter" data-level="7.1.2" data-path="chp5.html"><a href="chp5.html#multicollinearity"><i class="fa fa-check"></i><b>7.1.2</b> Multicollinearity</a></li>
 <li class="chapter" data-level="7.1.3" data-path="chp5.html"><a href="chp5.html#standardized-coefficients"><i class="fa fa-check"></i><b>7.1.3</b> Standardized Coefficients</a></li>
@@ -276,9 +291,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="16.2.2" data-path="chp14.html"><a href="chp14.html#ols-estimator-is-unbiased"><i class="fa fa-check"></i><b>16.2.2</b> OLS estimator is unbiased</a></li>
 <li class="chapter" data-level="16.2.3" data-path="chp14.html"><a href="chp14.html#variance-covariance-is-a-minimum"><i class="fa fa-check"></i><b>16.2.3</b> Variance-Covariance is a minimum</a></li>
 </ul></li>
-<li class="chapter" data-level="16.3" data-path="chp14.html"><a href="chp14.html#probability-distributions-in-r-1"><i class="fa fa-check"></i><b>16.3</b> Probability Distributions in R</a><ul>
+<li class="chapter" data-level="16.3" data-path="chp4.html"><a href="chp4.html#probability-distributions-in-r"><i class="fa fa-check"></i><b>16.3</b> Probability Distributions in R</a><ul>
 <li class="chapter" data-level="16.3.1" data-path="chp14.html"><a href="chp14.html#obtaining-critical-statistics"><i class="fa fa-check"></i><b>16.3.1</b> Obtaining Critical Statistics</a></li>
-<li class="chapter" data-level="16.3.2" data-path="chp14.html"><a href="chp14.html#generating-random-numbers-1"><i class="fa fa-check"></i><b>16.3.2</b> Generating Random Numbers</a></li>
+<li class="chapter" data-level="16.3.2" data-path="cph3.html"><a href="cph3.html#generating-random-numbers"><i class="fa fa-check"></i><b>16.3.2</b> Generating Random Numbers</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="17" data-path="chp15.html"><a href="chp15.html"><i class="fa fa-check"></i><b>17</b> Advanced Panel Data</a><ul>
@@ -314,26 +329,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="chp9" class="section level1">
 <h1><span class="header-section-number">Chapter 11</span> Instrumental Variables: Using Exogenous Variation to Fight Endogeneity</h1>
 <p>In this chapter we will learn to use R to instrumental variables and two–stage least squares models. We will use the libraries below.</p>
-<div class="sourceCode" id="cb270"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb270-1" title="1"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb270-2" title="2"><span class="kw">library</span>(magrittr)</a>
-<a class="sourceLine" id="cb270-3" title="3"><span class="kw">library</span>(broom)</a></code></pre></div>
+<div class="sourceCode" id="cb279"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb279-1"><a href="chp9.html#cb279-1"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb279-2"><a href="chp9.html#cb279-2"></a><span class="kw">library</span>(magrittr)</span>
+<span id="cb279-3"><a href="chp9.html#cb279-3"></a><span class="kw">library</span>(broom)</span></code></pre></div>
 <div id="stage-least-squares" class="section level2">
 <h2><span class="header-section-number">11.1</span> 2 Stage Least Squares</h2>
-<p>To estimate a 2SLS, use <code>ivreg</code> from the <code>AER</code> package. <code>ivreg</code>, at a minimum, requires a formula that specifies the dependent and independent variables, instruments that identify instrumental variables, and the data. So the form of the call is, for example, <code>ivreg</code>(Y ~ X1 + X2 | Z1 + Z2 + X2, dataframe).<a href="#fn11" class="footnote-ref" id="fnref11"><sup>11</sup></a> Where X1 is the endogenous variable, X2 is exogenous and Z1 and Z2 are instruments for X1.</p>
-<div class="sourceCode" id="cb271"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb271-1" title="1"><span class="kw">library</span>(AER)</a></code></pre></div>
+<p>To estimate a 2SLS, use <code>ivreg</code> from the <code>AER</code> package. <code>ivreg</code>, at a minimum, requires a formula that specifies the dependent and independent variables, instruments that identify instrumental variables, and the data. So the form of the call is, for example, <code>ivreg</code>(Y ~ X1 + X2 | Z1 + Z2 + X2, dataframe).<a href="#fn15" class="footnote-ref" id="fnref15"><sup>15</sup></a> Where X1 is the endogenous variable, X2 is exogenous and Z1 and Z2 are instruments for X1.</p>
+<div class="sourceCode" id="cb280"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb280-1"><a href="chp9.html#cb280-1"></a><span class="kw">library</span>(AER)</span></code></pre></div>
 <p>The classic example of endogeneity in economics is that of a demand equation, that is of quantity demanded as a function of price, <span class="math inline">\(Q=Q(P)\)</span>. There is no reason we can’t write <span class="math inline">\(P=P(Q)\)</span> because a price determines quantity demanded, but we can’t have a quantity without a price. That is, price depends on quantity demanded which depends on price. To solve this problem we need an instrument that is exogenous to the demand equation but related to supply. This variable will induce changes in supply along the demand curve and thus changes in price. Since changes in supply will be correlated (cause) with changes in price, this new variable can serve as an instrument for price.</p>
 <p>Let the demand equation be given by <span class="math display">\[q_d=\beta_0+\beta_1p+u,\]</span> supply by <span class="math display">\[q_s=\alpha_0+\alpha_1p+v,\]</span> and the market clearing equation by <span class="math display">\[q_d=q_s=q\]</span> These are known as the <em>structural equations</em>. Solving for <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> separately gives us the <em>reduced form</em> equations. Using the market clearing equation we know: <span class="math display">\[\beta_0+\beta_1p+u=\alpha_0+\alpha_1p+v\]</span> so, <span class="math display">\[p=\frac{\alpha_0-\beta_0}{\beta_1-\alpha_1}+\frac{v-u}{\beta_1-\alpha_1}=\lambda_0+\epsilon_1\]</span> and <span class="math display">\[q=\frac{\beta_1\alpha_0-\beta_0\alpha_1}{\beta_1-\alpha_1}+\frac{\beta_1v-\alpha_1u}{\beta_1-\alpha_1}=\mu_0+\epsilon_2\]</span></p>
 <p>Notice that we have two estimable equations now. We can obtain OLS estimates for the reduced form parameters as <span class="math inline">\(\hat\lambda_0\)</span> and <span class="math inline">\(\hat\mu_0\)</span> as <span class="math display">\[\hat\lambda_0=\bar p = \frac{\alpha_0-\beta_0}{\beta_1-\alpha_1}\]</span> and <span class="math display">\[\hat\mu_o=\bar q=\frac{\beta_1\alpha_0-\beta_0\alpha_1}{\beta_1-\alpha_1}\]</span> where <span class="math inline">\(\bar p\)</span> and <span class="math inline">\(\bar q\)</span> are the sample means of <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span>.</p>
 <p>What we want, however, are estimates of the structural parameters <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\alpha_0\)</span>, and <span class="math inline">\(\alpha_1\)</span>. We have two equations and four unknowns; we cannot estimate the four parameters from the the two OLS estimates, <span class="math inline">\(\hat\lambda_0\)</span> and <span class="math inline">\(\hat\mu_0\)</span>. That is, we cannot derive unique values for structural parameters from our estimates of the reduced form parameters. This is the essence of what’s known as the identification problem. If we can find a unique solution to the structural parameters from the OLS estimates of the reduced form parameters, then the equation is identified. The parameters of an identified equation are estimable.</p>
 <p>Suppose the supply is now given by <span class="math display">\[q_s=\alpha_0+\alpha_1p+\alpha_2r+v\]</span>
-where <em>r</em> is an exogenous variable. Solving for <em>p</em> and <em>q</em> yields the <em>reduced form</em> equations <span class="math display">\[p=\lambda_0+\lambda_1r+\epsilon_1\]</span> and <span class="math display">\[q=\mu_0+\mu_1r+\epsilon_2\]</span> where <span class="math inline">\(\lambda_0=\frac{\alpha_0-\beta_0}{\beta_1-\alpha_1}\)</span>, <span class="math inline">\(\lambda_1=\frac{\alpha_2}{\beta_1-\alpha_1}\)</span>, <span class="math inline">\(\mu_0=\beta_0+\beta_1\lambda_0\)</span>, and <span class="math inline">\(\mu_1=\beta_1\lambda_1\)</span>. We can solve for unique values of <span class="math inline">\(\hat\beta_0=\hat\mu_0-\frac{\hat\mu_1}{\hat\lambda_1}\hat\lambda_0\)</span> and <span class="math inline">\(\hat\beta_1=\frac{\hat\mu_1}{\hat\lambda_1}\)</span>. So the demand equation is identified. We can not obtain unique parameter estimates for the supply equation, however, so because <span class="math inline">\(\hat\mu_0=\frac{\hat\beta_1\alpha_1-\hat\beta_0\alpha_1}{\hat\beta_1-\alpha_1}\)</span> and <span class="math inline">\(\hat\mu_1=\frac{\hat\beta_1\alpha_2}{\hat\beta_1-\alpha_1}\)</span> are only two equations with three unknowns. If we add an exogenous variable to the demand equation, both equations would be identified.<a href="#fn12" class="footnote-ref" id="fnref12"><sup>12</sup></a></p>
-<p>This method for obtaining parameter estimates is called indirect least squares (ILS). Let’s use the truffles data set from the <code>PoEdata</code> package.<a href="#fn13" class="footnote-ref" id="fnref13"><sup>13</sup></a> Truffles is a data frame with 30 observations on 5 variables. p is the price per ounce of premium truffles in $, q is the quantity of truffles traded in ounces, ps is the price per ounce of choice truffles in $, di is monthly per capita disposable income in $1000 per month, and pf is the hourly rental fee in $ of a truffle pig.</p>
-<div class="sourceCode" id="cb272"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb272-1" title="1"><span class="kw">library</span>(PoEdata)</a>
-<a class="sourceLine" id="cb272-2" title="2"><span class="kw">data</span>(<span class="st">&quot;truffles&quot;</span>)</a></code></pre></div>
+where <em>r</em> is an exogenous variable. Solving for <em>p</em> and <em>q</em> yields the <em>reduced form</em> equations <span class="math display">\[p=\lambda_0+\lambda_1r+\epsilon_1\]</span> and <span class="math display">\[q=\mu_0+\mu_1r+\epsilon_2\]</span> where <span class="math inline">\(\lambda_0=\frac{\alpha_0-\beta_0}{\beta_1-\alpha_1}\)</span>, <span class="math inline">\(\lambda_1=\frac{\alpha_2}{\beta_1-\alpha_1}\)</span>, <span class="math inline">\(\mu_0=\beta_0+\beta_1\lambda_0\)</span>, and <span class="math inline">\(\mu_1=\beta_1\lambda_1\)</span>. We can solve for unique values of <span class="math inline">\(\hat\beta_0=\hat\mu_0-\frac{\hat\mu_1}{\hat\lambda_1}\hat\lambda_0\)</span> and <span class="math inline">\(\hat\beta_1=\frac{\hat\mu_1}{\hat\lambda_1}\)</span>. So the demand equation is identified. We can not obtain unique parameter estimates for the supply equation, however, so because <span class="math inline">\(\hat\mu_0=\frac{\hat\beta_1\alpha_1-\hat\beta_0\alpha_1}{\hat\beta_1-\alpha_1}\)</span> and <span class="math inline">\(\hat\mu_1=\frac{\hat\beta_1\alpha_2}{\hat\beta_1-\alpha_1}\)</span> are only two equations with three unknowns. If we add an exogenous variable to the demand equation, both equations would be identified.<a href="#fn16" class="footnote-ref" id="fnref16"><sup>16</sup></a></p>
+<p>This method for obtaining parameter estimates is called indirect least squares (ILS). Let’s use the truffles data set from the <code>PoEdata</code> package.<a href="#fn17" class="footnote-ref" id="fnref17"><sup>17</sup></a> Truffles is a data frame with 30 observations on 5 variables. p is the price per ounce of premium truffles in $, q is the quantity of truffles traded in ounces, ps is the price per ounce of choice truffles in $, di is monthly per capita disposable income in $1000 per month, and pf is the hourly rental fee in $ of a truffle pig.</p>
+<div class="sourceCode" id="cb281"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb281-1"><a href="chp9.html#cb281-1"></a><span class="kw">library</span>(PoEdata)</span>
+<span id="cb281-2"><a href="chp9.html#cb281-2"></a><span class="kw">data</span>(<span class="st">&quot;truffles&quot;</span>)</span></code></pre></div>
 <p>Let the demand function be <span class="math display">\[q=\beta_0+\beta_1p+u\]</span> and the supply function be <span class="math display">\[q=\alpha_0+\alpha_1p+\alpha_2pf+v\]</span></p>
 <p>Estimate the two reduced form equations as follows:</p>
-<div class="sourceCode" id="cb273"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb273-1" title="1">truffles <span class="op">%$%</span></a>
-<a class="sourceLine" id="cb273-2" title="2"><span class="st">  </span><span class="kw">lm</span>(p <span class="op">~</span><span class="st"> </span>pf)</a></code></pre></div>
+<div class="sourceCode" id="cb282"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb282-1"><a href="chp9.html#cb282-1"></a>truffles <span class="op">%$%</span></span>
+<span id="cb282-2"><a href="chp9.html#cb282-2"></a><span class="st">  </span><span class="kw">lm</span>(p <span class="op">~</span><span class="st"> </span>pf)</span></code></pre></div>
 <pre><code>
 Call:
 lm(formula = p ~ pf)
@@ -341,8 +356,8 @@ lm(formula = p ~ pf)
 Coefficients:
 (Intercept)           pf  
        4.34         2.57  </code></pre>
-<div class="sourceCode" id="cb275"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb275-1" title="1">truffles <span class="op">%$%</span></a>
-<a class="sourceLine" id="cb275-2" title="2"><span class="st">  </span><span class="kw">lm</span>(q <span class="op">~</span><span class="st"> </span>pf)</a></code></pre></div>
+<div class="sourceCode" id="cb284"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb284-1"><a href="chp9.html#cb284-1"></a>truffles <span class="op">%$%</span></span>
+<span id="cb284-2"><a href="chp9.html#cb284-2"></a><span class="st">  </span><span class="kw">lm</span>(q <span class="op">~</span><span class="st"> </span>pf)</span></code></pre></div>
 <pre><code>
 Call:
 lm(formula = q ~ pf)
@@ -352,9 +367,9 @@ Coefficients:
      21.501       -0.134  </code></pre>
 <p>The reduced form parameter estimates are <span class="math inline">\(\hat\lambda_0=3.343\)</span>, <span class="math inline">\(\hat\lambda_1=2.566\)</span>, <span class="math inline">\(\hat\mu_0=21.5006\)</span>, and <span class="math inline">\(\hat\mu_1=-0.1337\)</span>. The structural from parameter estimates for the demand equation are <span class="math inline">\(\hat\beta_1=\frac{-0.1337}{2.566}=-0.0521\)</span> and <span class="math inline">\(\hat\beta_0=21.5006-(-0.0521)*4.343=21.7269\)</span>. So are demand equation is <span class="math inline">\(q_d=21.7269-0.0521p\)</span>.</p>
 <p>Below we see the two stage least square estimates are the same.</p>
-<div class="sourceCode" id="cb277"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb277-1" title="1">truffles <span class="op">%$%</span></a>
-<a class="sourceLine" id="cb277-2" title="2"><span class="st">  </span><span class="kw">ivreg</span>(q <span class="op">~</span><span class="st"> </span>p <span class="op">|</span><span class="st"> </span>pf) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb277-3" title="3"><span class="st">  </span><span class="kw">summary</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb286"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb286-1"><a href="chp9.html#cb286-1"></a>truffles <span class="op">%$%</span></span>
+<span id="cb286-2"><a href="chp9.html#cb286-2"></a><span class="st">  </span><span class="kw">ivreg</span>(q <span class="op">~</span><span class="st"> </span>p <span class="op">|</span><span class="st"> </span>pf) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb286-3"><a href="chp9.html#cb286-3"></a><span class="st">  </span><span class="kw">summary</span>()</span></code></pre></div>
 <pre><code>
 Call:
 ivreg(formula = q ~ p | pf)
@@ -371,15 +386,15 @@ p            -0.0521     0.0718   -0.73     0.47
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
 Residual standard error: 5.29 on 28 degrees of freedom
-Multiple R-Squared: -0.268, Adjusted R-squared: -0.313 
+Multiple R-Squared: -0.268,	Adjusted R-squared: -0.313 
 Wald test: 0.527 on 1 and 28 DF,  p-value: 0.474 </code></pre>
 </div>
 <div id="explanatory-power-of-the-instruments" class="section level2">
 <h2><span class="header-section-number">11.2</span> Explanatory power of the instruments</h2>
 <p>Now, let the demand for premium truffles be a function of the price premium truffles, disposable income, and the price of choice truffles. Let the supply of premium truffles be a function the price of premium truffles and the rental rate of a truffle pig. Suppose we’d like to estimate the demand equation. In this case, <em>pf</em> is the lone instrument for <em>p</em>. Assess the explanatory power of <em>pf</em> as an instrument as follows:</p>
-<div class="sourceCode" id="cb279"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb279-1" title="1">truffles <span class="op">%$%</span></a>
-<a class="sourceLine" id="cb279-2" title="2"><span class="st">  </span><span class="kw">lm</span>(p <span class="op">~</span><span class="st"> </span>pf <span class="op">+</span><span class="st"> </span>di <span class="op">+</span><span class="st"> </span>ps) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb279-3" title="3"><span class="st">  </span><span class="kw">tidy</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb288"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb288-1"><a href="chp9.html#cb288-1"></a>truffles <span class="op">%$%</span></span>
+<span id="cb288-2"><a href="chp9.html#cb288-2"></a><span class="st">  </span><span class="kw">lm</span>(p <span class="op">~</span><span class="st"> </span>pf <span class="op">+</span><span class="st"> </span>di <span class="op">+</span><span class="st"> </span>ps) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb288-3"><a href="chp9.html#cb288-3"></a><span class="st">  </span><span class="kw">tidy</span>()</span></code></pre></div>
 <pre><code># A tibble: 4 x 5
   term        estimate std.error statistic   p.value
   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
@@ -389,22 +404,22 @@ Wald test: 0.527 on 1 and 28 DF,  p-value: 0.474 </code></pre>
 4 ps              1.71     0.351      4.87 0.0000476</code></pre>
 <p>The <em>t</em> statistic exceeds 3, so <em>pf</em> is a good instrument for <em>p</em>.</p>
 <p>Similarly we can estimate the supply of premium truffles as a function of the price of premium truffles and the rental rate of a truffle pig. Using the demand function from above, we now have two instruments for <em>p</em> in the supply equation, <em>ps</em> and <em>di</em>. Since there is only one exogenous variable in the supply equation, the <em>F</em> test for the instruments is simply the <em>F</em> test for overall significance for the regression <span class="math inline">\(pf = \beta_0+\beta_1ps+\beta_2di+\epsilon\)</span>.</p>
-<div class="sourceCode" id="cb281"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb281-1" title="1">truffles <span class="op">%$%</span></a>
-<a class="sourceLine" id="cb281-2" title="2"><span class="st">  </span><span class="kw">lm</span>(pf <span class="op">~</span><span class="st"> </span>ps <span class="op">+</span><span class="st"> </span>di) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb281-3" title="3"><span class="st">  </span><span class="kw">glance</span>()</a></code></pre></div>
-<pre><code># A tibble: 1 x 11
+<div class="sourceCode" id="cb290"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb290-1"><a href="chp9.html#cb290-1"></a>truffles <span class="op">%$%</span></span>
+<span id="cb290-2"><a href="chp9.html#cb290-2"></a><span class="st">  </span><span class="kw">lm</span>(pf <span class="op">~</span><span class="st"> </span>ps <span class="op">+</span><span class="st"> </span>di) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb290-3"><a href="chp9.html#cb290-3"></a><span class="st">  </span><span class="kw">glance</span>()</span></code></pre></div>
+<pre><code># A tibble: 1 x 12
   r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC
-      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1     0.407         0.363  4.25      9.27 8.63e-4     3  -84.4  177.  182.
-# ... with 2 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
+      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1     0.407         0.363  4.25      9.27 8.63e-4     2  -84.4  177.  182.
+# ... with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
 <p>The <em>F</em> statistic is 9.27 which is slightly below the rule of thumb of 10 for multiple instruments.</p>
 </div>
 <div id="estimating-simultaneous-equation-model" class="section level2">
 <h2><span class="header-section-number">11.3</span> Estimating Simultaneous Equation Model</h2>
 <p>We can estimate the model posed above by estimating each equation as follows:</p>
-<div class="sourceCode" id="cb283"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb283-1" title="1">truffles <span class="op">%$%</span></a>
-<a class="sourceLine" id="cb283-2" title="2"><span class="st">  </span><span class="kw">ivreg</span>(q <span class="op">~</span><span class="st"> </span>p <span class="op">+</span><span class="st"> </span>ps <span class="op">+</span><span class="st"> </span>di <span class="op">|</span><span class="st"> </span>p <span class="op">+</span><span class="st"> </span>ps <span class="op">+</span><span class="st"> </span>di <span class="op">+</span><span class="st"> </span>pf) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb283-3" title="3"><span class="st">  </span><span class="kw">summary</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb292"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb292-1"><a href="chp9.html#cb292-1"></a>truffles <span class="op">%$%</span></span>
+<span id="cb292-2"><a href="chp9.html#cb292-2"></a><span class="st">  </span><span class="kw">ivreg</span>(q <span class="op">~</span><span class="st"> </span>p <span class="op">+</span><span class="st"> </span>ps <span class="op">+</span><span class="st"> </span>di <span class="op">|</span><span class="st"> </span>p <span class="op">+</span><span class="st"> </span>ps <span class="op">+</span><span class="st"> </span>di <span class="op">+</span><span class="st"> </span>pf) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb292-3"><a href="chp9.html#cb292-3"></a><span class="st">  </span><span class="kw">summary</span>()</span></code></pre></div>
 <pre><code>
 Call:
 ivreg(formula = q ~ p + ps + di | p + ps + di + pf)
@@ -423,11 +438,11 @@ di            0.0764     1.1909    0.06   0.9493
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
 Residual standard error: 3.46 on 26 degrees of freedom
-Multiple R-Squared: 0.496,  Adjusted R-squared: 0.438 
+Multiple R-Squared: 0.496,	Adjusted R-squared: 0.438 
 Wald test: 8.52 on 3 and 26 DF,  p-value: 0.000416 </code></pre>
-<div class="sourceCode" id="cb285"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb285-1" title="1">truffles <span class="op">%$%</span></a>
-<a class="sourceLine" id="cb285-2" title="2"><span class="st">  </span><span class="kw">ivreg</span>(q <span class="op">~</span><span class="st"> </span>p <span class="op">+</span><span class="st"> </span>pf <span class="op">|</span><span class="st"> </span>p <span class="op">+</span><span class="st"> </span>ps <span class="op">+</span><span class="st"> </span>di <span class="op">+</span><span class="st"> </span>pf) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb285-3" title="3"><span class="st">  </span><span class="kw">summary</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb294"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb294-1"><a href="chp9.html#cb294-1"></a>truffles <span class="op">%$%</span></span>
+<span id="cb294-2"><a href="chp9.html#cb294-2"></a><span class="st">  </span><span class="kw">ivreg</span>(q <span class="op">~</span><span class="st"> </span>p <span class="op">+</span><span class="st"> </span>pf <span class="op">|</span><span class="st"> </span>p <span class="op">+</span><span class="st"> </span>ps <span class="op">+</span><span class="st"> </span>di <span class="op">+</span><span class="st"> </span>pf) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb294-3"><a href="chp9.html#cb294-3"></a><span class="st">  </span><span class="kw">summary</span>()</span></code></pre></div>
 <pre><code>
 Call:
 ivreg(formula = q ~ p + pf | p + ps + di + pf)
@@ -445,17 +460,17 @@ pf           -1.0009     0.0764   -13.1 0.0000000000003235 ***
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
 Residual standard error: 1.5 on 27 degrees of freedom
-Multiple R-Squared: 0.902,  Adjusted R-squared: 0.895 
+Multiple R-Squared: 0.902,	Adjusted R-squared: 0.895 
 Wald test:  124 on 2 and 27 DF,  p-value: 0.0000000000000245 </code></pre>
 
 </div>
 </div>
 <div class="footnotes">
 <hr />
-<ol start="11">
-<li id="fn11"><p>The data argument can be called with the expose operator %$%.<a href="chp9.html#fnref11" class="footnote-back">↩</a></p></li>
-<li id="fn12"><p>The reader can verify that be saying adding the exogenous variable <em>y</em> to the demand equation to yield <span class="math inline">\(q_d=\beta_0+\beta_1p+\beta_2y+u\)</span> and solving for the reduced form equations.<a href="chp9.html#fnref12" class="footnote-back">↩</a></p></li>
-<li id="fn13"><p>Install the <code>PoEdata</code> package as follows: Install the <code>remotes</code> package with <code>install.packages("remotes")</code>. The remotes package allows you to install R packages from remote repositories such as GitHub. Install the <code>PoEdata</code> package by calling <code>remotes::install_github("ccolonescu/PoEdata")</code>. Finally, load the truffles data by calling <code>data("truffles")</code>.<a href="chp9.html#fnref13" class="footnote-back">↩</a></p></li>
+<ol start="15">
+<li id="fn15"><p>The data argument can be called with the expose operator %$%.<a href="chp9.html#fnref15" class="footnote-back">↩︎</a></p></li>
+<li id="fn16"><p>The reader can verify that be saying adding the exogenous variable <em>y</em> to the demand equation to yield <span class="math inline">\(q_d=\beta_0+\beta_1p+\beta_2y+u\)</span> and solving for the reduced form equations.<a href="chp9.html#fnref16" class="footnote-back">↩︎</a></p></li>
+<li id="fn17"><p>Install the <code>PoEdata</code> package as follows: Install the <code>remotes</code> package with <code>install.packages("remotes")</code>. The remotes package allows you to install R packages from remote repositories such as GitHub. Install the <code>PoEdata</code> package by calling <code>remotes::install_github("ccolonescu/PoEdata")</code>. Finally, load the truffles data by calling <code>data("truffles")</code>.<a href="chp9.html#fnref17" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>
@@ -469,11 +484,13 @@ Wald test:  124 on 2 and 27 DF,  p-value: 0.0000000000000245 </code></pre>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -481,12 +498,11 @@ gitbook.start({
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -498,6 +514,10 @@ gitbook.start({
 "text": null
 },
 "history": {
+"link": null,
+"text": null
+},
+"view": {
 "link": null,
 "text": null
 },

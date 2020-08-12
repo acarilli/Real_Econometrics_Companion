@@ -1,30 +1,30 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 7 Multivariate OLS: Where the Action Is | R Companion to Real Econometrics</title>
-  <meta name="description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
-  <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
+  <meta name="description" content="R, RStudio IDE, and the tidyverse companion to Bailey’s Real Econometrics" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 7 Multivariate OLS: Where the Action Is | R Companion to Real Econometrics" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  <meta property="og:description" content="R, RStudio IDE, and the tidyverse companion to Bailey’s Real Econometrics" />
   
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Chapter 7 Multivariate OLS: Where the Action Is | R Companion to Real Econometrics" />
   
-  <meta name="twitter:description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  <meta name="twitter:description" content="R, RStudio IDE, and the tidyverse companion to Bailey’s Real Econometrics" />
   
 
 <meta name="author" content="Tony Carilli" />
 
 
-<meta name="date" content="2019-09-23" />
+<meta name="date" content="2020-08-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -40,6 +40,7 @@
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
 
 
 
@@ -47,12 +48,23 @@
 
 
 
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.15/datatables.js"></script>
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -61,14 +73,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -77,9 +91,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -128,7 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./">R Companion to *Real Econometrics*</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a></li>
 <li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a><ul>
 <li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#install-r-and-rstudio"><i class="fa fa-check"></i><b>2.1</b> Install R and RStudio</a></li>
 <li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#using-rstudio"><i class="fa fa-check"></i><b>2.2</b> Using RStudio</a><ul>
@@ -147,7 +161,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="chp2.html"><a href="chp2.html"><i class="fa fa-check"></i><b>4</b> Stats in the Wild: Good Data Practices</a><ul>
-<li class="chapter" data-level="4.1" data-path="chp2.html"><a href="chp2.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
+<li class="chapter" data-level="4.1" data-path="chp1.html"><a href="chp1.html#introduction"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
 <li class="chapter" data-level="4.2" data-path="chp2.html"><a href="chp2.html#table-and-figure-reproduction"><i class="fa fa-check"></i><b>4.2</b> Table and Figure Reproduction</a><ul>
 <li class="chapter" data-level="4.2.1" data-path="chp2.html"><a href="chp2.html#table-2.1"><i class="fa fa-check"></i><b>4.2.1</b> Table 2.1</a></li>
 <li class="chapter" data-level="4.2.2" data-path="chp2.html"><a href="chp2.html#table-2.2"><i class="fa fa-check"></i><b>4.2.2</b> Table 2.2</a></li>
@@ -158,6 +172,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.3.1" data-path="chp2.html"><a href="chp2.html#reading-data"><i class="fa fa-check"></i><b>4.3.1</b> Reading Data</a></li>
 <li class="chapter" data-level="4.3.2" data-path="chp2.html"><a href="chp2.html#manually-entering-data"><i class="fa fa-check"></i><b>4.3.2</b> Manually Entering Data</a></li>
 <li class="chapter" data-level="4.3.3" data-path="chp2.html"><a href="chp2.html#simple-statistics"><i class="fa fa-check"></i><b>4.3.3</b> Simple Statistics</a></li>
+<li class="chapter" data-level="4.3.4" data-path="chp2.html"><a href="chp2.html#subsetting"><i class="fa fa-check"></i><b>4.3.4</b> Subsetting</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="cph3.html"><a href="cph3.html"><i class="fa fa-check"></i><b>5</b> Bivariate OLS: The Foundation of Econometric Analysis</a><ul>
@@ -177,7 +192,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="chp5.html"><a href="chp5.html"><i class="fa fa-check"></i><b>7</b> Multivariate OLS: Where the Action Is</a><ul>
-<li class="chapter" data-level="7.1" data-path="chp5.html"><a href="chp5.html#computing-corner-1"><i class="fa fa-check"></i><b>7.1</b> Computing Corner</a><ul>
+<li class="chapter" data-level="7.1" data-path="chp4.html"><a href="chp4.html#computing-corner"><i class="fa fa-check"></i><b>7.1</b> Computing Corner</a><ul>
 <li class="chapter" data-level="7.1.1" data-path="chp5.html"><a href="chp5.html#multiple-regression"><i class="fa fa-check"></i><b>7.1.1</b> Multiple Regression</a></li>
 <li class="chapter" data-level="7.1.2" data-path="chp5.html"><a href="chp5.html#multicollinearity"><i class="fa fa-check"></i><b>7.1.2</b> Multicollinearity</a></li>
 <li class="chapter" data-level="7.1.3" data-path="chp5.html"><a href="chp5.html#standardized-coefficients"><i class="fa fa-check"></i><b>7.1.3</b> Standardized Coefficients</a></li>
@@ -276,9 +291,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="16.2.2" data-path="chp14.html"><a href="chp14.html#ols-estimator-is-unbiased"><i class="fa fa-check"></i><b>16.2.2</b> OLS estimator is unbiased</a></li>
 <li class="chapter" data-level="16.2.3" data-path="chp14.html"><a href="chp14.html#variance-covariance-is-a-minimum"><i class="fa fa-check"></i><b>16.2.3</b> Variance-Covariance is a minimum</a></li>
 </ul></li>
-<li class="chapter" data-level="16.3" data-path="chp14.html"><a href="chp14.html#probability-distributions-in-r-1"><i class="fa fa-check"></i><b>16.3</b> Probability Distributions in R</a><ul>
+<li class="chapter" data-level="16.3" data-path="chp4.html"><a href="chp4.html#probability-distributions-in-r"><i class="fa fa-check"></i><b>16.3</b> Probability Distributions in R</a><ul>
 <li class="chapter" data-level="16.3.1" data-path="chp14.html"><a href="chp14.html#obtaining-critical-statistics"><i class="fa fa-check"></i><b>16.3.1</b> Obtaining Critical Statistics</a></li>
-<li class="chapter" data-level="16.3.2" data-path="chp14.html"><a href="chp14.html#generating-random-numbers-1"><i class="fa fa-check"></i><b>16.3.2</b> Generating Random Numbers</a></li>
+<li class="chapter" data-level="16.3.2" data-path="cph3.html"><a href="cph3.html#generating-random-numbers"><i class="fa fa-check"></i><b>16.3.2</b> Generating Random Numbers</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="17" data-path="chp15.html"><a href="chp15.html"><i class="fa fa-check"></i><b>17</b> Advanced Panel Data</a><ul>
@@ -313,14 +328,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="chp5" class="section level1">
 <h1><span class="header-section-number">Chapter 7</span> Multivariate OLS: Where the Action Is</h1>
-<div id="computing-corner-1" class="section level2">
+<div id="computing-corner" class="section level2">
 <h2><span class="header-section-number">7.1</span> Computing Corner</h2>
 <p>Packages needed for this chapter.</p>
-<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb141-1" title="1"><span class="kw">library</span>(magrittr)</a>
-<a class="sourceLine" id="cb141-2" title="2"><span class="kw">library</span>(car)</a>
-<a class="sourceLine" id="cb141-3" title="3"><span class="kw">library</span>(broom)</a>
-<a class="sourceLine" id="cb141-4" title="4"><span class="kw">library</span>(estimatr)</a>
-<a class="sourceLine" id="cb141-5" title="5"><span class="kw">library</span>(lm.beta)</a></code></pre></div>
+<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb150-1"><a href="chp5.html#cb150-1"></a><span class="kw">library</span>(magrittr)</span>
+<span id="cb150-2"><a href="chp5.html#cb150-2"></a><span class="kw">library</span>(car)</span>
+<span id="cb150-3"><a href="chp5.html#cb150-3"></a><span class="kw">library</span>(broom)</span>
+<span id="cb150-4"><a href="chp5.html#cb150-4"></a><span class="kw">library</span>(estimatr)</span>
+<span id="cb150-5"><a href="chp5.html#cb150-5"></a><span class="kw">library</span>(lm.beta)</span></code></pre></div>
 <p>In this chapter you will learn the basics of estimating multivariate OLS models.</p>
 <div id="multiple-regression" class="section level3">
 <h3><span class="header-section-number">7.1.1</span> Multiple Regression</h3>
@@ -375,9 +390,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h4><span class="header-section-number">7.1.5.1</span> Multiple Regression</h4>
 <p>Suppose we want to estimate the mpg as a function of the number of cylinders, the displacement, and the gross horsepower, then our (unrestricted) model is <span class="math display">\[mpg=\beta_0+\beta_1cyl+\beta_2disp+\beta_3hp+\epsilon\]</span>.</p>
 <p>Let’s estimate the unrestricted model using the expose pipe <code>%$%</code> both with and without robust errors.</p>
-<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb142-1" title="1"><span class="co"># estimate model without reobust standard errors</span></a>
-<a class="sourceLine" id="cb142-2" title="2">ols &lt;-<span class="st"> </span>mtcars <span class="op">%$%</span><span class="st"> </span><span class="kw">lm</span>(mpg <span class="op">~</span><span class="st"> </span>cyl <span class="op">+</span><span class="st"> </span>disp <span class="op">+</span><span class="st"> </span>hp)</a>
-<a class="sourceLine" id="cb142-3" title="3">ols <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tidy</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb151-1"><a href="chp5.html#cb151-1"></a><span class="co"># estimate model without reobust standard errors</span></span>
+<span id="cb151-2"><a href="chp5.html#cb151-2"></a>ols &lt;-<span class="st"> </span>mtcars <span class="op">%$%</span><span class="st"> </span><span class="kw">lm</span>(mpg <span class="op">~</span><span class="st"> </span>cyl <span class="op">+</span><span class="st"> </span>disp <span class="op">+</span><span class="st"> </span>hp)</span>
+<span id="cb151-3"><a href="chp5.html#cb151-3"></a>ols <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tidy</span>()</span></code></pre></div>
 <pre><code># A tibble: 4 x 5
   term        estimate std.error statistic  p.value
   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
@@ -385,35 +400,35 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 2 cyl          -1.23      0.797      -1.54 1.35e- 1
 3 disp         -0.0188    0.0104     -1.81 8.09e- 2
 4 hp           -0.0147    0.0147     -1.00 3.25e- 1</code></pre>
-<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb144-1" title="1"><span class="co"># estimate model with robust standard erros</span></a>
-<a class="sourceLine" id="cb144-2" title="2">ols_robust &lt;-<span class="st"> </span>mtcars <span class="op">%$%</span><span class="st"> </span><span class="kw">lm_robust</span>(mpg <span class="op">~</span><span class="st"> </span>cyl <span class="op">+</span><span class="st"> </span>disp <span class="op">+</span><span class="st"> </span>hp)</a>
-<a class="sourceLine" id="cb144-3" title="3">ols_robust <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">tidy</span>()</a></code></pre></div>
-<pre><code>         term estimate std.error statistic           p.value conf.low
-1 (Intercept)  34.1849    2.4700     13.84 0.000000000000048  29.1253
-2         cyl  -1.2274    0.5967     -2.06 0.049121075438813  -2.4498
-3        disp  -0.0188    0.0083     -2.27 0.031138440490781  -0.0358
-4          hp  -0.0147    0.0109     -1.34 0.190818678697032  -0.0371
-  conf.high df outcome
-1  39.24451 28     mpg
-2  -0.00506 28     mpg
-3  -0.00183 28     mpg
-4   0.00775 28     mpg</code></pre>
+<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="chp5.html#cb153-1"></a><span class="co"># estimate model with robust standard erros</span></span>
+<span id="cb153-2"><a href="chp5.html#cb153-2"></a>ols_robust &lt;-<span class="st"> </span>mtcars <span class="op">%$%</span><span class="st"> </span><span class="kw">lm_robust</span>(mpg <span class="op">~</span><span class="st"> </span>cyl <span class="op">+</span><span class="st"> </span>disp <span class="op">+</span><span class="st"> </span>hp)</span>
+<span id="cb153-3"><a href="chp5.html#cb153-3"></a>ols_robust <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">tidy</span>()</span></code></pre></div>
+<pre><code>         term estimate std.error statistic           p.value conf.low conf.high
+1 (Intercept)  34.1849    2.4700     13.84 0.000000000000048  29.1253  39.24451
+2         cyl  -1.2274    0.5967     -2.06 0.049121075438813  -2.4498  -0.00506
+3        disp  -0.0188    0.0083     -2.27 0.031138440490781  -0.0358  -0.00183
+4          hp  -0.0147    0.0109     -1.34 0.190818678697032  -0.0371   0.00775
+  df outcome
+1 28     mpg
+2 28     mpg
+3 28     mpg
+4 28     mpg</code></pre>
 </div>
 <div id="multicollinearity-1" class="section level4">
 <h4><span class="header-section-number">7.1.5.2</span> Multicollinearity</h4>
 <p>Using the model above <span class="math display">\[mpg=\beta_0+\beta_1cyl+\beta_2disp+\beta_3hp+\epsilon\]</span>.</p>
 <p>We can calcualte the VIF’s as follows:</p>
-<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb146-1" title="1">ols <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">vif</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="chp5.html#cb155-1"></a>ols <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">vif</span>()</span></code></pre></div>
 <pre><code> cyl disp   hp 
 6.73 5.52 3.35 </code></pre>
-<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb148-1" title="1">ols_robust <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">vif</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb157-1"><a href="chp5.html#cb157-1"></a>ols_robust <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">vif</span>()</span></code></pre></div>
 <pre><code> cyl disp   hp 
 3.67 2.90 2.71 </code></pre>
 </div>
 <div id="standardize-regression-coefficients" class="section level4">
 <h4><span class="header-section-number">7.1.5.3</span> Standardize Regression Coefficients</h4>
 <p>Using the model <span class="math display">\[mpg=\beta_0+\beta_1cyl+\beta_2disp+\beta_3hp+\epsilon\]</span>, estimate standardized regression coefficients as follows:</p>
-<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb150-1" title="1">ols <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">lm.beta</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb159-1"><a href="chp5.html#cb159-1"></a>ols <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">lm.beta</span>()</span></code></pre></div>
 <pre><code>
 Call:
 lm(formula = mpg ~ cyl + disp + hp)
@@ -426,10 +441,10 @@ Standardized Coefficients::
 <h4><span class="header-section-number">7.1.5.4</span> <em>F</em>-test for Overall significance</h4>
 <p>Suppose we want to estimate the mpg as a function of the number of cylinders, the displacement, and the gross horsepower, then our (unrestricted) model is <span class="math display">\[mpg=\beta_0+\beta_1cyl+\beta_2disp+\beta_3hp+\epsilon\]</span>.</p>
 <p>Let’s estimate the unrestricted model using the expose pipe <code>%$%</code></p>
-<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb152-1" title="1">ols_u &lt;-<span class="st"> </span>mtcars <span class="op">%$%</span><span class="st"> </span><span class="kw">lm</span>(mpg <span class="op">~</span><span class="st"> </span>cyl <span class="op">+</span><span class="st"> </span>disp <span class="op">+</span><span class="st"> </span>hp)</a></code></pre></div>
+<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb161-1"><a href="chp5.html#cb161-1"></a>ols_u &lt;-<span class="st"> </span>mtcars <span class="op">%$%</span><span class="st"> </span><span class="kw">lm</span>(mpg <span class="op">~</span><span class="st"> </span>cyl <span class="op">+</span><span class="st"> </span>disp <span class="op">+</span><span class="st"> </span>hp)</span></code></pre></div>
 <p>The test for overall significance is: <span class="math display">\[H_0:\beta_1=\beta_2=\beta_3=0\]</span> <span class="math display">\[H_1: \text{@ least one }\beta_j\ne0\]</span></p>
 <p>Recall that <em>the</em> <em>F</em>-test is reported as a matter of course in <code>summary</code> from base R and <code>glance</code> from the broom package.</p>
-<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb153-1" title="1">ols_u <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summary</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="chp5.html#cb162-1"></a>ols_u <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summary</span>()</span></code></pre></div>
 <pre><code>
 Call:
 lm(formula = mpg ~ cyl + disp + hp)
@@ -448,14 +463,14 @@ hp           -0.0147     0.0147   -1.00            0.325
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
 Residual standard error: 3.06 on 28 degrees of freedom
-Multiple R-squared:  0.768, Adjusted R-squared:  0.743 
+Multiple R-squared:  0.768,	Adjusted R-squared:  0.743 
 F-statistic: 30.9 on 3 and 28 DF,  p-value: 0.00000000505</code></pre>
-<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb155-1" title="1">ols_u <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">glance</span>()</a></code></pre></div>
-<pre><code># A tibble: 1 x 11
+<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb164-1"><a href="chp5.html#cb164-1"></a>ols_u <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">glance</span>()</span></code></pre></div>
+<pre><code># A tibble: 1 x 12
   r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC
-      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1     0.768         0.743  3.06      30.9 5.05e-9     4  -79.0  168.  175.
-# ... with 2 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
+      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1     0.768         0.743  3.06      30.9 5.05e-9     3  -79.0  168.  175.
+# ... with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
 <p>So we see that <span class="math inline">\(F=30.877\)</span>, <span class="math inline">\(q=3\)</span>, and <span class="math inline">\(df2=28\)</span>. The critical <em>F</em> with <span class="math inline">\(\alpha=.05\)</span> is <span class="math inline">\(2.947\)</span>. Since the calculated <em>F</em>-stat is greater than the critical <em>F</em>-stat, we reject <span class="math inline">\(H_0\)</span> in favor of <span class="math inline">\(H_1\)</span>. That is, the explanatory power of the model is statistical significant.</p>
 </div>
 <div id="f-test-of-joint-significance" class="section level4">
@@ -465,36 +480,36 @@ F-statistic: 30.9 on 3 and 28 DF,  p-value: 0.00000000505</code></pre>
 </div>
 <div id="perform-the-test-manually" class="section level4">
 <h4><span class="header-section-number">7.1.5.6</span> Perform the test “manually”</h4>
-<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb157-1" title="1"><span class="co"># estimate the unrestricted model</span></a>
-<a class="sourceLine" id="cb157-2" title="2">ols_u &lt;-<span class="st"> </span>mtcars <span class="op">%$%</span><span class="st"> </span><span class="kw">lm</span>(mpg <span class="op">~</span><span class="st"> </span>cyl <span class="op">+</span><span class="st"> </span>disp <span class="op">+</span><span class="st"> </span>disp <span class="op">+</span><span class="st"> </span>hp <span class="op">+</span><span class="st"> </span>wt <span class="op">+</span><span class="st"> </span>gear <span class="op">+</span><span class="st"> </span>carb)</a>
-<a class="sourceLine" id="cb157-3" title="3"><span class="co"># generate the residual sum of squares</span></a>
-<a class="sourceLine" id="cb157-4" title="4">rss_u &lt;-<span class="st"> </span>ols_u<span class="op">$</span>residuals<span class="op">^</span><span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb157-5" title="5"><span class="st">  </span><span class="kw">sum</span>()</a>
-<a class="sourceLine" id="cb157-6" title="6"><span class="co"># retrive the degrees of freedom for the unrestricted model</span></a>
-<a class="sourceLine" id="cb157-7" title="7">df_u &lt;-<span class="st"> </span>ols_u<span class="op">$</span>df.residual</a>
-<a class="sourceLine" id="cb157-8" title="8"><span class="co"># estimate the restricted model</span></a>
-<a class="sourceLine" id="cb157-9" title="9">ols_r &lt;-<span class="st"> </span>mtcars <span class="op">%$%</span><span class="st"> </span><span class="kw">lm</span>(mpg <span class="op">~</span><span class="st"> </span>cyl <span class="op">+</span><span class="st"> </span>disp <span class="op">+</span><span class="st"> </span>disp <span class="op">+</span><span class="st"> </span>hp)</a>
-<a class="sourceLine" id="cb157-10" title="10"><span class="co"># generate the residual sum of squares</span></a>
-<a class="sourceLine" id="cb157-11" title="11">rss_r &lt;-<span class="st"> </span>ols_r<span class="op">$</span>residuals<span class="op">^</span><span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb157-12" title="12"><span class="st">  </span><span class="kw">sum</span>()</a>
-<a class="sourceLine" id="cb157-13" title="13"><span class="co"># retrive the degrees of freedom for the restricted model</span></a>
-<a class="sourceLine" id="cb157-14" title="14">df_r &lt;-<span class="st"> </span>ols_r<span class="op">$</span>df.residual</a>
-<a class="sourceLine" id="cb157-15" title="15"><span class="co"># calculate the number of restrictions</span></a>
-<a class="sourceLine" id="cb157-16" title="16">q &lt;-<span class="st"> </span>df_r <span class="op">-</span><span class="st"> </span>df_u</a>
-<a class="sourceLine" id="cb157-17" title="17"><span class="co"># calculate F</span></a>
-<a class="sourceLine" id="cb157-18" title="18">(F_stat &lt;-<span class="st"> </span>((rss_r<span class="op">-</span>rss_u)<span class="op">/</span>q)<span class="op">/</span>(rss_u<span class="op">/</span>df_u)) <span class="co"># () around the call prints the result to the screen</span></a></code></pre></div>
+<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb166-1"><a href="chp5.html#cb166-1"></a><span class="co"># estimate the unrestricted model</span></span>
+<span id="cb166-2"><a href="chp5.html#cb166-2"></a>ols_u &lt;-<span class="st"> </span>mtcars <span class="op">%$%</span><span class="st"> </span><span class="kw">lm</span>(mpg <span class="op">~</span><span class="st"> </span>cyl <span class="op">+</span><span class="st"> </span>disp <span class="op">+</span><span class="st"> </span>disp <span class="op">+</span><span class="st"> </span>hp <span class="op">+</span><span class="st"> </span>wt <span class="op">+</span><span class="st"> </span>gear <span class="op">+</span><span class="st"> </span>carb)</span>
+<span id="cb166-3"><a href="chp5.html#cb166-3"></a><span class="co"># generate the residual sum of squares</span></span>
+<span id="cb166-4"><a href="chp5.html#cb166-4"></a>rss_u &lt;-<span class="st"> </span>ols_u<span class="op">$</span>residuals<span class="op">^</span><span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb166-5"><a href="chp5.html#cb166-5"></a><span class="st">  </span><span class="kw">sum</span>()</span>
+<span id="cb166-6"><a href="chp5.html#cb166-6"></a><span class="co"># retrive the degrees of freedom for the unrestricted model</span></span>
+<span id="cb166-7"><a href="chp5.html#cb166-7"></a>df_u &lt;-<span class="st"> </span>ols_u<span class="op">$</span>df.residual</span>
+<span id="cb166-8"><a href="chp5.html#cb166-8"></a><span class="co"># estimate the restricted model</span></span>
+<span id="cb166-9"><a href="chp5.html#cb166-9"></a>ols_r &lt;-<span class="st"> </span>mtcars <span class="op">%$%</span><span class="st"> </span><span class="kw">lm</span>(mpg <span class="op">~</span><span class="st"> </span>cyl <span class="op">+</span><span class="st"> </span>disp <span class="op">+</span><span class="st"> </span>disp <span class="op">+</span><span class="st"> </span>hp)</span>
+<span id="cb166-10"><a href="chp5.html#cb166-10"></a><span class="co"># generate the residual sum of squares</span></span>
+<span id="cb166-11"><a href="chp5.html#cb166-11"></a>rss_r &lt;-<span class="st"> </span>ols_r<span class="op">$</span>residuals<span class="op">^</span><span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb166-12"><a href="chp5.html#cb166-12"></a><span class="st">  </span><span class="kw">sum</span>()</span>
+<span id="cb166-13"><a href="chp5.html#cb166-13"></a><span class="co"># retrive the degrees of freedom for the restricted model</span></span>
+<span id="cb166-14"><a href="chp5.html#cb166-14"></a>df_r &lt;-<span class="st"> </span>ols_r<span class="op">$</span>df.residual</span>
+<span id="cb166-15"><a href="chp5.html#cb166-15"></a><span class="co"># calculate the number of restrictions</span></span>
+<span id="cb166-16"><a href="chp5.html#cb166-16"></a>q &lt;-<span class="st"> </span>df_r <span class="op">-</span><span class="st"> </span>df_u</span>
+<span id="cb166-17"><a href="chp5.html#cb166-17"></a><span class="co"># calculate F</span></span>
+<span id="cb166-18"><a href="chp5.html#cb166-18"></a>(F_stat &lt;-<span class="st"> </span>((rss_r<span class="op">-</span>rss_u)<span class="op">/</span>q)<span class="op">/</span>(rss_u<span class="op">/</span>df_u)) <span class="co"># () around the call prints the result to the screen</span></span></code></pre></div>
 <pre><code>[1] 4.8</code></pre>
-<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb159-1" title="1"><span class="co"># retrieve the critical F</span></a>
-<a class="sourceLine" id="cb159-2" title="2">(F_crit &lt;-<span class="st"> </span><span class="kw">qf</span>(.<span class="dv">95</span>, q, df_u))</a></code></pre></div>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="chp5.html#cb168-1"></a><span class="co"># retrieve the critical F</span></span>
+<span id="cb168-2"><a href="chp5.html#cb168-2"></a>(F_crit &lt;-<span class="st"> </span><span class="kw">qf</span>(.<span class="dv">95</span>, q, df_u))</span></code></pre></div>
 <pre><code>[1] 2.99</code></pre>
-<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb161-1" title="1"><span class="co"># p-value </span></a>
-<a class="sourceLine" id="cb161-2" title="2">(F_stat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pf</span>(q, df_u, <span class="dt">lower.tail =</span> F))</a></code></pre></div>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="chp5.html#cb170-1"></a><span class="co"># p-value </span></span>
+<span id="cb170-2"><a href="chp5.html#cb170-2"></a>(F_stat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pf</span>(q, df_u, <span class="dt">lower.tail =</span> F))</span></code></pre></div>
 <pre><code>[1] 0.00897</code></pre>
 <p>Since 4.796 is greater than 2.991 we can reject <span class="math inline">\(H_0\)</span> in favor of <span class="math inline">\(H_1\)</span> and conclude that wt, am, and carb add signficant explanatory power to the model. We can also see that the p-vallue for our calculated <em>F</em>-statistic is 0.009. Since this is less than <span class="math inline">\(\alpha=.05\)</span> we reject <span class="math inline">\(H_0\)</span>.</p>
 </div>
 <div id="perform-the-test-with-linearhypothesis" class="section level4">
 <h4><span class="header-section-number">7.1.5.7</span> Perform the test with <code>linearHypothesis</code></h4>
-<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb163-1" title="1"><span class="kw">linearHypothesis</span>(ols_u, <span class="kw">c</span>(<span class="st">&quot;wt&quot;</span>, <span class="st">&quot;gear&quot;</span>, <span class="st">&quot;carb&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="chp5.html#cb172-1"></a><span class="kw">linearHypothesis</span>(ols_u, <span class="kw">c</span>(<span class="st">&quot;wt&quot;</span>, <span class="st">&quot;gear&quot;</span>, <span class="st">&quot;carb&quot;</span>))</span></code></pre></div>
 <pre><code>Linear hypothesis test
 
 Hypothesis:
@@ -518,37 +533,37 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <div id="perform-the-test-manually-1" class="section level5">
 <h5><span class="header-section-number">7.1.5.8.1</span> Perform the Test “Manually”</h5>
 <p>Form the restricted model under <span class="math inline">\(H_0\)</span>. If <span class="math inline">\(H_0\)</span> holds, <span class="math inline">\(\beta_2=-1-\beta_1\)</span>. Substituting into the unrestricted model yields the restricted model: <span class="math display">\[\text{R: }\ln(mpg)+\ln(wt)=\beta_0+\beta_1(\ln(cyl)-\ln(wt))+\eta\]</span></p>
-<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb165-1" title="1"><span class="co"># estimate the unrestricted model</span></a>
-<a class="sourceLine" id="cb165-2" title="2">ols_u &lt;-<span class="st"> </span>mtcars <span class="op">%$%</span><span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(mpg) <span class="op">~</span><span class="st"> </span><span class="kw">log</span>(cyl) <span class="op">+</span><span class="st"> </span><span class="kw">log</span>(wt))</a>
-<a class="sourceLine" id="cb165-3" title="3"><span class="co"># generate the residual sum of squares</span></a>
-<a class="sourceLine" id="cb165-4" title="4">rss_u &lt;-<span class="st"> </span>ols_u<span class="op">$</span>residuals<span class="op">^</span><span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb165-5" title="5"><span class="st">  </span><span class="kw">sum</span>()</a>
-<a class="sourceLine" id="cb165-6" title="6"><span class="co"># retrive the degrees of freedom for the unrestricted model</span></a>
-<a class="sourceLine" id="cb165-7" title="7">df_u &lt;-<span class="st"> </span>ols_u<span class="op">$</span>df.residual</a>
-<a class="sourceLine" id="cb165-8" title="8"><span class="co"># estimate the restricted model</span></a>
-<a class="sourceLine" id="cb165-9" title="9">ols_r &lt;-<span class="st"> </span>mtcars <span class="op">%$%</span><span class="st"> </span><span class="kw">lm</span>(<span class="kw">I</span>(<span class="kw">log</span>(mpg)<span class="op">+</span><span class="kw">log</span>(wt)) <span class="op">~</span><span class="st"> </span><span class="kw">I</span>(<span class="kw">log</span>(cyl) <span class="op">-</span><span class="st"> </span><span class="kw">log</span>(wt)))</a>
-<a class="sourceLine" id="cb165-10" title="10"><span class="co"># generate the residual sum of squares</span></a>
-<a class="sourceLine" id="cb165-11" title="11">rss_r &lt;-<span class="st"> </span>ols_r<span class="op">$</span>residuals<span class="op">^</span><span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb165-12" title="12"><span class="st">  </span><span class="kw">sum</span>()</a>
-<a class="sourceLine" id="cb165-13" title="13"><span class="co"># retrive the degrees of freedom for the restricted model</span></a>
-<a class="sourceLine" id="cb165-14" title="14">df_r &lt;-<span class="st"> </span>ols_r<span class="op">$</span>df.residual</a>
-<a class="sourceLine" id="cb165-15" title="15"><span class="co"># calculate the number of restrictions</span></a>
-<a class="sourceLine" id="cb165-16" title="16">q &lt;-<span class="st"> </span>df_r <span class="op">-</span><span class="st"> </span>df_u</a>
-<a class="sourceLine" id="cb165-17" title="17"><span class="co"># calculate F</span></a>
-<a class="sourceLine" id="cb165-18" title="18">(F_stat &lt;-<span class="st"> </span>((rss_r<span class="op">-</span>rss_u)<span class="op">/</span>q)<span class="op">/</span>(rss_u<span class="op">/</span>df_u)) <span class="co"># () around the call prints the result to the screen</span></a></code></pre></div>
+<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="chp5.html#cb174-1"></a><span class="co"># estimate the unrestricted model</span></span>
+<span id="cb174-2"><a href="chp5.html#cb174-2"></a>ols_u &lt;-<span class="st"> </span>mtcars <span class="op">%$%</span><span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(mpg) <span class="op">~</span><span class="st"> </span><span class="kw">log</span>(cyl) <span class="op">+</span><span class="st"> </span><span class="kw">log</span>(wt))</span>
+<span id="cb174-3"><a href="chp5.html#cb174-3"></a><span class="co"># generate the residual sum of squares</span></span>
+<span id="cb174-4"><a href="chp5.html#cb174-4"></a>rss_u &lt;-<span class="st"> </span>ols_u<span class="op">$</span>residuals<span class="op">^</span><span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb174-5"><a href="chp5.html#cb174-5"></a><span class="st">  </span><span class="kw">sum</span>()</span>
+<span id="cb174-6"><a href="chp5.html#cb174-6"></a><span class="co"># retrive the degrees of freedom for the unrestricted model</span></span>
+<span id="cb174-7"><a href="chp5.html#cb174-7"></a>df_u &lt;-<span class="st"> </span>ols_u<span class="op">$</span>df.residual</span>
+<span id="cb174-8"><a href="chp5.html#cb174-8"></a><span class="co"># estimate the restricted model</span></span>
+<span id="cb174-9"><a href="chp5.html#cb174-9"></a>ols_r &lt;-<span class="st"> </span>mtcars <span class="op">%$%</span><span class="st"> </span><span class="kw">lm</span>(<span class="kw">I</span>(<span class="kw">log</span>(mpg)<span class="op">+</span><span class="kw">log</span>(wt)) <span class="op">~</span><span class="st"> </span><span class="kw">I</span>(<span class="kw">log</span>(cyl) <span class="op">-</span><span class="st"> </span><span class="kw">log</span>(wt)))</span>
+<span id="cb174-10"><a href="chp5.html#cb174-10"></a><span class="co"># generate the residual sum of squares</span></span>
+<span id="cb174-11"><a href="chp5.html#cb174-11"></a>rss_r &lt;-<span class="st"> </span>ols_r<span class="op">$</span>residuals<span class="op">^</span><span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb174-12"><a href="chp5.html#cb174-12"></a><span class="st">  </span><span class="kw">sum</span>()</span>
+<span id="cb174-13"><a href="chp5.html#cb174-13"></a><span class="co"># retrive the degrees of freedom for the restricted model</span></span>
+<span id="cb174-14"><a href="chp5.html#cb174-14"></a>df_r &lt;-<span class="st"> </span>ols_r<span class="op">$</span>df.residual</span>
+<span id="cb174-15"><a href="chp5.html#cb174-15"></a><span class="co"># calculate the number of restrictions</span></span>
+<span id="cb174-16"><a href="chp5.html#cb174-16"></a>q &lt;-<span class="st"> </span>df_r <span class="op">-</span><span class="st"> </span>df_u</span>
+<span id="cb174-17"><a href="chp5.html#cb174-17"></a><span class="co"># calculate F</span></span>
+<span id="cb174-18"><a href="chp5.html#cb174-18"></a>(F_stat &lt;-<span class="st"> </span>((rss_r<span class="op">-</span>rss_u)<span class="op">/</span>q)<span class="op">/</span>(rss_u<span class="op">/</span>df_u)) <span class="co"># () around the call prints the result to the screen</span></span></code></pre></div>
 <pre><code>[1] 1.29</code></pre>
-<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb167-1" title="1"><span class="co"># retrieve the critical F</span></a>
-<a class="sourceLine" id="cb167-2" title="2">(F_crit &lt;-<span class="st"> </span><span class="kw">qf</span>(.<span class="dv">95</span>, q, df_u))</a></code></pre></div>
+<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="chp5.html#cb176-1"></a><span class="co"># retrieve the critical F</span></span>
+<span id="cb176-2"><a href="chp5.html#cb176-2"></a>(F_crit &lt;-<span class="st"> </span><span class="kw">qf</span>(.<span class="dv">95</span>, q, df_u))</span></code></pre></div>
 <pre><code>[1] 4.18</code></pre>
-<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb169-1" title="1"><span class="co"># p-value </span></a>
-<a class="sourceLine" id="cb169-2" title="2">(F_stat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pf</span>(q, df_u, <span class="dt">lower.tail =</span> F))</a></code></pre></div>
+<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="chp5.html#cb178-1"></a><span class="co"># p-value </span></span>
+<span id="cb178-2"><a href="chp5.html#cb178-2"></a>(F_stat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pf</span>(q, df_u, <span class="dt">lower.tail =</span> F))</span></code></pre></div>
 <pre><code>[1] 0.266</code></pre>
 <p>Since 1.289 is less than 4.183 we can failt to reject <span class="math inline">\(H_0\)</span> and conclude that we have no evidence to suggest that <span class="math inline">\(\beta_1+\beta_2\ne1\)</span>. We can also see that the p-vallue for our calculated <em>F</em>-statistic is 0.266. Since this is greater than <span class="math inline">\(\alpha=.05\)</span> we fail to reject <span class="math inline">\(H_0\)</span>.</p>
 </div>
 </div>
 <div id="perform-the-test-with-linearhypothesis-1" class="section level4">
 <h4><span class="header-section-number">7.1.5.9</span> Perform the test with <code>linearHypothesis</code></h4>
-<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb171-1" title="1">ols_u <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">linearHypothesis</span>(<span class="kw">c</span>(<span class="st">&quot;log(cyl) + log(wt) = -1&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="chp5.html#cb180-1"></a>ols_u <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">linearHypothesis</span>(<span class="kw">c</span>(<span class="st">&quot;log(cyl) + log(wt) = -1&quot;</span>))</span></code></pre></div>
 <pre><code>Linear hypothesis test
 
 Hypothesis:
@@ -576,11 +591,13 @@ Model 2: log(mpg) ~ log(cyl) + log(wt)
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -588,12 +605,11 @@ gitbook.start({
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -605,6 +621,10 @@ gitbook.start({
 "text": null
 },
 "history": {
+"link": null,
+"text": null
+},
+"view": {
 "link": null,
 "text": null
 },

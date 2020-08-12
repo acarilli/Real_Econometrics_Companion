@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 3 The Quest for Causality | R Companion to Real Econometrics</title>
   <meta name="description" content="R, RStudio IDE, and the tidyverse companion to Bailey’s Real Econometrics" />
-  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 3 The Quest for Causality | R Companion to Real Econometrics" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Tony Carilli" />
 
 
-<meta name="date" content="2020-08-07" />
+<meta name="date" content="2020-08-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,9 +50,10 @@
 
 
 
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 <script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.13/datatables.js"></script>
+<script src="libs/datatables-binding-0.15/datatables.js"></script>
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
@@ -160,7 +161,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="chp2.html"><a href="chp2.html"><i class="fa fa-check"></i><b>4</b> Stats in the Wild: Good Data Practices</a><ul>
-<li class="chapter" data-level="4.1" data-path="chp2.html"><a href="chp2.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
+<li class="chapter" data-level="4.1" data-path="chp1.html"><a href="chp1.html#introduction"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
 <li class="chapter" data-level="4.2" data-path="chp2.html"><a href="chp2.html#table-and-figure-reproduction"><i class="fa fa-check"></i><b>4.2</b> Table and Figure Reproduction</a><ul>
 <li class="chapter" data-level="4.2.1" data-path="chp2.html"><a href="chp2.html#table-2.1"><i class="fa fa-check"></i><b>4.2.1</b> Table 2.1</a></li>
 <li class="chapter" data-level="4.2.2" data-path="chp2.html"><a href="chp2.html#table-2.2"><i class="fa fa-check"></i><b>4.2.2</b> Table 2.2</a></li>
@@ -171,6 +172,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.3.1" data-path="chp2.html"><a href="chp2.html#reading-data"><i class="fa fa-check"></i><b>4.3.1</b> Reading Data</a></li>
 <li class="chapter" data-level="4.3.2" data-path="chp2.html"><a href="chp2.html#manually-entering-data"><i class="fa fa-check"></i><b>4.3.2</b> Manually Entering Data</a></li>
 <li class="chapter" data-level="4.3.3" data-path="chp2.html"><a href="chp2.html#simple-statistics"><i class="fa fa-check"></i><b>4.3.3</b> Simple Statistics</a></li>
+<li class="chapter" data-level="4.3.4" data-path="chp2.html"><a href="chp2.html#subsetting"><i class="fa fa-check"></i><b>4.3.4</b> Subsetting</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="cph3.html"><a href="cph3.html"><i class="fa fa-check"></i><b>5</b> Bivariate OLS: The Foundation of Econometric Analysis</a><ul>
@@ -190,7 +192,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="chp5.html"><a href="chp5.html"><i class="fa fa-check"></i><b>7</b> Multivariate OLS: Where the Action Is</a><ul>
-<li class="chapter" data-level="7.1" data-path="chp5.html"><a href="chp5.html#computing-corner-1"><i class="fa fa-check"></i><b>7.1</b> Computing Corner</a><ul>
+<li class="chapter" data-level="7.1" data-path="chp4.html"><a href="chp4.html#computing-corner"><i class="fa fa-check"></i><b>7.1</b> Computing Corner</a><ul>
 <li class="chapter" data-level="7.1.1" data-path="chp5.html"><a href="chp5.html#multiple-regression"><i class="fa fa-check"></i><b>7.1.1</b> Multiple Regression</a></li>
 <li class="chapter" data-level="7.1.2" data-path="chp5.html"><a href="chp5.html#multicollinearity"><i class="fa fa-check"></i><b>7.1.2</b> Multicollinearity</a></li>
 <li class="chapter" data-level="7.1.3" data-path="chp5.html"><a href="chp5.html#standardized-coefficients"><i class="fa fa-check"></i><b>7.1.3</b> Standardized Coefficients</a></li>
@@ -289,9 +291,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="16.2.2" data-path="chp14.html"><a href="chp14.html#ols-estimator-is-unbiased"><i class="fa fa-check"></i><b>16.2.2</b> OLS estimator is unbiased</a></li>
 <li class="chapter" data-level="16.2.3" data-path="chp14.html"><a href="chp14.html#variance-covariance-is-a-minimum"><i class="fa fa-check"></i><b>16.2.3</b> Variance-Covariance is a minimum</a></li>
 </ul></li>
-<li class="chapter" data-level="16.3" data-path="chp14.html"><a href="chp14.html#probability-distributions-in-r-1"><i class="fa fa-check"></i><b>16.3</b> Probability Distributions in R</a><ul>
+<li class="chapter" data-level="16.3" data-path="chp4.html"><a href="chp4.html#probability-distributions-in-r"><i class="fa fa-check"></i><b>16.3</b> Probability Distributions in R</a><ul>
 <li class="chapter" data-level="16.3.1" data-path="chp14.html"><a href="chp14.html#obtaining-critical-statistics"><i class="fa fa-check"></i><b>16.3.1</b> Obtaining Critical Statistics</a></li>
-<li class="chapter" data-level="16.3.2" data-path="chp14.html"><a href="chp14.html#generating-random-numbers-1"><i class="fa fa-check"></i><b>16.3.2</b> Generating Random Numbers</a></li>
+<li class="chapter" data-level="16.3.2" data-path="cph3.html"><a href="cph3.html#generating-random-numbers"><i class="fa fa-check"></i><b>16.3.2</b> Generating Random Numbers</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="17" data-path="chp15.html"><a href="chp15.html"><i class="fa fa-check"></i><b>17</b> Advanced Panel Data</a><ul>
@@ -355,10 +357,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-5"><a href="chp1.html#cb2-5"></a><span class="kw">save</span>(donuts, <span class="dt">file =</span> <span class="st">&quot;donuts.RData&quot;</span>)</span>
 <span id="cb2-6"><a href="chp1.html#cb2-6"></a><span class="co"># save the data frame as R Data</span></span></code></pre></div>
 <p>A tibble is an update to the traditional data frame. For most of what we will do, it will act the same as a data frame. The two main differences in data frames and tibbles are printing and subsetting. For more on tibbles type <code>vignette("tibble")</code> in the console.</p>
-<p>The <code>tidyverse</code> is an opinionated collection of R packages that share an underlying philosophy, grammar, and data structures.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>(<a href="https://www.tidyverse.org/" class="uri">https://www.tidyverse.org/</a>).</p>
+<p>The <code>tidyverse</code> is an opinionated collection of R packages that share an underlying philosophy, grammar, and data structures.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>(<a href="https://www.tidyverse.org/" class="uri">https://www.tidyverse.org/</a>).</p>
 <div id="packages" class="section level4">
 <h4><span class="header-section-number">3.1.1.1</span> Packages</h4>
-<p>An R package is shareable bundle of code, data, documentation, tests, etc. To use a package, it must first be installed and then be loaded. To install a package, call <code>install.packages("package_name")</code><a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>. To make use of a package, load it by calling <code>library(packagename)</code><a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>. Currently there are more than 16,000 packages available, to see the packages visit <a href="https://cran.r-project.org/web/packages/">Contributed Packages</a>. <a href="https://cran.r-project.org/web/views/">CRAN Task Views</a> shows relevant packages by task. You may want to visit <a href="https://cran.r-project.org/web/views/Econometrics.html">CRAN Task View: Econometrics</a> to see the extensive array of packages for use in econometrics.</p>
+<p>An R package is shareable bundle of code, data, documentation, tests, etc. To use a package, it must first be installed and then be loaded. To install a package, call <code>install.packages("package_name")</code><a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>. To make use of a package, load it by calling <code>library(packagename)</code><a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>. Currently there are more than 16,000 packages available, to see the packages visit <a href="https://cran.r-project.org/web/packages/">Contributed Packages</a>. <a href="https://cran.r-project.org/web/views/">CRAN Task Views</a> shows relevant packages by task. You may want to visit <a href="https://cran.r-project.org/web/views/Econometrics.html">CRAN Task View: Econometrics</a> to see the extensive array of packages for use in econometrics.</p>
 <p>The <code>tidyverse</code> package is a collection of packages that share an underlying design philosophy, grammar, and data structures. For more on the tidyverse follow this <a href="https://www.tidyverse.org">link</a>. The <code>dplyr</code> package loaded below is a grammar of data manipulation that can be used to solve most data manipulation problems.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="chp1.html#cb3-1"></a><span class="co"># Print the tibble to the console by typing its name.</span></span>
 <span id="cb3-2"><a href="chp1.html#cb3-2"></a>donuts</span></code></pre></div>
@@ -491,8 +493,8 @@ $ weight             &lt;dbl&gt; 275, 141, 70, 75, 310, 80, 160, 263, 205, 185, 
 <p>Or we can create an interactive table with the <code>DT</code> package.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="chp1.html#cb9-1"></a>donuts <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb9-2"><a href="chp1.html#cb9-2"></a><span class="st">  </span>DT<span class="op">::</span><span class="kw">datatable</span>(<span class="dt">caption =</span> <span class="st">&#39;Table 1.1 Donut Consumption and Weight&#39;</span>)</span></code></pre></div>
-<div id="htmlwidget-69f57299077b25242a45" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-69f57299077b25242a45">{"x":{"filter":"none","caption":"<caption>Table 1.1 Donut Consumption and Weight<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13"],[1,2,3,4,5,6,7,8,9,10,11,12,13],["Homer","Marge","Lisa","Bart","Comic Book Guy","Mr. Burns","Smithers","Chief Wiggum","Principle Skinner","Rev. Lovejoy","Ned Flanders","Patty","Selma"],[14,0,0,5,20,0.75,0.25,16,3,2,0.8,5,4],[275,141,70,75,310,80,160,263,205,185,170,155,145]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>observation_number<\/th>\n      <th>name<\/th>\n      <th>donuts_per_week<\/th>\n      <th>weight<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-fc5e2ca0dc64ff3b85da" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-fc5e2ca0dc64ff3b85da">{"x":{"filter":"none","caption":"<caption>Table 1.1 Donut Consumption and Weight<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13"],[1,2,3,4,5,6,7,8,9,10,11,12,13],["Homer","Marge","Lisa","Bart","Comic Book Guy","Mr. Burns","Smithers","Chief Wiggum","Principle Skinner","Rev. Lovejoy","Ned Flanders","Patty","Selma"],[14,0,0,5,20,0.75,0.25,16,3,2,0.8,5,4],[275,141,70,75,310,80,160,263,205,185,170,155,145]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>observation_number<\/th>\n      <th>name<\/th>\n      <th>donuts_per_week<\/th>\n      <th>weight<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <div id="figure-1.2" class="section level3">
@@ -619,10 +621,10 @@ The names are not in aesthetically pleasing positions. The <code>ggrepel</code> 
 </div>
 <div class="footnotes">
 <hr />
-<ol start="1">
-<li id="fn1"><p>Tidyverse<a href="chp1.html#fnref1" class="footnote-back">↩︎</a></p></li>
-<li id="fn2"><p>You need install a package only once<a href="chp1.html#fnref2" class="footnote-back">↩︎</a></p></li>
-<li id="fn3"><p>You must load the package during each R session to make use of it.<a href="chp1.html#fnref3" class="footnote-back">↩︎</a></p></li>
+<ol start="2">
+<li id="fn2"><p>Tidyverse<a href="chp1.html#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>You need install a package only once<a href="chp1.html#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p>You must load the package during each R session to make use of it.<a href="chp1.html#fnref4" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>

@@ -1,30 +1,30 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 15 Time Series: Dealing with Stickiness over Time | R Companion to Real Econometrics</title>
-  <meta name="description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
-  <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
+  <meta name="description" content="R, RStudio IDE, and the tidyverse companion to Bailey’s Real Econometrics" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 15 Time Series: Dealing with Stickiness over Time | R Companion to Real Econometrics" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  <meta property="og:description" content="R, RStudio IDE, and the tidyverse companion to Bailey’s Real Econometrics" />
   
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Chapter 15 Time Series: Dealing with Stickiness over Time | R Companion to Real Econometrics" />
   
-  <meta name="twitter:description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  <meta name="twitter:description" content="R, RStudio IDE, and the tidyverse companion to Bailey’s Real Econometrics" />
   
 
 <meta name="author" content="Tony Carilli" />
 
 
-<meta name="date" content="2019-09-23" />
+<meta name="date" content="2020-08-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -40,6 +40,7 @@
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
 
 
 
@@ -47,12 +48,23 @@
 
 
 
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.15/datatables.js"></script>
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -61,14 +73,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -77,9 +91,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -128,7 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./">R Companion to *Real Econometrics*</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a></li>
 <li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a><ul>
 <li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#install-r-and-rstudio"><i class="fa fa-check"></i><b>2.1</b> Install R and RStudio</a></li>
 <li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#using-rstudio"><i class="fa fa-check"></i><b>2.2</b> Using RStudio</a><ul>
@@ -147,7 +161,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="chp2.html"><a href="chp2.html"><i class="fa fa-check"></i><b>4</b> Stats in the Wild: Good Data Practices</a><ul>
-<li class="chapter" data-level="4.1" data-path="chp2.html"><a href="chp2.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
+<li class="chapter" data-level="4.1" data-path="chp1.html"><a href="chp1.html#introduction"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
 <li class="chapter" data-level="4.2" data-path="chp2.html"><a href="chp2.html#table-and-figure-reproduction"><i class="fa fa-check"></i><b>4.2</b> Table and Figure Reproduction</a><ul>
 <li class="chapter" data-level="4.2.1" data-path="chp2.html"><a href="chp2.html#table-2.1"><i class="fa fa-check"></i><b>4.2.1</b> Table 2.1</a></li>
 <li class="chapter" data-level="4.2.2" data-path="chp2.html"><a href="chp2.html#table-2.2"><i class="fa fa-check"></i><b>4.2.2</b> Table 2.2</a></li>
@@ -158,6 +172,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.3.1" data-path="chp2.html"><a href="chp2.html#reading-data"><i class="fa fa-check"></i><b>4.3.1</b> Reading Data</a></li>
 <li class="chapter" data-level="4.3.2" data-path="chp2.html"><a href="chp2.html#manually-entering-data"><i class="fa fa-check"></i><b>4.3.2</b> Manually Entering Data</a></li>
 <li class="chapter" data-level="4.3.3" data-path="chp2.html"><a href="chp2.html#simple-statistics"><i class="fa fa-check"></i><b>4.3.3</b> Simple Statistics</a></li>
+<li class="chapter" data-level="4.3.4" data-path="chp2.html"><a href="chp2.html#subsetting"><i class="fa fa-check"></i><b>4.3.4</b> Subsetting</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="cph3.html"><a href="cph3.html"><i class="fa fa-check"></i><b>5</b> Bivariate OLS: The Foundation of Econometric Analysis</a><ul>
@@ -177,7 +192,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="chp5.html"><a href="chp5.html"><i class="fa fa-check"></i><b>7</b> Multivariate OLS: Where the Action Is</a><ul>
-<li class="chapter" data-level="7.1" data-path="chp5.html"><a href="chp5.html#computing-corner-1"><i class="fa fa-check"></i><b>7.1</b> Computing Corner</a><ul>
+<li class="chapter" data-level="7.1" data-path="chp4.html"><a href="chp4.html#computing-corner"><i class="fa fa-check"></i><b>7.1</b> Computing Corner</a><ul>
 <li class="chapter" data-level="7.1.1" data-path="chp5.html"><a href="chp5.html#multiple-regression"><i class="fa fa-check"></i><b>7.1.1</b> Multiple Regression</a></li>
 <li class="chapter" data-level="7.1.2" data-path="chp5.html"><a href="chp5.html#multicollinearity"><i class="fa fa-check"></i><b>7.1.2</b> Multicollinearity</a></li>
 <li class="chapter" data-level="7.1.3" data-path="chp5.html"><a href="chp5.html#standardized-coefficients"><i class="fa fa-check"></i><b>7.1.3</b> Standardized Coefficients</a></li>
@@ -276,9 +291,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="16.2.2" data-path="chp14.html"><a href="chp14.html#ols-estimator-is-unbiased"><i class="fa fa-check"></i><b>16.2.2</b> OLS estimator is unbiased</a></li>
 <li class="chapter" data-level="16.2.3" data-path="chp14.html"><a href="chp14.html#variance-covariance-is-a-minimum"><i class="fa fa-check"></i><b>16.2.3</b> Variance-Covariance is a minimum</a></li>
 </ul></li>
-<li class="chapter" data-level="16.3" data-path="chp14.html"><a href="chp14.html#probability-distributions-in-r-1"><i class="fa fa-check"></i><b>16.3</b> Probability Distributions in R</a><ul>
+<li class="chapter" data-level="16.3" data-path="chp4.html"><a href="chp4.html#probability-distributions-in-r"><i class="fa fa-check"></i><b>16.3</b> Probability Distributions in R</a><ul>
 <li class="chapter" data-level="16.3.1" data-path="chp14.html"><a href="chp14.html#obtaining-critical-statistics"><i class="fa fa-check"></i><b>16.3.1</b> Obtaining Critical Statistics</a></li>
-<li class="chapter" data-level="16.3.2" data-path="chp14.html"><a href="chp14.html#generating-random-numbers-1"><i class="fa fa-check"></i><b>16.3.2</b> Generating Random Numbers</a></li>
+<li class="chapter" data-level="16.3.2" data-path="cph3.html"><a href="cph3.html#generating-random-numbers"><i class="fa fa-check"></i><b>16.3.2</b> Generating Random Numbers</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="17" data-path="chp15.html"><a href="chp15.html"><i class="fa fa-check"></i><b>17</b> Advanced Panel Data</a><ul>
@@ -317,7 +332,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="time-series-objects-in-r" class="section level2">
 <h2><span class="header-section-number">15.1</span> Time Series Objects in R</h2>
 <p>Working with time-series data in R is simplified if the data are structured as a <em>time-series object</em>. There are a host of functions and packages dedicated to time-series data. A time-series object is an R structure that contains the observations, the start and end date of the series, and information about the frequency or periodicity.</p>
-<p>We will use the <a href="https://archive.ics.uci.edu/ml/machine-learning-databases/00275/">Bike Sharing Dataset</a><a href="#fn22" class="footnote-ref" id="fnref22"><sup>22</sup></a> from the UCI Machine Learning Repository.</p>
+<p>We will use the <a href="https://archive.ics.uci.edu/ml/machine-learning-databases/00275/">Bike Sharing Dataset</a><a href="#fn26" class="footnote-ref" id="fnref26"><sup>26</sup></a> from the UCI Machine Learning Repository.</p>
 <ul>
 <li>The data set has 731 observations on 17 variables
 <ul>
@@ -346,52 +361,52 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>cnt: count of total rental bikes including both casual and registered</li>
 </ul></li>
 </ul>
-<div class="sourceCode" id="cb342"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb342-1" title="1"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb342-2" title="2"><span class="kw">library</span>(broom)</a>
-<a class="sourceLine" id="cb342-3" title="3"><span class="kw">library</span>(xts)</a>
-<a class="sourceLine" id="cb342-4" title="4"><span class="kw">library</span>(magrittr)</a>
-<a class="sourceLine" id="cb342-5" title="5">bike_share &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;Data/day.csv&quot;</span>)</a>
-<a class="sourceLine" id="cb342-6" title="6"><span class="kw">head</span>(bike_share)</a></code></pre></div>
+<div class="sourceCode" id="cb351"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb351-1"><a href="chp13.html#cb351-1"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb351-2"><a href="chp13.html#cb351-2"></a><span class="kw">library</span>(broom)</span>
+<span id="cb351-3"><a href="chp13.html#cb351-3"></a><span class="kw">library</span>(xts)</span>
+<span id="cb351-4"><a href="chp13.html#cb351-4"></a><span class="kw">library</span>(magrittr)</span>
+<span id="cb351-5"><a href="chp13.html#cb351-5"></a>bike_share &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;Data/day.csv&quot;</span>)</span>
+<span id="cb351-6"><a href="chp13.html#cb351-6"></a><span class="kw">head</span>(bike_share)</span></code></pre></div>
 <pre><code># A tibble: 6 x 16
-  instant dteday     season    yr  mnth holiday weekday workingday
-    &lt;dbl&gt; &lt;date&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;      &lt;dbl&gt;
-1       1 2011-01-01      1     0     1       0       6          0
-2       2 2011-01-02      1     0     1       0       0          0
-3       3 2011-01-03      1     0     1       0       1          1
-4       4 2011-01-04      1     0     1       0       2          1
-5       5 2011-01-05      1     0     1       0       3          1
-6       6 2011-01-06      1     0     1       0       4          1
-# ... with 8 more variables: weathersit &lt;dbl&gt;, temp &lt;dbl&gt;, atemp &lt;dbl&gt;,
-#   hum &lt;dbl&gt;, windspeed &lt;dbl&gt;, casual &lt;dbl&gt;, registered &lt;dbl&gt;, cnt &lt;dbl&gt;</code></pre>
+  instant dteday     season    yr  mnth holiday weekday workingday weathersit
+    &lt;dbl&gt; &lt;date&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+1       1 2011-01-01      1     0     1       0       6          0          2
+2       2 2011-01-02      1     0     1       0       0          0          2
+3       3 2011-01-03      1     0     1       0       1          1          1
+4       4 2011-01-04      1     0     1       0       2          1          1
+5       5 2011-01-05      1     0     1       0       3          1          1
+6       6 2011-01-06      1     0     1       0       4          1          1
+# ... with 7 more variables: temp &lt;dbl&gt;, atemp &lt;dbl&gt;, hum &lt;dbl&gt;,
+#   windspeed &lt;dbl&gt;, casual &lt;dbl&gt;, registered &lt;dbl&gt;, cnt &lt;dbl&gt;</code></pre>
 <p>We can convert <code>bike_share</code> to a time-series object using the <code>xts</code> package. A time-series object requires an index to identify each observation by its date. We create the index with <code>seq(as.date("YYYY-MM-DD"), by = "period", length.out = n)</code>, our start date is 2011-01-01, by “days”, with the number of observations as the length. After we create the date index, we will use <code>dplyr:select</code> to choose the variables (we don’t need <em>dteday</em>, <em>yr</em>, or <em>mnth</em>). As always, we will make use of the pipe operator to complete the code.</p>
-<div class="sourceCode" id="cb344"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb344-1" title="1">dates &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="kw">as.Date</span>(<span class="st">&quot;2011-01-01&quot;</span>), <span class="dt">by =</span> <span class="st">&quot;days&quot;</span>, <span class="dt">length.out =</span> <span class="dv">731</span>)</a>
-<a class="sourceLine" id="cb344-2" title="2">bike_ts &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb344-3" title="3">bike_share <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb344-4" title="4"><span class="st">  </span><span class="kw">select</span>(instant, season, holiday, weekday, workingday, weathersit, temp, atemp, hum, windspeed, casual, registered, cnt) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb344-5" title="5"><span class="st">  </span><span class="kw">xts</span>(dates) </a>
-<a class="sourceLine" id="cb344-6" title="6">bike_ts <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb344-7" title="7"><span class="st">  </span><span class="kw">head</span>()</a></code></pre></div>
-<pre><code>           instant season holiday weekday workingday weathersit  temp
-2011-01-01       1      1       0       6          0          2 0.344
-2011-01-02       2      1       0       0          0          2 0.363
-2011-01-03       3      1       0       1          1          1 0.196
-2011-01-04       4      1       0       2          1          1 0.200
-2011-01-05       5      1       0       3          1          1 0.227
-2011-01-06       6      1       0       4          1          1 0.204
-           atemp   hum windspeed casual registered  cnt
-2011-01-01 0.364 0.806    0.1604    331        654  985
-2011-01-02 0.354 0.696    0.2485    131        670  801
-2011-01-03 0.189 0.437    0.2483    120       1229 1349
-2011-01-04 0.212 0.590    0.1603    108       1454 1562
-2011-01-05 0.229 0.437    0.1869     82       1518 1600
-2011-01-06 0.233 0.518    0.0896     88       1518 1606</code></pre>
+<div class="sourceCode" id="cb353"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb353-1"><a href="chp13.html#cb353-1"></a>dates &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="kw">as.Date</span>(<span class="st">&quot;2011-01-01&quot;</span>), <span class="dt">by =</span> <span class="st">&quot;days&quot;</span>, <span class="dt">length.out =</span> <span class="dv">731</span>)</span>
+<span id="cb353-2"><a href="chp13.html#cb353-2"></a>bike_ts &lt;-<span class="st"> </span></span>
+<span id="cb353-3"><a href="chp13.html#cb353-3"></a>bike_share <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb353-4"><a href="chp13.html#cb353-4"></a><span class="st">  </span><span class="kw">select</span>(instant, season, holiday, weekday, workingday, weathersit, temp, atemp, hum, windspeed, casual, registered, cnt) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb353-5"><a href="chp13.html#cb353-5"></a><span class="st">  </span><span class="kw">xts</span>(dates) </span>
+<span id="cb353-6"><a href="chp13.html#cb353-6"></a>bike_ts <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb353-7"><a href="chp13.html#cb353-7"></a><span class="st">  </span><span class="kw">head</span>()</span></code></pre></div>
+<pre><code>           instant season holiday weekday workingday weathersit  temp atemp
+2011-01-01       1      1       0       6          0          2 0.344 0.364
+2011-01-02       2      1       0       0          0          2 0.363 0.354
+2011-01-03       3      1       0       1          1          1 0.196 0.189
+2011-01-04       4      1       0       2          1          1 0.200 0.212
+2011-01-05       5      1       0       3          1          1 0.227 0.229
+2011-01-06       6      1       0       4          1          1 0.204 0.233
+             hum windspeed casual registered  cnt
+2011-01-01 0.806    0.1604    331        654  985
+2011-01-02 0.696    0.2485    131        670  801
+2011-01-03 0.437    0.2483    120       1229 1349
+2011-01-04 0.590    0.1603    108       1454 1562
+2011-01-05 0.437    0.1869     82       1518 1600
+2011-01-06 0.518    0.0896     88       1518 1606</code></pre>
 <p>We see that the data now have a date index indicating to which date each observations belongs.</p>
 </div>
 <div id="detecting-autocorrelation" class="section level2">
 <h2><span class="header-section-number">15.2</span> Detecting Autocorrelation</h2>
 <p>Let’s estimate the total number of riders as a function of time, <span class="math inline">\(cnt=\beta_0+\beta_1instant+\epsilon\)</span>, and test the residuals for first order auto correlation using the auxiliary regression approach.</p>
-<div class="sourceCode" id="cb346"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb346-1" title="1">bike_ts <span class="op">%$%</span></a>
-<a class="sourceLine" id="cb346-2" title="2"><span class="st">  </span><span class="kw">lm</span>(cnt <span class="op">~</span><span class="st"> </span>instant) </a></code></pre></div>
+<div class="sourceCode" id="cb355"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb355-1"><a href="chp13.html#cb355-1"></a>bike_ts <span class="op">%$%</span></span>
+<span id="cb355-2"><a href="chp13.html#cb355-2"></a><span class="st">  </span><span class="kw">lm</span>(cnt <span class="op">~</span><span class="st"> </span>instant) </span></code></pre></div>
 <pre><code>
 Call:
 lm(formula = cnt ~ instant)
@@ -399,13 +414,13 @@ lm(formula = cnt ~ instant)
 Coefficients:
 (Intercept)      instant  
     2392.96         5.77  </code></pre>
-<div class="sourceCode" id="cb348"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb348-1" title="1"><span class="co"># retrieve the residuals as e</span></a>
-<a class="sourceLine" id="cb348-2" title="2">e &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb348-3" title="3"><span class="st">  </span>bike_ts <span class="op">%$%</span></a>
-<a class="sourceLine" id="cb348-4" title="4"><span class="st">  </span><span class="kw">lm</span>(cnt <span class="op">~</span><span class="st"> </span>instant)<span class="op">$</span>residuals</a>
-<a class="sourceLine" id="cb348-5" title="5"><span class="co"># auxiliary regression</span></a>
-<a class="sourceLine" id="cb348-6" title="6"><span class="kw">lm</span>(e <span class="op">~</span><span class="st"> </span><span class="kw">lag</span>(e,<span class="dv">1</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb348-7" title="7"><span class="st">  </span><span class="kw">tidy</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb357"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb357-1"><a href="chp13.html#cb357-1"></a><span class="co"># retrieve the residuals as e</span></span>
+<span id="cb357-2"><a href="chp13.html#cb357-2"></a>e &lt;-<span class="st"> </span></span>
+<span id="cb357-3"><a href="chp13.html#cb357-3"></a><span class="st">  </span>bike_ts <span class="op">%$%</span></span>
+<span id="cb357-4"><a href="chp13.html#cb357-4"></a><span class="st">  </span><span class="kw">lm</span>(cnt <span class="op">~</span><span class="st"> </span>instant)<span class="op">$</span>residuals</span>
+<span id="cb357-5"><a href="chp13.html#cb357-5"></a><span class="co"># auxiliary regression</span></span>
+<span id="cb357-6"><a href="chp13.html#cb357-6"></a><span class="kw">lm</span>(e <span class="op">~</span><span class="st"> </span><span class="kw">lag</span>(e,<span class="dv">1</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb357-7"><a href="chp13.html#cb357-7"></a><span class="st">  </span><span class="kw">tidy</span>()</span></code></pre></div>
 <pre><code># A tibble: 2 x 5
   term        estimate std.error statistic   p.value
   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
@@ -417,21 +432,21 @@ Coefficients:
 <h2><span class="header-section-number">15.3</span> Correcting Autocorrelation</h2>
 <div id="newey-west" class="section level3">
 <h3><span class="header-section-number">15.3.1</span> Newey-West</h3>
-<p>The <code>sandwich</code> package contains a function to estimate Newey-West standard errors.<a href="#fn23" class="footnote-ref" id="fnref23"><sup>23</sup></a> The output of the function call is the corrected variance-covariance matrix. We still need to calculate <em>t-statistics</em> based on the corrected variance-covariances. We will use the <code>lmtest</code> package to perform this test. <code>coeftest(lm_object, vcov = variance-covariance_matrix)</code>.</p>
-<div class="sourceCode" id="cb350"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb350-1" title="1"><span class="co"># estimate the model (the lm_object)</span></a>
-<a class="sourceLine" id="cb350-2" title="2">bike_lm &lt;-<span class="st"> </span><span class="kw">lm</span>(cnt <span class="op">~</span><span class="st"> </span>instant, bike_ts)</a>
-<a class="sourceLine" id="cb350-3" title="3">bike_lm <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb350-4" title="4"><span class="st">  </span><span class="kw">tidy</span>()</a></code></pre></div>
+<p>The <code>sandwich</code> package contains a function to estimate Newey-West standard errors.<a href="#fn27" class="footnote-ref" id="fnref27"><sup>27</sup></a> The output of the function call is the corrected variance-covariance matrix. We still need to calculate <em>t-statistics</em> based on the corrected variance-covariances. We will use the <code>lmtest</code> package to perform this test. <code>coeftest(lm_object, vcov = variance-covariance_matrix)</code>.</p>
+<div class="sourceCode" id="cb359"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb359-1"><a href="chp13.html#cb359-1"></a><span class="co"># estimate the model (the lm_object)</span></span>
+<span id="cb359-2"><a href="chp13.html#cb359-2"></a>bike_lm &lt;-<span class="st"> </span><span class="kw">lm</span>(cnt <span class="op">~</span><span class="st"> </span>instant, bike_ts)</span>
+<span id="cb359-3"><a href="chp13.html#cb359-3"></a>bike_lm <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb359-4"><a href="chp13.html#cb359-4"></a><span class="st">  </span><span class="kw">tidy</span>()</span></code></pre></div>
 <pre><code># A tibble: 2 x 5
   term        estimate std.error statistic  p.value
   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
 1 (Intercept)  2393.     112.         21.4 1.91e-79
 2 instant         5.77     0.264      21.8 1.02e-81</code></pre>
-<div class="sourceCode" id="cb352"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb352-1" title="1"><span class="co"># determine the number of lags for the Newey-West correction</span></a>
-<a class="sourceLine" id="cb352-2" title="2">lags &lt;-<span class="st"> </span><span class="kw">length</span>(bike_ts<span class="op">$</span>instant)<span class="op">^</span>(.<span class="dv">25</span>)</a>
-<a class="sourceLine" id="cb352-3" title="3">nw_vcov &lt;-<span class="st"> </span>sandwich<span class="op">::</span><span class="kw">NeweyWest</span>(bike_lm, <span class="dt">lag =</span> lags, <span class="dt">prewhite =</span> F, <span class="dt">adjust =</span> T)</a>
-<a class="sourceLine" id="cb352-4" title="4"><span class="co"># model with corrected errors</span></a>
-<a class="sourceLine" id="cb352-5" title="5">lmtest<span class="op">::</span><span class="kw">coeftest</span>(bike_lm, <span class="dt">vcov. =</span> nw_vcov)</a></code></pre></div>
+<div class="sourceCode" id="cb361"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb361-1"><a href="chp13.html#cb361-1"></a><span class="co"># determine the number of lags for the Newey-West correction</span></span>
+<span id="cb361-2"><a href="chp13.html#cb361-2"></a>lags &lt;-<span class="st"> </span><span class="kw">length</span>(bike_ts<span class="op">$</span>instant)<span class="op">^</span>(.<span class="dv">25</span>)</span>
+<span id="cb361-3"><a href="chp13.html#cb361-3"></a>nw_vcov &lt;-<span class="st"> </span>sandwich<span class="op">::</span><span class="kw">NeweyWest</span>(bike_lm, <span class="dt">lag =</span> lags, <span class="dt">prewhite =</span> F, <span class="dt">adjust =</span> T)</span>
+<span id="cb361-4"><a href="chp13.html#cb361-4"></a><span class="co"># model with corrected errors</span></span>
+<span id="cb361-5"><a href="chp13.html#cb361-5"></a>lmtest<span class="op">::</span><span class="kw">coeftest</span>(bike_lm, <span class="dt">vcov. =</span> nw_vcov)</span></code></pre></div>
 <pre><code>
 t test of coefficients:
 
@@ -444,9 +459,9 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <div id="cochrane-orcutt" class="section level3">
 <h3><span class="header-section-number">15.3.2</span> Cochrane-Orcutt</h3>
 <p>The <code>orcutt</code> package allows us to use the Cochrane-Orcutt method to <span class="math inline">\(\rho\)</span> difference the data to produce corrected standard errors using <code>cochrane.orcutt(lm_oject)</code></p>
-<div class="sourceCode" id="cb354"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb354-1" title="1">bike_lm <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb354-2" title="2"><span class="st">  </span>orcutt<span class="op">::</span><span class="kw">cochrane.orcutt</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb354-3" title="3"><span class="st">  </span><span class="kw">tidy</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb363"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb363-1"><a href="chp13.html#cb363-1"></a>bike_lm <span class="op">%&gt;%</span></span>
+<span id="cb363-2"><a href="chp13.html#cb363-2"></a><span class="st">  </span>orcutt<span class="op">::</span><span class="kw">cochrane.orcutt</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb363-3"><a href="chp13.html#cb363-3"></a><span class="st">  </span><span class="kw">tidy</span>()</span></code></pre></div>
 <pre><code># A tibble: 2 x 5
   term        estimate std.error statistic  p.value
   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
@@ -457,9 +472,9 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <div id="dynamic-models" class="section level2">
 <h2><span class="header-section-number">15.4</span> Dynamic Models</h2>
 <p>Using a time-series object makes running dynamic models as easy as calling the argument <code>lag(variable_name, number_of_lags)</code>. Suppose we’d like to estimate the a lagged version of the model we have been using with the form <span class="math inline">\(cnt_t=\beta_0+\beta_1instant_t+\beta_2temp_{t-1}+\epsilon\)</span>. We want to see if yesterday’s weather affects today’s rentals.</p>
-<div class="sourceCode" id="cb356"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb356-1" title="1">bike_lm_dyn &lt;-<span class="st"> </span><span class="kw">lm</span>(cnt <span class="op">~</span><span class="st"> </span>instant <span class="op">+</span><span class="st"> </span><span class="kw">lag</span>(temp, <span class="dv">1</span>), bike_ts)</a>
-<a class="sourceLine" id="cb356-2" title="2">bike_lm_dyn <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb356-3" title="3"><span class="st"> </span>tidy</a></code></pre></div>
+<div class="sourceCode" id="cb365"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb365-1"><a href="chp13.html#cb365-1"></a>bike_lm_dyn &lt;-<span class="st"> </span><span class="kw">lm</span>(cnt <span class="op">~</span><span class="st"> </span>instant <span class="op">+</span><span class="st"> </span><span class="kw">lag</span>(temp, <span class="dv">1</span>), bike_ts)</span>
+<span id="cb365-2"><a href="chp13.html#cb365-2"></a>bike_lm_dyn <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb365-3"><a href="chp13.html#cb365-3"></a><span class="st"> </span>tidy</span></code></pre></div>
 <pre><code># A tibble: 3 x 5
   term         estimate std.error statistic   p.value
   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
@@ -470,10 +485,10 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <div id="dickey-fuller-test" class="section level2">
 <h2><span class="header-section-number">15.5</span> Dickey-Fuller Test</h2>
 <p>The <code>tseries</code> package includes an augmented Dickey-Fuller test, <code>adf.test(time_series)</code>.</p>
-<div class="sourceCode" id="cb358"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb358-1" title="1">bike_ts<span class="op">$</span>cnt <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb358-2" title="2"><span class="st">  </span>tseries<span class="op">::</span><span class="kw">adf.test</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb367"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb367-1"><a href="chp13.html#cb367-1"></a>bike_ts<span class="op">$</span>cnt <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb367-2"><a href="chp13.html#cb367-2"></a><span class="st">  </span>tseries<span class="op">::</span><span class="kw">adf.test</span>()</span></code></pre></div>
 <pre><code>
-    Augmented Dickey-Fuller Test
+	Augmented Dickey-Fuller Test
 
 data:  .
 Dickey-Fuller = -2, Lag order = 9, p-value = 0.7
@@ -483,27 +498,27 @@ alternative hypothesis: stationary</code></pre>
 <div id="first-differencing" class="section level2">
 <h2><span class="header-section-number">15.6</span> First Differencing</h2>
 <p>A simple solution to non-stationarity is to use first differences of values, i.e., <span class="math inline">\(\Delta y_t=y_t-y_{t-1}\)</span>. <code>diff(x, ...)</code> makes this easy with a time-series object. Let’s test <span class="math inline">\(\Delta y_t\)</span> for stationarity.</p>
-<div class="sourceCode" id="cb360"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb360-1" title="1">bike_ts<span class="op">$</span>cnt <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb360-2" title="2"><span class="st">  </span><span class="kw">diff</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb360-3" title="3"><span class="st">  </span>tseries<span class="op">::</span><span class="kw">na.remove</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># first differencing introduces NA&#39;s into the data</span></a>
-<a class="sourceLine" id="cb360-4" title="4"><span class="st">  </span>tseries<span class="op">::</span><span class="kw">adf.test</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb369"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb369-1"><a href="chp13.html#cb369-1"></a>bike_ts<span class="op">$</span>cnt <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb369-2"><a href="chp13.html#cb369-2"></a><span class="st">  </span><span class="kw">diff</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb369-3"><a href="chp13.html#cb369-3"></a><span class="st">  </span>tseries<span class="op">::</span><span class="kw">na.remove</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># first differencing introduces NA&#39;s into the data</span></span>
+<span id="cb369-4"><a href="chp13.html#cb369-4"></a><span class="st">  </span>tseries<span class="op">::</span><span class="kw">adf.test</span>()</span></code></pre></div>
 <pre><code>
-    Augmented Dickey-Fuller Test
+	Augmented Dickey-Fuller Test
 
 data:  .
 Dickey-Fuller = -14, Lag order = 8, p-value = 0.01
 alternative hypothesis: stationary</code></pre>
 <p>We can reject the null-hypothesis of non-stationarity. So let’s estimate the model <span class="math inline">\(\Delta cnt_t=\beta_0+\beta_1\Delta temp_t+\eta_t\)</span></p>
-<div class="sourceCode" id="cb362"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb362-1" title="1"><span class="kw">lm</span>(<span class="kw">diff</span>(cnt) <span class="op">~</span><span class="st"> </span><span class="kw">diff</span>(temp), bike_ts) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb362-2" title="2"><span class="st">  </span><span class="kw">tidy</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb371"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb371-1"><a href="chp13.html#cb371-1"></a><span class="kw">lm</span>(<span class="kw">diff</span>(cnt) <span class="op">~</span><span class="st"> </span><span class="kw">diff</span>(temp), bike_ts) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb371-2"><a href="chp13.html#cb371-2"></a><span class="st">  </span><span class="kw">tidy</span>()</span></code></pre></div>
 <pre><code># A tibble: 2 x 5
   term        estimate std.error statistic  p.value
   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
 1 (Intercept)     3.24      38.0    0.0852 9.32e- 1
 2 diff(temp)   4838.       651.     7.43   3.09e-13</code></pre>
-<div class="sourceCode" id="cb364"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb364-1" title="1"><span class="co"># Compare to same equation in the levels.</span></a>
-<a class="sourceLine" id="cb364-2" title="2"><span class="kw">lm</span>(cnt <span class="op">~</span><span class="st"> </span>temp, bike_ts) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb364-3" title="3"><span class="st">  </span><span class="kw">tidy</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb373"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb373-1"><a href="chp13.html#cb373-1"></a><span class="co"># Compare to same equation in the levels.</span></span>
+<span id="cb373-2"><a href="chp13.html#cb373-2"></a><span class="kw">lm</span>(cnt <span class="op">~</span><span class="st"> </span>temp, bike_ts) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb373-3"><a href="chp13.html#cb373-3"></a><span class="st">  </span><span class="kw">tidy</span>()</span></code></pre></div>
 <pre><code># A tibble: 2 x 5
   term        estimate std.error statistic  p.value
   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
@@ -514,9 +529,9 @@ alternative hypothesis: stationary</code></pre>
 </div>
 <div class="footnotes">
 <hr />
-<ol start="22">
-<li id="fn22"><p>Fanaee-T, Hadi, and Gama, Joao, ‘Event labeling combining ensemble detectors and background knowledge’, Progress in Artificial Intelligence (2013): pp. 1-15, Springer Berlin Heidelberg<a href="chp13.html#fnref22" class="footnote-back">↩</a></p></li>
-<li id="fn23"><p>Unfortunately the pipe operator does not play nice with <code>NeweyWest</code>.<a href="chp13.html#fnref23" class="footnote-back">↩</a></p></li>
+<ol start="26">
+<li id="fn26"><p>Fanaee-T, Hadi, and Gama, Joao, ‘Event labeling combining ensemble detectors and background knowledge’, Progress in Artificial Intelligence (2013): pp. 1-15, Springer Berlin Heidelberg<a href="chp13.html#fnref26" class="footnote-back">↩︎</a></p></li>
+<li id="fn27"><p>Unfortunately the pipe operator does not play nice with <code>NeweyWest</code>.<a href="chp13.html#fnref27" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>
@@ -530,11 +545,13 @@ alternative hypothesis: stationary</code></pre>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -542,12 +559,11 @@ gitbook.start({
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -559,6 +575,10 @@ gitbook.start({
 "text": null
 },
 "history": {
+"link": null,
+"text": null
+},
+"view": {
 "link": null,
 "text": null
 },

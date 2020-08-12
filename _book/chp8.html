@@ -1,30 +1,30 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 10 Using Fixed Effects Models to Fight Endogeneity in Panel Data and Difference–in–Difference Models | R Companion to Real Econometrics</title>
-  <meta name="description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
-  <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
+  <meta name="description" content="R, RStudio IDE, and the tidyverse companion to Bailey’s Real Econometrics" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 10 Using Fixed Effects Models to Fight Endogeneity in Panel Data and Difference–in–Difference Models | R Companion to Real Econometrics" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  <meta property="og:description" content="R, RStudio IDE, and the tidyverse companion to Bailey’s Real Econometrics" />
   
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Chapter 10 Using Fixed Effects Models to Fight Endogeneity in Panel Data and Difference–in–Difference Models | R Companion to Real Econometrics" />
   
-  <meta name="twitter:description" content="This book looks at the R code necessary to complete the end of chapter exercises in Bailey’s Real Econometrics" />
+  <meta name="twitter:description" content="R, RStudio IDE, and the tidyverse companion to Bailey’s Real Econometrics" />
   
 
 <meta name="author" content="Tony Carilli" />
 
 
-<meta name="date" content="2019-09-23" />
+<meta name="date" content="2020-08-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -40,6 +40,7 @@
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
 
 
 
@@ -47,12 +48,23 @@
 
 
 
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.15/datatables.js"></script>
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -61,14 +73,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -77,9 +91,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -128,7 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./">R Companion to *Real Econometrics*</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a></li>
 <li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a><ul>
 <li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#install-r-and-rstudio"><i class="fa fa-check"></i><b>2.1</b> Install R and RStudio</a></li>
 <li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#using-rstudio"><i class="fa fa-check"></i><b>2.2</b> Using RStudio</a><ul>
@@ -147,7 +161,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="chp2.html"><a href="chp2.html"><i class="fa fa-check"></i><b>4</b> Stats in the Wild: Good Data Practices</a><ul>
-<li class="chapter" data-level="4.1" data-path="chp2.html"><a href="chp2.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
+<li class="chapter" data-level="4.1" data-path="chp1.html"><a href="chp1.html#introduction"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
 <li class="chapter" data-level="4.2" data-path="chp2.html"><a href="chp2.html#table-and-figure-reproduction"><i class="fa fa-check"></i><b>4.2</b> Table and Figure Reproduction</a><ul>
 <li class="chapter" data-level="4.2.1" data-path="chp2.html"><a href="chp2.html#table-2.1"><i class="fa fa-check"></i><b>4.2.1</b> Table 2.1</a></li>
 <li class="chapter" data-level="4.2.2" data-path="chp2.html"><a href="chp2.html#table-2.2"><i class="fa fa-check"></i><b>4.2.2</b> Table 2.2</a></li>
@@ -158,6 +172,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.3.1" data-path="chp2.html"><a href="chp2.html#reading-data"><i class="fa fa-check"></i><b>4.3.1</b> Reading Data</a></li>
 <li class="chapter" data-level="4.3.2" data-path="chp2.html"><a href="chp2.html#manually-entering-data"><i class="fa fa-check"></i><b>4.3.2</b> Manually Entering Data</a></li>
 <li class="chapter" data-level="4.3.3" data-path="chp2.html"><a href="chp2.html#simple-statistics"><i class="fa fa-check"></i><b>4.3.3</b> Simple Statistics</a></li>
+<li class="chapter" data-level="4.3.4" data-path="chp2.html"><a href="chp2.html#subsetting"><i class="fa fa-check"></i><b>4.3.4</b> Subsetting</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="cph3.html"><a href="cph3.html"><i class="fa fa-check"></i><b>5</b> Bivariate OLS: The Foundation of Econometric Analysis</a><ul>
@@ -177,7 +192,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="chp5.html"><a href="chp5.html"><i class="fa fa-check"></i><b>7</b> Multivariate OLS: Where the Action Is</a><ul>
-<li class="chapter" data-level="7.1" data-path="chp5.html"><a href="chp5.html#computing-corner-1"><i class="fa fa-check"></i><b>7.1</b> Computing Corner</a><ul>
+<li class="chapter" data-level="7.1" data-path="chp4.html"><a href="chp4.html#computing-corner"><i class="fa fa-check"></i><b>7.1</b> Computing Corner</a><ul>
 <li class="chapter" data-level="7.1.1" data-path="chp5.html"><a href="chp5.html#multiple-regression"><i class="fa fa-check"></i><b>7.1.1</b> Multiple Regression</a></li>
 <li class="chapter" data-level="7.1.2" data-path="chp5.html"><a href="chp5.html#multicollinearity"><i class="fa fa-check"></i><b>7.1.2</b> Multicollinearity</a></li>
 <li class="chapter" data-level="7.1.3" data-path="chp5.html"><a href="chp5.html#standardized-coefficients"><i class="fa fa-check"></i><b>7.1.3</b> Standardized Coefficients</a></li>
@@ -276,9 +291,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="16.2.2" data-path="chp14.html"><a href="chp14.html#ols-estimator-is-unbiased"><i class="fa fa-check"></i><b>16.2.2</b> OLS estimator is unbiased</a></li>
 <li class="chapter" data-level="16.2.3" data-path="chp14.html"><a href="chp14.html#variance-covariance-is-a-minimum"><i class="fa fa-check"></i><b>16.2.3</b> Variance-Covariance is a minimum</a></li>
 </ul></li>
-<li class="chapter" data-level="16.3" data-path="chp14.html"><a href="chp14.html#probability-distributions-in-r-1"><i class="fa fa-check"></i><b>16.3</b> Probability Distributions in R</a><ul>
+<li class="chapter" data-level="16.3" data-path="chp4.html"><a href="chp4.html#probability-distributions-in-r"><i class="fa fa-check"></i><b>16.3</b> Probability Distributions in R</a><ul>
 <li class="chapter" data-level="16.3.1" data-path="chp14.html"><a href="chp14.html#obtaining-critical-statistics"><i class="fa fa-check"></i><b>16.3.1</b> Obtaining Critical Statistics</a></li>
-<li class="chapter" data-level="16.3.2" data-path="chp14.html"><a href="chp14.html#generating-random-numbers-1"><i class="fa fa-check"></i><b>16.3.2</b> Generating Random Numbers</a></li>
+<li class="chapter" data-level="16.3.2" data-path="cph3.html"><a href="cph3.html#generating-random-numbers"><i class="fa fa-check"></i><b>16.3.2</b> Generating Random Numbers</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="17" data-path="chp15.html"><a href="chp15.html"><i class="fa fa-check"></i><b>17</b> Advanced Panel Data</a><ul>
@@ -314,16 +329,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="chp8" class="section level1">
 <h1><span class="header-section-number">Chapter 10</span> Using Fixed Effects Models to Fight Endogeneity in Panel Data and Difference–in–Difference Models</h1>
 <p>In this chapter we will learn to deal with panel data in R. Panel data are data that include observations in and through time. Panel data combine aspects of cross–sectional data with time–series data. The libraries necessary for this chapter are:</p>
-<div class="sourceCode" id="cb237"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb237-1" title="1"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb237-2" title="2"><span class="kw">library</span>(magrittr)</a>
-<a class="sourceLine" id="cb237-3" title="3"><span class="kw">library</span>(broom)</a>
-<a class="sourceLine" id="cb237-4" title="4"><span class="kw">library</span>(estimatr)</a>
-<a class="sourceLine" id="cb237-5" title="5"><span class="kw">library</span>(carData)</a></code></pre></div>
+<div class="sourceCode" id="cb246"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb246-1"><a href="chp8.html#cb246-1"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb246-2"><a href="chp8.html#cb246-2"></a><span class="kw">library</span>(magrittr)</span>
+<span id="cb246-3"><a href="chp8.html#cb246-3"></a><span class="kw">library</span>(broom)</span>
+<span id="cb246-4"><a href="chp8.html#cb246-4"></a><span class="kw">library</span>(estimatr)</span>
+<span id="cb246-5"><a href="chp8.html#cb246-5"></a><span class="kw">library</span>(carData)</span></code></pre></div>
 <div id="simpsons-paradox" class="section level2">
 <h2><span class="header-section-number">10.1</span> Simpson’s Paradox</h2>
 <p>Simpson’s paradox - Simpson (<a href="https://www.jstor.org/stable/2984065?seq=1#metadata_info_tab_contents">1951</a>) is phenomenon where an apparent relationship between two variables reverses itself when the data are dis-aggregated. For example, let’s look at the admissions rate for men and women in the University of California at Berkeley admissions data.</p>
 <p>UCBAdmissions is a cross-tabulation of 4526 applicants by 3 variables: Admit, Gender, and Dept, the number of observations for each is n stored as 3-dimensional array.</p>
-<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb238-1" title="1">UCBAdmissions</a></code></pre></div>
+<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb247-1"><a href="chp8.html#cb247-1"></a>UCBAdmissions</span></code></pre></div>
 <pre><code>, , Dept = A
 
           Gender
@@ -366,28 +381,28 @@ Admit      Male Female
   Admitted   22     24
   Rejected  351    317</code></pre>
 <p>To calculate admission rates, we need to create a new variable, apps, that is the sum of admitted and rejected apps for both men and women.</p>
-<div class="sourceCode" id="cb240"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb240-1" title="1">UCBAdmissions <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb240-2" title="2"><span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># convert the table to a data frame</span></a>
-<a class="sourceLine" id="cb240-3" title="3"><span class="st">  </span><span class="kw">group_by</span>(Dept, Gender) <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># allows us to sum admitted and rejected by department</span></a>
-<a class="sourceLine" id="cb240-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">apps =</span> <span class="kw">sum</span>(n)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># create number of applicants by department</span></a>
-<a class="sourceLine" id="cb240-5" title="5"><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># return the full data frame</span></a>
-<a class="sourceLine" id="cb240-6" title="6"><span class="st">  </span><span class="kw">filter</span>(Admit <span class="op">==</span><span class="st"> &quot;Admitted&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># select only those applicants admitted</span></a>
-<a class="sourceLine" id="cb240-7" title="7"><span class="st">  </span><span class="kw">group_by</span>(Gender) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># allows us to calculate acceptance rates by gender</span></a>
-<a class="sourceLine" id="cb240-8" title="8"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">rate =</span> <span class="kw">sum</span>(n)<span class="op">/</span><span class="kw">sum</span>(apps))</a></code></pre></div>
+<div class="sourceCode" id="cb249"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb249-1"><a href="chp8.html#cb249-1"></a>UCBAdmissions <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb249-2"><a href="chp8.html#cb249-2"></a><span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># convert the table to a data frame</span></span>
+<span id="cb249-3"><a href="chp8.html#cb249-3"></a><span class="st">  </span><span class="kw">group_by</span>(Dept, Gender) <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># allows us to sum admitted and rejected by department</span></span>
+<span id="cb249-4"><a href="chp8.html#cb249-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">apps =</span> <span class="kw">sum</span>(n)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># create number of applicants by department</span></span>
+<span id="cb249-5"><a href="chp8.html#cb249-5"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># return the full data frame</span></span>
+<span id="cb249-6"><a href="chp8.html#cb249-6"></a><span class="st">  </span><span class="kw">filter</span>(Admit <span class="op">==</span><span class="st"> &quot;Admitted&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># select only those applicants admitted</span></span>
+<span id="cb249-7"><a href="chp8.html#cb249-7"></a><span class="st">  </span><span class="kw">group_by</span>(Gender) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># allows us to calculate acceptance rates by gender</span></span>
+<span id="cb249-8"><a href="chp8.html#cb249-8"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">rate =</span> <span class="kw">sum</span>(n)<span class="op">/</span><span class="kw">sum</span>(apps))</span></code></pre></div>
 <pre><code># A tibble: 2 x 2
   Gender  rate
   &lt;chr&gt;  &lt;dbl&gt;
 1 Female 0.304
 2 Male   0.445</code></pre>
 <p>Males are accepted at rate of 44.5% while females are accepted at lower rate of 30.4%.</p>
-<div class="sourceCode" id="cb242"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb242-1" title="1">UCBAdmissions <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb242-2" title="2"><span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb242-3" title="3"><span class="st">  </span><span class="kw">group_by</span>(Dept, Gender) <span class="op">%&gt;%</span><span class="st">  </span></a>
-<a class="sourceLine" id="cb242-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">apps =</span> <span class="kw">sum</span>(n)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb242-5" title="5"><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb242-6" title="6"><span class="st">  </span><span class="kw">filter</span>(Admit <span class="op">==</span><span class="st"> &quot;Admitted&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb242-7" title="7"><span class="st">  </span><span class="kw">group_by</span>(Dept, Gender) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb242-8" title="8"><span class="st">  </span><span class="kw">summarize</span>(n<span class="op">/</span>apps)</a></code></pre></div>
+<div class="sourceCode" id="cb251"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb251-1"><a href="chp8.html#cb251-1"></a>UCBAdmissions <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb251-2"><a href="chp8.html#cb251-2"></a><span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb251-3"><a href="chp8.html#cb251-3"></a><span class="st">  </span><span class="kw">group_by</span>(Dept, Gender) <span class="op">%&gt;%</span><span class="st">  </span></span>
+<span id="cb251-4"><a href="chp8.html#cb251-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">apps =</span> <span class="kw">sum</span>(n)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb251-5"><a href="chp8.html#cb251-5"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb251-6"><a href="chp8.html#cb251-6"></a><span class="st">  </span><span class="kw">filter</span>(Admit <span class="op">==</span><span class="st"> &quot;Admitted&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb251-7"><a href="chp8.html#cb251-7"></a><span class="st">  </span><span class="kw">group_by</span>(Dept, Gender) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb251-8"><a href="chp8.html#cb251-8"></a><span class="st">  </span><span class="kw">summarize</span>(n<span class="op">/</span>apps)</span></code></pre></div>
 <pre><code># A tibble: 12 x 3
 # Groups:   Dept [6]
    Dept  Gender `n/apps`
@@ -409,51 +424,51 @@ Admit      Male Female
 <div id="figures-8.1-8.3" class="section level2">
 <h2><span class="header-section-number">10.2</span> Figures 8.1-8.3</h2>
 <p>We see a similar effect in Figures 8.1-8.3 in the text. We can reproduce those graphs with the code below. The crime data set contains observations on 19 variables from 58 cities over the period 1972 to 1993. First choose observations for only the California cities of Fresno, Los Angeles, Oakland, Sacramento, and San Francisco. Next convert the robbery and police to numbers per 1000 persons. The data frame crime contains the data.# the %in% operator means match the elements in one vector with elements in another.</p>
-<div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb244-1" title="1">crime <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb244-2" title="2"><span class="st">  </span><span class="kw">select</span>(cityname, policesworn, robbery, popcity) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># choose relevant variables</span></a>
-<a class="sourceLine" id="cb244-3" title="3"><span class="st">  </span><span class="kw">filter</span>(cityname <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;fresno&quot;</span>, <span class="st">&quot;losangel&quot;</span>, <span class="st">&quot;oakland&quot;</span>, <span class="st">&quot;sacramen&quot;</span>, <span class="st">&quot;sanfran&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># choose relevant cities</span></a>
-<a class="sourceLine" id="cb244-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">robbery=</span>robbery<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>, <span class="dt">policesworn =</span> policesworn<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># convert to per 1000</span></a>
-<a class="sourceLine" id="cb244-5" title="5"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> policesworn, <span class="dt">y =</span> robbery)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb244-6" title="6"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">na.rm =</span> T) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb244-7" title="7"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> lm, <span class="dt">na.rm =</span> T, <span class="dt">se =</span> F) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb244-8" title="8"><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Police per 1000 People&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb244-9" title="9"><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Robberies per 1000 People&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb244-10" title="10"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">caption =</span> <span class="st">&quot;Figure 8.1: Robberies and Police for Large Cities in California&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="co"># create caption</span></a>
-<a class="sourceLine" id="cb244-11" title="11"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.caption =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="dv">0</span>)) <span class="co"># left justify the caption</span></a></code></pre></div>
+<div class="sourceCode" id="cb253"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb253-1"><a href="chp8.html#cb253-1"></a>crime <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb253-2"><a href="chp8.html#cb253-2"></a><span class="st">  </span><span class="kw">select</span>(cityname, policesworn, robbery, popcity) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># choose relevant variables</span></span>
+<span id="cb253-3"><a href="chp8.html#cb253-3"></a><span class="st">  </span><span class="kw">filter</span>(cityname <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;fresno&quot;</span>, <span class="st">&quot;losangel&quot;</span>, <span class="st">&quot;oakland&quot;</span>, <span class="st">&quot;sacramen&quot;</span>, <span class="st">&quot;sanfran&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># choose relevant cities</span></span>
+<span id="cb253-4"><a href="chp8.html#cb253-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">robbery=</span>robbery<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>, <span class="dt">policesworn =</span> policesworn<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># convert to per 1000</span></span>
+<span id="cb253-5"><a href="chp8.html#cb253-5"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> policesworn, <span class="dt">y =</span> robbery)) <span class="op">+</span></span>
+<span id="cb253-6"><a href="chp8.html#cb253-6"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">na.rm =</span> T) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb253-7"><a href="chp8.html#cb253-7"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> lm, <span class="dt">na.rm =</span> T, <span class="dt">se =</span> F) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb253-8"><a href="chp8.html#cb253-8"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Police per 1000 People&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb253-9"><a href="chp8.html#cb253-9"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Robberies per 1000 People&quot;</span>) <span class="op">+</span></span>
+<span id="cb253-10"><a href="chp8.html#cb253-10"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">caption =</span> <span class="st">&quot;Figure 8.1: Robberies and Police for Large Cities in California&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="co"># create caption</span></span>
+<span id="cb253-11"><a href="chp8.html#cb253-11"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.caption =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="dv">0</span>)) <span class="co"># left justify the caption</span></span></code></pre></div>
 <p><img src="bailey_files/figure-html/figure8.1-1.png" width="672" /></p>
-<div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb245-1" title="1">crime <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb245-2" title="2"><span class="st">  </span><span class="kw">select</span>(cityname, policesworn, robbery, popcity) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb245-3" title="3"><span class="st">  </span><span class="kw">filter</span>(cityname <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;fresno&quot;</span>, <span class="st">&quot;losangel&quot;</span>, <span class="st">&quot;oakland&quot;</span>, <span class="st">&quot;sacramen&quot;</span>, <span class="st">&quot;sanfran&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb245-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">robbery=</span>robbery<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>, <span class="dt">policesworn =</span> policesworn<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb245-5" title="5"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> policesworn, <span class="dt">y =</span> robbery, <span class="dt">color =</span> cityname)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb245-6" title="6"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">na.rm =</span> T) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb245-7" title="7"><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Police per 1000 People&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb245-8" title="8"><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Robberies per 1000 People&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb245-9" title="9"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">caption =</span> <span class="st">&quot;Figure 8.2: Robberies and Police for Specified Cities in California&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb245-10" title="10"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.caption =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="dv">0</span>), <span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="co"># remove legend</span></a>
-<a class="sourceLine" id="cb245-11" title="11"><span class="st">  </span><span class="co"># place city names with corresponding colors.</span></a>
-<a class="sourceLine" id="cb245-12" title="12"><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="fl">1.6</span>, <span class="dt">y =</span> <span class="dv">10</span>, <span class="dt">label =</span> <span class="st">&quot;Oakland&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#00BF7D&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb245-13" title="13"><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="dv">2</span>, <span class="dt">y =</span> <span class="dv">5</span>, <span class="dt">label =</span> <span class="st">&quot;Sacramento&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#00B0F6&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb245-14" title="14"><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="fl">2.58</span>, <span class="dt">y =</span> <span class="fl">4.5</span>, <span class="dt">label =</span> <span class="st">&quot;Los Angeles&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#A3A500&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb245-15" title="15"><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="fl">2.7</span>, <span class="dt">y =</span> <span class="fl">7.8</span>, <span class="dt">label =</span> <span class="st">&quot;San Francisco&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#E76BF3&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb245-16" title="16"><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="fl">1.25</span>, <span class="dt">y =</span> <span class="fl">3.5</span>, <span class="dt">label =</span> <span class="st">&quot;Fresno&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#F8766D&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb254"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb254-1"><a href="chp8.html#cb254-1"></a>crime <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb254-2"><a href="chp8.html#cb254-2"></a><span class="st">  </span><span class="kw">select</span>(cityname, policesworn, robbery, popcity) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb254-3"><a href="chp8.html#cb254-3"></a><span class="st">  </span><span class="kw">filter</span>(cityname <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;fresno&quot;</span>, <span class="st">&quot;losangel&quot;</span>, <span class="st">&quot;oakland&quot;</span>, <span class="st">&quot;sacramen&quot;</span>, <span class="st">&quot;sanfran&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb254-4"><a href="chp8.html#cb254-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">robbery=</span>robbery<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>, <span class="dt">policesworn =</span> policesworn<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb254-5"><a href="chp8.html#cb254-5"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> policesworn, <span class="dt">y =</span> robbery, <span class="dt">color =</span> cityname)) <span class="op">+</span></span>
+<span id="cb254-6"><a href="chp8.html#cb254-6"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">na.rm =</span> T) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb254-7"><a href="chp8.html#cb254-7"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Police per 1000 People&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb254-8"><a href="chp8.html#cb254-8"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Robberies per 1000 People&quot;</span>) <span class="op">+</span></span>
+<span id="cb254-9"><a href="chp8.html#cb254-9"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">caption =</span> <span class="st">&quot;Figure 8.2: Robberies and Police for Specified Cities in California&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb254-10"><a href="chp8.html#cb254-10"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.caption =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="dv">0</span>), <span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="co"># remove legend</span></span>
+<span id="cb254-11"><a href="chp8.html#cb254-11"></a><span class="st">  </span><span class="co"># place city names with corresponding colors.</span></span>
+<span id="cb254-12"><a href="chp8.html#cb254-12"></a><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="fl">1.6</span>, <span class="dt">y =</span> <span class="dv">10</span>, <span class="dt">label =</span> <span class="st">&quot;Oakland&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#00BF7D&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb254-13"><a href="chp8.html#cb254-13"></a><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="dv">2</span>, <span class="dt">y =</span> <span class="dv">5</span>, <span class="dt">label =</span> <span class="st">&quot;Sacramento&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#00B0F6&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb254-14"><a href="chp8.html#cb254-14"></a><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="fl">2.58</span>, <span class="dt">y =</span> <span class="fl">4.5</span>, <span class="dt">label =</span> <span class="st">&quot;Los Angeles&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#A3A500&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb254-15"><a href="chp8.html#cb254-15"></a><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="fl">2.7</span>, <span class="dt">y =</span> <span class="fl">7.8</span>, <span class="dt">label =</span> <span class="st">&quot;San Francisco&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#E76BF3&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb254-16"><a href="chp8.html#cb254-16"></a><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="fl">1.25</span>, <span class="dt">y =</span> <span class="fl">3.5</span>, <span class="dt">label =</span> <span class="st">&quot;Fresno&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#F8766D&quot;</span>)</span></code></pre></div>
 <p><img src="bailey_files/figure-html/figure8.2-1.png" width="672" /></p>
-<div class="sourceCode" id="cb246"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb246-1" title="1">crime <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb246-2" title="2"><span class="st">  </span><span class="kw">select</span>(cityname, policesworn, robbery, popcity) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb246-3" title="3"><span class="st">  </span><span class="kw">filter</span>(cityname <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;fresno&quot;</span>, <span class="st">&quot;losangel&quot;</span>, <span class="st">&quot;oakland&quot;</span>, <span class="st">&quot;sacramen&quot;</span>, <span class="st">&quot;sanfran&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb246-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">robbery=</span>robbery<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>, <span class="dt">policesworn =</span> policesworn<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb246-5" title="5"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> policesworn, <span class="dt">y =</span> robbery, <span class="dt">color =</span> cityname)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb246-6" title="6"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">na.rm =</span> T) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb246-7" title="7"><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Police per 1000 People&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb246-8" title="8"><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Robberies per 1000 People&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb246-9" title="9"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">caption =</span> <span class="st">&quot;Figure 8.3: Robberies and Police for Specified Cities in California with City-Specific Regression Lines&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb246-10" title="10"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.caption =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="dv">0</span>), <span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb246-11" title="11"><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="fl">1.6</span>, <span class="dt">y =</span> <span class="dv">10</span>, <span class="dt">label =</span> <span class="st">&quot;Oakland&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#00BF7D&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb246-12" title="12"><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="dv">2</span>, <span class="dt">y =</span> <span class="dv">5</span>, <span class="dt">label =</span> <span class="st">&quot;Sacramento&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#00B0F6&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb246-13" title="13"><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="fl">2.58</span>, <span class="dt">y =</span> <span class="fl">4.5</span>, <span class="dt">label =</span> <span class="st">&quot;Los Angeles&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#A3A500&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb246-14" title="14"><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="fl">2.7</span>, <span class="dt">y =</span> <span class="fl">7.8</span>, <span class="dt">label =</span> <span class="st">&quot;San Francisco&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#E76BF3&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb246-15" title="15"><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="fl">1.25</span>, <span class="dt">y =</span> <span class="fl">3.5</span>, <span class="dt">label =</span> <span class="st">&quot;Fresno&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#F8766D&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb246-16" title="16"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="dt">se =</span> F) <span class="co"># add regression lines. the addition of the color aesthetic will cause geom_smooth to add regression lines for each &quot;color&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb255"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb255-1"><a href="chp8.html#cb255-1"></a>crime <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb255-2"><a href="chp8.html#cb255-2"></a><span class="st">  </span><span class="kw">select</span>(cityname, policesworn, robbery, popcity) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb255-3"><a href="chp8.html#cb255-3"></a><span class="st">  </span><span class="kw">filter</span>(cityname <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;fresno&quot;</span>, <span class="st">&quot;losangel&quot;</span>, <span class="st">&quot;oakland&quot;</span>, <span class="st">&quot;sacramen&quot;</span>, <span class="st">&quot;sanfran&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb255-4"><a href="chp8.html#cb255-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">robbery=</span>robbery<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>, <span class="dt">policesworn =</span> policesworn<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb255-5"><a href="chp8.html#cb255-5"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> policesworn, <span class="dt">y =</span> robbery, <span class="dt">color =</span> cityname)) <span class="op">+</span></span>
+<span id="cb255-6"><a href="chp8.html#cb255-6"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">na.rm =</span> T) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb255-7"><a href="chp8.html#cb255-7"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Police per 1000 People&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb255-8"><a href="chp8.html#cb255-8"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Robberies per 1000 People&quot;</span>) <span class="op">+</span></span>
+<span id="cb255-9"><a href="chp8.html#cb255-9"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">caption =</span> <span class="st">&quot;Figure 8.3: Robberies and Police for Specified Cities in California with City-Specific Regression Lines&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb255-10"><a href="chp8.html#cb255-10"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.caption =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="dv">0</span>), <span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb255-11"><a href="chp8.html#cb255-11"></a><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="fl">1.6</span>, <span class="dt">y =</span> <span class="dv">10</span>, <span class="dt">label =</span> <span class="st">&quot;Oakland&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#00BF7D&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb255-12"><a href="chp8.html#cb255-12"></a><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="dv">2</span>, <span class="dt">y =</span> <span class="dv">5</span>, <span class="dt">label =</span> <span class="st">&quot;Sacramento&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#00B0F6&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb255-13"><a href="chp8.html#cb255-13"></a><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="fl">2.58</span>, <span class="dt">y =</span> <span class="fl">4.5</span>, <span class="dt">label =</span> <span class="st">&quot;Los Angeles&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#A3A500&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb255-14"><a href="chp8.html#cb255-14"></a><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="fl">2.7</span>, <span class="dt">y =</span> <span class="fl">7.8</span>, <span class="dt">label =</span> <span class="st">&quot;San Francisco&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#E76BF3&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb255-15"><a href="chp8.html#cb255-15"></a><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="fl">1.25</span>, <span class="dt">y =</span> <span class="fl">3.5</span>, <span class="dt">label =</span> <span class="st">&quot;Fresno&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;#F8766D&quot;</span>) <span class="op">+</span></span>
+<span id="cb255-16"><a href="chp8.html#cb255-16"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="dt">se =</span> F) <span class="co"># add regression lines. the addition of the color aesthetic will cause geom_smooth to add regression lines for each &quot;color&quot;</span></span></code></pre></div>
 <p><img src="bailey_files/figure-html/figure8.3-1.png" width="672" /></p>
 </div>
 <div id="one-way-fixed-effects-models" class="section level2">
@@ -461,12 +476,12 @@ Admit      Male Female
 <div id="lsdv-approach" class="section level3">
 <h3><span class="header-section-number">10.3.1</span> LSDV Approach</h3>
 <p>The least squares dummy variable approach allows us to account for the fixed effects by including a dummy variable for each unit. First, let’s calculate the pooled model.</p>
-<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb247-1" title="1">crime <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb247-2" title="2"><span class="st">  </span><span class="kw">select</span>(cityname, policesworn, robbery, popcity) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb247-3" title="3"><span class="st">  </span><span class="kw">filter</span>(cityname <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;fresno&quot;</span>, <span class="st">&quot;losangel&quot;</span>, <span class="st">&quot;oakland&quot;</span>, <span class="st">&quot;sacramen&quot;</span>, <span class="st">&quot;sanfran&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb247-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">robbery=</span>robbery<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>, <span class="dt">policesworn =</span> policesworn<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>) <span class="op">%$%</span></a>
-<a class="sourceLine" id="cb247-5" title="5"><span class="st">  </span><span class="kw">lm</span>(robbery <span class="op">~</span><span class="st"> </span>policesworn) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb247-6" title="6"><span class="st">  </span><span class="kw">tidy</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb256"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb256-1"><a href="chp8.html#cb256-1"></a>crime <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb256-2"><a href="chp8.html#cb256-2"></a><span class="st">  </span><span class="kw">select</span>(cityname, policesworn, robbery, popcity) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb256-3"><a href="chp8.html#cb256-3"></a><span class="st">  </span><span class="kw">filter</span>(cityname <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;fresno&quot;</span>, <span class="st">&quot;losangel&quot;</span>, <span class="st">&quot;oakland&quot;</span>, <span class="st">&quot;sacramen&quot;</span>, <span class="st">&quot;sanfran&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb256-4"><a href="chp8.html#cb256-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">robbery=</span>robbery<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>, <span class="dt">policesworn =</span> policesworn<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>) <span class="op">%$%</span></span>
+<span id="cb256-5"><a href="chp8.html#cb256-5"></a><span class="st">  </span><span class="kw">lm</span>(robbery <span class="op">~</span><span class="st"> </span>policesworn) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb256-6"><a href="chp8.html#cb256-6"></a><span class="st">  </span><span class="kw">tidy</span>()</span></code></pre></div>
 <pre><code># A tibble: 2 x 5
   term        estimate std.error statistic  p.value
   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
@@ -474,11 +489,11 @@ Admit      Male Female
 2 policesworn     1.76     0.509      3.46 0.000771</code></pre>
 <p>We can see that the coefficient on the police variable is positive and significantly different than zero.</p>
 <p>To apply LSDV approach in R, we add cityname as an explanatory variable. Since cityname is a character vector, R will treat it as a factor.</p>
-<div class="sourceCode" id="cb249"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb249-1" title="1">crime <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb249-2" title="2"><span class="st">  </span><span class="kw">select</span>(cityname, policesworn, robbery, popcity) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb249-3" title="3"><span class="st">  </span><span class="kw">filter</span>(cityname <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;fresno&quot;</span>, <span class="st">&quot;losangel&quot;</span>, <span class="st">&quot;oakland&quot;</span>, <span class="st">&quot;sacramen&quot;</span>, <span class="st">&quot;sanfran&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb249-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">robbery=</span>robbery<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>, <span class="dt">policesworn =</span> policesworn<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>) <span class="op">%$%</span></a>
-<a class="sourceLine" id="cb249-5" title="5"><span class="st">  </span><span class="kw">lm</span>(robbery <span class="op">~</span><span class="st"> </span>policesworn <span class="op">+</span><span class="st"> </span>cityname) </a></code></pre></div>
+<div class="sourceCode" id="cb258"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb258-1"><a href="chp8.html#cb258-1"></a>crime <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb258-2"><a href="chp8.html#cb258-2"></a><span class="st">  </span><span class="kw">select</span>(cityname, policesworn, robbery, popcity) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb258-3"><a href="chp8.html#cb258-3"></a><span class="st">  </span><span class="kw">filter</span>(cityname <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;fresno&quot;</span>, <span class="st">&quot;losangel&quot;</span>, <span class="st">&quot;oakland&quot;</span>, <span class="st">&quot;sacramen&quot;</span>, <span class="st">&quot;sanfran&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb258-4"><a href="chp8.html#cb258-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">robbery=</span>robbery<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>, <span class="dt">policesworn =</span> policesworn<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>) <span class="op">%$%</span></span>
+<span id="cb258-5"><a href="chp8.html#cb258-5"></a><span class="st">  </span><span class="kw">lm</span>(robbery <span class="op">~</span><span class="st"> </span>policesworn <span class="op">+</span><span class="st"> </span>cityname) </span></code></pre></div>
 <pre><code>
 Call:
 lm(formula = robbery ~ policesworn + cityname)
@@ -489,13 +504,13 @@ Coefficients:
 citynamesacramen   citynamesanfran  
             1.63              8.32  </code></pre>
 <p>We can confirm that below.</p>
-<div class="sourceCode" id="cb251"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb251-1" title="1">crime <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb251-2" title="2"><span class="st">  </span><span class="kw">select</span>(cityname, policesworn, robbery, popcity) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb251-3" title="3"><span class="st">  </span><span class="kw">filter</span>(cityname <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;fresno&quot;</span>, <span class="st">&quot;losangel&quot;</span>, <span class="st">&quot;oakland&quot;</span>, <span class="st">&quot;sacramen&quot;</span>, <span class="st">&quot;sanfran&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb251-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">robbery=</span>robbery<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>, </a>
-<a class="sourceLine" id="cb251-5" title="5">         <span class="dt">policesworn =</span> policesworn<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>,</a>
-<a class="sourceLine" id="cb251-6" title="6">         <span class="dt">cityname =</span> <span class="kw">as_factor</span>(cityname)) <span class="op">%$%</span><span class="st"> </span><span class="co"># coerce cityname to a factor</span></a>
-<a class="sourceLine" id="cb251-7" title="7"><span class="st">  </span><span class="kw">lm</span>(robbery <span class="op">~</span><span class="st"> </span>policesworn <span class="op">+</span><span class="st"> </span>cityname) </a></code></pre></div>
+<div class="sourceCode" id="cb260"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb260-1"><a href="chp8.html#cb260-1"></a>crime <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb260-2"><a href="chp8.html#cb260-2"></a><span class="st">  </span><span class="kw">select</span>(cityname, policesworn, robbery, popcity) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb260-3"><a href="chp8.html#cb260-3"></a><span class="st">  </span><span class="kw">filter</span>(cityname <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;fresno&quot;</span>, <span class="st">&quot;losangel&quot;</span>, <span class="st">&quot;oakland&quot;</span>, <span class="st">&quot;sacramen&quot;</span>, <span class="st">&quot;sanfran&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb260-4"><a href="chp8.html#cb260-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">robbery=</span>robbery<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>, </span>
+<span id="cb260-5"><a href="chp8.html#cb260-5"></a>         <span class="dt">policesworn =</span> policesworn<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>,</span>
+<span id="cb260-6"><a href="chp8.html#cb260-6"></a>         <span class="dt">cityname =</span> <span class="kw">as_factor</span>(cityname)) <span class="op">%$%</span><span class="st"> </span><span class="co"># coerce cityname to a factor</span></span>
+<span id="cb260-7"><a href="chp8.html#cb260-7"></a><span class="st">  </span><span class="kw">lm</span>(robbery <span class="op">~</span><span class="st"> </span>policesworn <span class="op">+</span><span class="st"> </span>cityname) </span></code></pre></div>
 <pre><code>
 Call:
 lm(formula = robbery ~ policesworn + cityname)
@@ -511,14 +526,14 @@ citynamesacramen   citynamesanfran
 <span class="math display">\[\text{Oakland: }Robbery = 16.89-2.75Police\]</span>
 <span class="math display">\[\text{Sacramento: }Robbery = 12.56-2.75Police\]</span>
 <span class="math display">\[\text{San Francisco: }Robbery = 19.25-2.75Police\]</span>
-We see the effect of Simpson’s Paradox in the slope variable here. The slope variable is now negative and significant. It should be noted that these results are not consistent with Figure 8.3. Here we have only one slope coefficient with five different intercepts; Figure 8.3 shows five different slope coefficients along with five different intercepts. We can return results consistent with Figure 8.3 as below. We can show the equation for each of the five cities by adding the coefficient on the dummy variable to the intercept with the base case being Fresno<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a></p>
-<div class="sourceCode" id="cb253"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb253-1" title="1">crime <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb253-2" title="2"><span class="st">  </span><span class="kw">select</span>(cityname, policesworn, robbery, popcity) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb253-3" title="3"><span class="st">  </span><span class="kw">filter</span>(cityname <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;fresno&quot;</span>, <span class="st">&quot;losangel&quot;</span>, <span class="st">&quot;oakland&quot;</span>, <span class="st">&quot;sacramen&quot;</span>, <span class="st">&quot;sanfran&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb253-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">robbery=</span>robbery<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>, </a>
-<a class="sourceLine" id="cb253-5" title="5">         <span class="dt">policesworn =</span> policesworn<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>,</a>
-<a class="sourceLine" id="cb253-6" title="6">         <span class="dt">cityname =</span> <span class="kw">as_factor</span>(cityname)) <span class="op">%$%</span><span class="st"> </span><span class="co"># coerce cityname to a factor</span></a>
-<a class="sourceLine" id="cb253-7" title="7"><span class="st">  </span><span class="kw">lm</span>(robbery <span class="op">~</span><span class="st"> </span>policesworn <span class="op">*</span><span class="st"> </span>cityname) </a></code></pre></div>
+We see the effect of Simpson’s Paradox in the slope variable here. The slope variable is now negative and significant. It should be noted that these results are not consistent with Figure 8.3. Here we have only one slope coefficient with five different intercepts; Figure 8.3 shows five different slope coefficients along with five different intercepts. We can return results consistent with Figure 8.3 as below. We can show the equation for each of the five cities by adding the coefficient on the dummy variable to the intercept with the base case being Fresno<a href="#fn10" class="footnote-ref" id="fnref10"><sup>10</sup></a></p>
+<div class="sourceCode" id="cb262"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb262-1"><a href="chp8.html#cb262-1"></a>crime <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb262-2"><a href="chp8.html#cb262-2"></a><span class="st">  </span><span class="kw">select</span>(cityname, policesworn, robbery, popcity) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb262-3"><a href="chp8.html#cb262-3"></a><span class="st">  </span><span class="kw">filter</span>(cityname <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;fresno&quot;</span>, <span class="st">&quot;losangel&quot;</span>, <span class="st">&quot;oakland&quot;</span>, <span class="st">&quot;sacramen&quot;</span>, <span class="st">&quot;sanfran&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb262-4"><a href="chp8.html#cb262-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">robbery=</span>robbery<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>, </span>
+<span id="cb262-5"><a href="chp8.html#cb262-5"></a>         <span class="dt">policesworn =</span> policesworn<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>,</span>
+<span id="cb262-6"><a href="chp8.html#cb262-6"></a>         <span class="dt">cityname =</span> <span class="kw">as_factor</span>(cityname)) <span class="op">%$%</span><span class="st"> </span><span class="co"># coerce cityname to a factor</span></span>
+<span id="cb262-7"><a href="chp8.html#cb262-7"></a><span class="st">  </span><span class="kw">lm</span>(robbery <span class="op">~</span><span class="st"> </span>policesworn <span class="op">*</span><span class="st"> </span>cityname) </span></code></pre></div>
 <pre><code>
 Call:
 lm(formula = robbery ~ policesworn * cityname)
@@ -534,7 +549,7 @@ policesworn:citynamelosangel   policesworn:citynameoakland
                       -6.038                         0.992  
 policesworn:citynamesacramen   policesworn:citynamesanfran  
                       -2.940                         0.923  </code></pre>
-<p>Now the equation for each city requires that we add the slope dummy coefficient to the intercept coefficient and the interaction coefficient to the coefficient on policesworn. So the equation for each city is:<a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a></p>
+<p>Now the equation for each city requires that we add the slope dummy coefficient to the intercept coefficient and the interaction coefficient to the coefficient on policesworn. So the equation for each city is:<a href="#fn11" class="footnote-ref" id="fnref11"><sup>11</sup></a></p>
 <p><span class="math display">\[\text{Fresno: }Robbery = 8.79-2.75Police\]</span>
 <span class="math display">\[\text{Los Angeles: }Robbery=28.46-8.79Police\]</span>
 <span class="math display">\[\text{Oakland: }Robbery=12.51-1.76Police\]</span>
@@ -545,18 +560,18 @@ policesworn:citynamesacramen   policesworn:citynamesanfran
 <div id="f-test-for-significance-of-fixed-effects." class="section level3">
 <h3><span class="header-section-number">10.3.2</span> <em>F</em>-test for significance of fixed effects.</h3>
 <p>The unrestricted model is given by:<span class="math display">\[Y_{it}=\beta_0+\beta_1X_{1it}+\beta_2D_{1i}+\beta_3D_{2i}+\cdots+\beta_PD_{P-1,i}+\nu_{it}\]</span> To test for the significance of fixed effects we test the following hypothesis: <span class="math display">\[H_0:\beta_2=\beta_3=\cdots=\beta_P\]</span> <span class="math display">\[H_1: \text{@ least one }\beta\ne0\]</span> As in Chapter 5, we will make use of <code>linearHypothesis</code> from the car package.</p>
-<div class="sourceCode" id="cb255"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb255-1" title="1"><span class="kw">library</span>(car)</a>
-<a class="sourceLine" id="cb255-2" title="2">crime <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb255-3" title="3"><span class="st">  </span><span class="kw">select</span>(cityname, policesworn, robbery, popcity) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb255-4" title="4"><span class="st">  </span><span class="kw">filter</span>(cityname <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;fresno&quot;</span>, <span class="st">&quot;losangel&quot;</span>, <span class="st">&quot;oakland&quot;</span>, <span class="st">&quot;sacramen&quot;</span>, <span class="st">&quot;sanfran&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb255-5" title="5"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">robbery=</span>robbery<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>, </a>
-<a class="sourceLine" id="cb255-6" title="6">         <span class="dt">policesworn =</span> policesworn<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>,</a>
-<a class="sourceLine" id="cb255-7" title="7">         <span class="dt">cityname =</span> <span class="kw">as_factor</span>(cityname)) <span class="op">%$%</span><span class="st"> </span><span class="co"># coerce cityname to a factor</span></a>
-<a class="sourceLine" id="cb255-8" title="8"><span class="st">  </span><span class="kw">lm</span>(robbery <span class="op">~</span><span class="st"> </span>policesworn <span class="op">+</span><span class="st"> </span>cityname) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb255-9" title="9"><span class="st">  </span><span class="kw">linearHypothesis</span>(<span class="kw">c</span>(<span class="st">&quot;citynamelosangel = 0&quot;</span>, <span class="co"># use the variable names from the lm object</span></a>
-<a class="sourceLine" id="cb255-10" title="10">                     <span class="st">&quot;citynameoakland = 0&quot;</span>, </a>
-<a class="sourceLine" id="cb255-11" title="11">                     <span class="st">&quot;citynamesacramen = 0&quot;</span>, </a>
-<a class="sourceLine" id="cb255-12" title="12">                     <span class="st">&quot;citynamesanfran = 0&quot;</span> ))</a></code></pre></div>
+<div class="sourceCode" id="cb264"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb264-1"><a href="chp8.html#cb264-1"></a><span class="kw">library</span>(car)</span>
+<span id="cb264-2"><a href="chp8.html#cb264-2"></a>crime <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb264-3"><a href="chp8.html#cb264-3"></a><span class="st">  </span><span class="kw">select</span>(cityname, policesworn, robbery, popcity) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb264-4"><a href="chp8.html#cb264-4"></a><span class="st">  </span><span class="kw">filter</span>(cityname <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;fresno&quot;</span>, <span class="st">&quot;losangel&quot;</span>, <span class="st">&quot;oakland&quot;</span>, <span class="st">&quot;sacramen&quot;</span>, <span class="st">&quot;sanfran&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb264-5"><a href="chp8.html#cb264-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">robbery=</span>robbery<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>, </span>
+<span id="cb264-6"><a href="chp8.html#cb264-6"></a>         <span class="dt">policesworn =</span> policesworn<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>,</span>
+<span id="cb264-7"><a href="chp8.html#cb264-7"></a>         <span class="dt">cityname =</span> <span class="kw">as_factor</span>(cityname)) <span class="op">%$%</span><span class="st"> </span><span class="co"># coerce cityname to a factor</span></span>
+<span id="cb264-8"><a href="chp8.html#cb264-8"></a><span class="st">  </span><span class="kw">lm</span>(robbery <span class="op">~</span><span class="st"> </span>policesworn <span class="op">+</span><span class="st"> </span>cityname) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb264-9"><a href="chp8.html#cb264-9"></a><span class="st">  </span><span class="kw">linearHypothesis</span>(<span class="kw">c</span>(<span class="st">&quot;citynamelosangel = 0&quot;</span>, <span class="co"># use the variable names from the lm object</span></span>
+<span id="cb264-10"><a href="chp8.html#cb264-10"></a>                     <span class="st">&quot;citynameoakland = 0&quot;</span>, </span>
+<span id="cb264-11"><a href="chp8.html#cb264-11"></a>                     <span class="st">&quot;citynamesacramen = 0&quot;</span>, </span>
+<span id="cb264-12"><a href="chp8.html#cb264-12"></a>                     <span class="st">&quot;citynamesanfran = 0&quot;</span> ))</span></code></pre></div>
 <pre><code>Linear hypothesis test
 
 Hypothesis:
@@ -582,16 +597,16 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <h3><span class="header-section-number">10.4.1</span> Manually De-Mean</h3>
 <p>We can estimate the fixed-model with a de-meaned approach with the model: <span class="math display">\[Y_{it}-\bar Y_{i.}=\beta_1(X_{it}-\bar X_{i.})\]</span></p>
 <p><code>scale</code> will de-mean the data with the argument <code>scale = F</code>. Learn more about <code>scale</code> by calling <code>?scale</code>. Do de-mean the data by city will use <code>group_by</code> in our pipeline to group the data by city, then we will <code>mutate</code> the crime and police variables with <code>scale</code> to de-mean them. We should end up the same estimate of the slope coefficient from the LSDV approach.</p>
-<div class="sourceCode" id="cb257"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb257-1" title="1">crime <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb257-2" title="2"><span class="st">  </span><span class="kw">select</span>(cityname, policesworn, robbery, popcity) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb257-3" title="3"><span class="st">  </span><span class="kw">filter</span>(cityname <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;fresno&quot;</span>, <span class="st">&quot;losangel&quot;</span>, <span class="st">&quot;oakland&quot;</span>, <span class="st">&quot;sacramen&quot;</span>, <span class="st">&quot;sanfran&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb257-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">robbery=</span>robbery<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>, </a>
-<a class="sourceLine" id="cb257-5" title="5">         <span class="dt">policesworn =</span> policesworn<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>,</a>
-<a class="sourceLine" id="cb257-6" title="6">         <span class="dt">cityname =</span> <span class="kw">as_factor</span>(cityname)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb257-7" title="7"><span class="st">  </span><span class="kw">group_by</span>(cityname) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb257-8" title="8"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">robbery =</span> <span class="kw">scale</span>(robbery, <span class="dt">scale =</span> F),</a>
-<a class="sourceLine" id="cb257-9" title="9">         <span class="dt">policesworn =</span> <span class="kw">scale</span>(policesworn, <span class="dt">scale =</span> F)) <span class="op">%$%</span></a>
-<a class="sourceLine" id="cb257-10" title="10"><span class="st">  </span><span class="kw">lm</span>(robbery <span class="op">~</span><span class="st"> </span>policesworn) </a></code></pre></div>
+<div class="sourceCode" id="cb266"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb266-1"><a href="chp8.html#cb266-1"></a>crime <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb266-2"><a href="chp8.html#cb266-2"></a><span class="st">  </span><span class="kw">select</span>(cityname, policesworn, robbery, popcity) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb266-3"><a href="chp8.html#cb266-3"></a><span class="st">  </span><span class="kw">filter</span>(cityname <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;fresno&quot;</span>, <span class="st">&quot;losangel&quot;</span>, <span class="st">&quot;oakland&quot;</span>, <span class="st">&quot;sacramen&quot;</span>, <span class="st">&quot;sanfran&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb266-4"><a href="chp8.html#cb266-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">robbery=</span>robbery<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>, </span>
+<span id="cb266-5"><a href="chp8.html#cb266-5"></a>         <span class="dt">policesworn =</span> policesworn<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>,</span>
+<span id="cb266-6"><a href="chp8.html#cb266-6"></a>         <span class="dt">cityname =</span> <span class="kw">as_factor</span>(cityname)) <span class="op">%&gt;%</span></span>
+<span id="cb266-7"><a href="chp8.html#cb266-7"></a><span class="st">  </span><span class="kw">group_by</span>(cityname) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb266-8"><a href="chp8.html#cb266-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">robbery =</span> <span class="kw">scale</span>(robbery, <span class="dt">scale =</span> F),</span>
+<span id="cb266-9"><a href="chp8.html#cb266-9"></a>         <span class="dt">policesworn =</span> <span class="kw">scale</span>(policesworn, <span class="dt">scale =</span> F)) <span class="op">%$%</span></span>
+<span id="cb266-10"><a href="chp8.html#cb266-10"></a><span class="st">  </span><span class="kw">lm</span>(robbery <span class="op">~</span><span class="st"> </span>policesworn) </span></code></pre></div>
 <pre><code>
 Call:
 lm(formula = robbery ~ policesworn)
@@ -604,15 +619,15 @@ Coefficients:
 <div id="using-the-plm-package" class="section level3">
 <h3><span class="header-section-number">10.4.2</span> Using the <code>plm</code> package</h3>
 <p>We can estimate the fixed effects model with <code>plm</code> from the <code>plm</code> package. The <code>plm</code> package was created to make the estimation of linear panel models straightforward. To learn more read the <code>vignette(plmPackage)</code>. To estimate the one-way fixed effects model with <code>plm</code>, we need four arguments<code>formula</code>, <code>data</code>, <code>index</code>, and <code>model</code>. The <code>formula</code> and <code>data</code> arguments are the same as those in the <code>lm</code> call. <code>index</code> is a vector of the units and the type of variation is invoked with <code>model</code>. We estimate the model below:</p>
-<div class="sourceCode" id="cb259"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb259-1" title="1"><span class="kw">library</span>(plm)  </a>
-<a class="sourceLine" id="cb259-2" title="2">crime <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb259-3" title="3"><span class="st">  </span><span class="kw">select</span>(cityname, policesworn, robbery, popcity) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb259-4" title="4"><span class="st">  </span><span class="kw">filter</span>(cityname <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;fresno&quot;</span>, <span class="st">&quot;losangel&quot;</span>, <span class="st">&quot;oakland&quot;</span>, <span class="st">&quot;sacramen&quot;</span>, <span class="st">&quot;sanfran&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb259-5" title="5"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">robbery=</span>robbery<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>, </a>
-<a class="sourceLine" id="cb259-6" title="6">         <span class="dt">policesworn =</span> policesworn<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>,</a>
-<a class="sourceLine" id="cb259-7" title="7">         <span class="dt">cityname =</span> <span class="kw">as_factor</span>(cityname)) -&gt;<span class="st"> </span><span class="co"># the %$% pipe does not function with plm</span></a>
-<a class="sourceLine" id="cb259-8" title="8"><span class="st">  </span>cali <span class="co"># the modified data are assigned to the object cali</span></a>
-<a class="sourceLine" id="cb259-9" title="9">  <span class="kw">plm</span>(robbery <span class="op">~</span><span class="st"> </span>policesworn, <span class="dt">data =</span> cali, <span class="dt">index =</span> <span class="st">&quot;cityname&quot;</span>, <span class="dt">model =</span> <span class="st">&quot;within&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb268"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb268-1"><a href="chp8.html#cb268-1"></a><span class="kw">library</span>(plm)  </span>
+<span id="cb268-2"><a href="chp8.html#cb268-2"></a>crime <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb268-3"><a href="chp8.html#cb268-3"></a><span class="st">  </span><span class="kw">select</span>(cityname, policesworn, robbery, popcity) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb268-4"><a href="chp8.html#cb268-4"></a><span class="st">  </span><span class="kw">filter</span>(cityname <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;fresno&quot;</span>, <span class="st">&quot;losangel&quot;</span>, <span class="st">&quot;oakland&quot;</span>, <span class="st">&quot;sacramen&quot;</span>, <span class="st">&quot;sanfran&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb268-5"><a href="chp8.html#cb268-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">robbery=</span>robbery<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>, </span>
+<span id="cb268-6"><a href="chp8.html#cb268-6"></a>         <span class="dt">policesworn =</span> policesworn<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>,</span>
+<span id="cb268-7"><a href="chp8.html#cb268-7"></a>         <span class="dt">cityname =</span> <span class="kw">as_factor</span>(cityname)) -&gt;<span class="st"> </span><span class="co"># the %$% pipe does not function with plm</span></span>
+<span id="cb268-8"><a href="chp8.html#cb268-8"></a><span class="st">  </span>cali <span class="co"># the modified data are assigned to the object cali</span></span>
+<span id="cb268-9"><a href="chp8.html#cb268-9"></a>  <span class="kw">plm</span>(robbery <span class="op">~</span><span class="st"> </span>policesworn, <span class="dt">data =</span> cali, <span class="dt">index =</span> <span class="st">&quot;cityname&quot;</span>, <span class="dt">model =</span> <span class="st">&quot;within&quot;</span>)</span></code></pre></div>
 <pre><code>
 Model Formula: robbery ~ policesworn
 
@@ -628,14 +643,14 @@ policesworn
 <p>So we need to incorporate time into the one-way fixed effects model. This can be accomplished in one of two ways. Time can be treated as a factor (dummy variable) or set the effect in <code>plm</code> to <code>"twoways"</code>. The results will be the same.</p>
 <div id="time-as-a-factor" class="section level3">
 <h3><span class="header-section-number">10.5.1</span> Time as a factor</h3>
-<div class="sourceCode" id="cb261"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb261-1" title="1">crime <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb261-2" title="2"><span class="st">  </span><span class="kw">select</span>(cityname, policesworn, robbery, popcity, year) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb261-3" title="3"><span class="st">  </span><span class="kw">filter</span>(cityname <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;fresno&quot;</span>, <span class="st">&quot;losangel&quot;</span>, <span class="st">&quot;oakland&quot;</span>, <span class="st">&quot;sacramen&quot;</span>, <span class="st">&quot;sanfran&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb261-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">robbery=</span>robbery<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>, </a>
-<a class="sourceLine" id="cb261-5" title="5">         <span class="dt">policesworn =</span> policesworn<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>,</a>
-<a class="sourceLine" id="cb261-6" title="6">         <span class="dt">cityname =</span> <span class="kw">as_factor</span>(cityname)) -&gt;<span class="st"> </span><span class="co"># the %$% pipe does not function with plm</span></a>
-<a class="sourceLine" id="cb261-7" title="7"><span class="st">  </span>cali <span class="co"># the modified data are assigned to the object cali</span></a>
-<a class="sourceLine" id="cb261-8" title="8">  <span class="kw">plm</span>(robbery <span class="op">~</span><span class="st"> </span>policesworn <span class="op">+</span><span class="st"> </span><span class="kw">factor</span>(year), <span class="dt">data =</span> cali, <span class="dt">index =</span> <span class="st">&quot;cityname&quot;</span>, <span class="dt">model =</span> <span class="st">&quot;within&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb270"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb270-1"><a href="chp8.html#cb270-1"></a>crime <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb270-2"><a href="chp8.html#cb270-2"></a><span class="st">  </span><span class="kw">select</span>(cityname, policesworn, robbery, popcity, year) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb270-3"><a href="chp8.html#cb270-3"></a><span class="st">  </span><span class="kw">filter</span>(cityname <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;fresno&quot;</span>, <span class="st">&quot;losangel&quot;</span>, <span class="st">&quot;oakland&quot;</span>, <span class="st">&quot;sacramen&quot;</span>, <span class="st">&quot;sanfran&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb270-4"><a href="chp8.html#cb270-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">robbery=</span>robbery<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>, </span>
+<span id="cb270-5"><a href="chp8.html#cb270-5"></a>         <span class="dt">policesworn =</span> policesworn<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>,</span>
+<span id="cb270-6"><a href="chp8.html#cb270-6"></a>         <span class="dt">cityname =</span> <span class="kw">as_factor</span>(cityname)) -&gt;<span class="st"> </span><span class="co"># the %$% pipe does not function with plm</span></span>
+<span id="cb270-7"><a href="chp8.html#cb270-7"></a><span class="st">  </span>cali <span class="co"># the modified data are assigned to the object cali</span></span>
+<span id="cb270-8"><a href="chp8.html#cb270-8"></a>  <span class="kw">plm</span>(robbery <span class="op">~</span><span class="st"> </span>policesworn <span class="op">+</span><span class="st"> </span><span class="kw">factor</span>(year), <span class="dt">data =</span> cali, <span class="dt">index =</span> <span class="st">&quot;cityname&quot;</span>, <span class="dt">model =</span> <span class="st">&quot;within&quot;</span>)</span></code></pre></div>
 <pre><code>
 Model Formula: robbery ~ policesworn + factor(year)
 
@@ -653,14 +668,14 @@ factor(year)91 factor(year)92
 </div>
 <div id="effect-twoways" class="section level3">
 <h3><span class="header-section-number">10.5.2</span> effect = “twoways”</h3>
-<div class="sourceCode" id="cb263"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb263-1" title="1">crime <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb263-2" title="2"><span class="st">  </span><span class="kw">select</span>(cityname, policesworn, robbery, popcity, year) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb263-3" title="3"><span class="st">  </span><span class="kw">filter</span>(cityname <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;fresno&quot;</span>, <span class="st">&quot;losangel&quot;</span>, <span class="st">&quot;oakland&quot;</span>, <span class="st">&quot;sacramen&quot;</span>, <span class="st">&quot;sanfran&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb263-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">robbery=</span>robbery<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>, </a>
-<a class="sourceLine" id="cb263-5" title="5">         <span class="dt">policesworn =</span> policesworn<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>,</a>
-<a class="sourceLine" id="cb263-6" title="6">         <span class="dt">cityname =</span> <span class="kw">as_factor</span>(cityname)) -&gt;<span class="st"> </span><span class="co"># the %$% pipe does not function with plm</span></a>
-<a class="sourceLine" id="cb263-7" title="7"><span class="st">  </span>cali <span class="co"># the modified data are assigned to the object cali</span></a>
-<a class="sourceLine" id="cb263-8" title="8">  <span class="kw">plm</span>(robbery <span class="op">~</span><span class="st"> </span>policesworn, <span class="dt">data =</span> cali, <span class="dt">index =</span> <span class="st">&quot;cityname&quot;</span>, <span class="dt">model =</span> <span class="st">&quot;within&quot;</span>, <span class="dt">effect =</span> <span class="st">&quot;twoways&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb272"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb272-1"><a href="chp8.html#cb272-1"></a>crime <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb272-2"><a href="chp8.html#cb272-2"></a><span class="st">  </span><span class="kw">select</span>(cityname, policesworn, robbery, popcity, year) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb272-3"><a href="chp8.html#cb272-3"></a><span class="st">  </span><span class="kw">filter</span>(cityname <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;fresno&quot;</span>, <span class="st">&quot;losangel&quot;</span>, <span class="st">&quot;oakland&quot;</span>, <span class="st">&quot;sacramen&quot;</span>, <span class="st">&quot;sanfran&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb272-4"><a href="chp8.html#cb272-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">robbery=</span>robbery<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>, </span>
+<span id="cb272-5"><a href="chp8.html#cb272-5"></a>         <span class="dt">policesworn =</span> policesworn<span class="op">/</span>popcity<span class="op">*</span><span class="dv">1000</span>,</span>
+<span id="cb272-6"><a href="chp8.html#cb272-6"></a>         <span class="dt">cityname =</span> <span class="kw">as_factor</span>(cityname)) -&gt;<span class="st"> </span><span class="co"># the %$% pipe does not function with plm</span></span>
+<span id="cb272-7"><a href="chp8.html#cb272-7"></a><span class="st">  </span>cali <span class="co"># the modified data are assigned to the object cali</span></span>
+<span id="cb272-8"><a href="chp8.html#cb272-8"></a>  <span class="kw">plm</span>(robbery <span class="op">~</span><span class="st"> </span>policesworn, <span class="dt">data =</span> cali, <span class="dt">index =</span> <span class="st">&quot;cityname&quot;</span>, <span class="dt">model =</span> <span class="st">&quot;within&quot;</span>, <span class="dt">effect =</span> <span class="st">&quot;twoways&quot;</span>)</span></code></pre></div>
 <pre><code>
 Model Formula: robbery ~ policesworn
 
@@ -672,16 +687,16 @@ policesworn
 </div>
 <div id="difference-in-difference-models" class="section level2">
 <h2><span class="header-section-number">10.6</span> Difference-in-Difference Models</h2>
-<p>In 1992 New Jersey raised it’s minimum wage from $4.25 to $5.05 while neighboring Pennsylvania did not. We can use a difference-in-difference model to investigate the effect of the treatment (increase in minimum wage) on the effect full time employment. The <code>PoEdata</code><a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a> package contains a data set named <code>njmin3</code> that has 820 observations on 14 variables, call <code>?njmin</code> for more information.</p>
-<p>Estimate the basic model <span class="math display">\[fte_{it}=\beta_0+\beta_1nj_i+\beta_2d_i+\beta_3(nj_i\times d_i) + \epsilon_{it}\]</span> where <span class="math inline">\(fte_i\)</span> is full-time equivalent employees, <span class="math inline">\(nj_i\)</span> is the treatment<a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a>, and <span class="math inline">\(d_i\)</span> is the after dummy<a href="#fn10" class="footnote-ref" id="fnref10"><sup>10</sup></a>. Since <span class="math inline">\(\beta_3\)</span> is the difference in differences of treated and control states, test the hypothesis: <span class="math display">\[H_0:\beta_3=0\]</span><span class="math display">\[H_1:\beta_3\ne0\]</span></p>
-<div class="sourceCode" id="cb265"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb265-1" title="1"><span class="co"># Call the following only once.</span></a>
-<a class="sourceLine" id="cb265-2" title="2"><span class="co"># install.packages(&quot;devtools&quot;) # required to insall GitHub packages do this only once</span></a>
-<a class="sourceLine" id="cb265-3" title="3"><span class="co"># devtools::install_git(&quot;https://github.com/ccolonescu/PoEdata&quot;) # install the package from GitHub </span></a></code></pre></div>
-<div class="sourceCode" id="cb266"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb266-1" title="1"><span class="kw">library</span>(PoEdata)</a>
-<a class="sourceLine" id="cb266-2" title="2"><span class="kw">data</span>(njmin3)</a>
-<a class="sourceLine" id="cb266-3" title="3">njmin3 <span class="op">%$%</span></a>
-<a class="sourceLine" id="cb266-4" title="4"><span class="st">  </span><span class="kw">lm</span>(fte <span class="op">~</span><span class="st"> </span>nj<span class="op">*</span>d) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb266-5" title="5"><span class="st">  </span><span class="kw">summary</span>()</a></code></pre></div>
+<p>In 1992 New Jersey raised it’s minimum wage from $4.25 to $5.05 while neighboring Pennsylvania did not. We can use a difference-in-difference model to investigate the effect of the treatment (increase in minimum wage) on the effect full time employment. The <code>PoEdata</code><a href="#fn12" class="footnote-ref" id="fnref12"><sup>12</sup></a> package contains a data set named <code>njmin3</code> that has 820 observations on 14 variables, call <code>?njmin</code> for more information.</p>
+<p>Estimate the basic model <span class="math display">\[fte_{it}=\beta_0+\beta_1nj_i+\beta_2d_i+\beta_3(nj_i\times d_i) + \epsilon_{it}\]</span> where <span class="math inline">\(fte_i\)</span> is full-time equivalent employees, <span class="math inline">\(nj_i\)</span> is the treatment<a href="#fn13" class="footnote-ref" id="fnref13"><sup>13</sup></a>, and <span class="math inline">\(d_i\)</span> is the after dummy<a href="#fn14" class="footnote-ref" id="fnref14"><sup>14</sup></a>. Since <span class="math inline">\(\beta_3\)</span> is the difference in differences of treated and control states, test the hypothesis: <span class="math display">\[H_0:\beta_3=0\]</span><span class="math display">\[H_1:\beta_3\ne0\]</span></p>
+<div class="sourceCode" id="cb274"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb274-1"><a href="chp8.html#cb274-1"></a><span class="co"># Call the following only once.</span></span>
+<span id="cb274-2"><a href="chp8.html#cb274-2"></a><span class="co"># install.packages(&quot;devtools&quot;) # required to insall GitHub packages do this only once</span></span>
+<span id="cb274-3"><a href="chp8.html#cb274-3"></a><span class="co"># devtools::install_git(&quot;https://github.com/ccolonescu/PoEdata&quot;) # install the package from GitHub </span></span></code></pre></div>
+<div class="sourceCode" id="cb275"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb275-1"><a href="chp8.html#cb275-1"></a><span class="kw">library</span>(PoEdata)</span>
+<span id="cb275-2"><a href="chp8.html#cb275-2"></a><span class="kw">data</span>(njmin3)</span>
+<span id="cb275-3"><a href="chp8.html#cb275-3"></a>njmin3 <span class="op">%$%</span></span>
+<span id="cb275-4"><a href="chp8.html#cb275-4"></a><span class="st">  </span><span class="kw">lm</span>(fte <span class="op">~</span><span class="st"> </span>nj<span class="op">*</span>d) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb275-5"><a href="chp8.html#cb275-5"></a><span class="st">  </span><span class="kw">summary</span>()</span></code></pre></div>
 <pre><code>
 Call:
 lm(formula = fte ~ nj * d)
@@ -701,13 +716,13 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 
 Residual standard error: 9.41 on 790 degrees of freedom
   (26 observations deleted due to missingness)
-Multiple R-squared:  0.0074,    Adjusted R-squared:  0.00363 
+Multiple R-squared:  0.0074,	Adjusted R-squared:  0.00363 
 F-statistic: 1.96 on 3 and 790 DF,  p-value: 0.118</code></pre>
 <p>At the <span class="math inline">\(\alpha=.05\)</span> level of significance the t-statistic with 790 degrees of freedom is <span class="math inline">\(\pm\)</span> <span class="math inline">\(1.963\)</span>. The calculated t-statistic is 1.631 so we fail to reject the null hypothesis and conclude that there is no evidence to suggest that the change in the minimum wage changed full-time employment.</p>
 <p>We control for other variables below</p>
-<div class="sourceCode" id="cb268"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb268-1" title="1">njmin3 <span class="op">%$%</span></a>
-<a class="sourceLine" id="cb268-2" title="2"><span class="st">  </span><span class="kw">lm</span>(fte <span class="op">~</span><span class="st"> </span>nj<span class="op">*</span>d <span class="op">+</span><span class="st"> </span>co_owned) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb268-3" title="3"><span class="st">  </span><span class="kw">summary</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb277"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb277-1"><a href="chp8.html#cb277-1"></a>njmin3 <span class="op">%$%</span></span>
+<span id="cb277-2"><a href="chp8.html#cb277-2"></a><span class="st">  </span><span class="kw">lm</span>(fte <span class="op">~</span><span class="st"> </span>nj<span class="op">*</span>d <span class="op">+</span><span class="st"> </span>co_owned) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb277-3"><a href="chp8.html#cb277-3"></a><span class="st">  </span><span class="kw">summary</span>()</span></code></pre></div>
 <pre><code>
 Call:
 lm(formula = fte ~ nj * d + co_owned)
@@ -728,19 +743,19 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 
 Residual standard error: 9.33 on 789 degrees of freedom
   (26 observations deleted due to missingness)
-Multiple R-squared:  0.0253,    Adjusted R-squared:  0.0203 
+Multiple R-squared:  0.0253,	Adjusted R-squared:  0.0203 
 F-statistic: 5.11 on 4 and 789 DF,  p-value: 0.000454</code></pre>
 
 </div>
 </div>
 <div class="footnotes">
 <hr />
-<ol start="6">
-<li id="fn6"><p>The base case can be changed from the default with appropriate arguments see the <a href="https://forcats.tidyverse.org/">forcats</a> package for more.<a href="chp8.html#fnref6" class="footnote-back">↩</a></p></li>
-<li id="fn7"><p>Please note that not all of the coefficients are significant at the 5% level. This is ignored in the equations derived for expository purposes. In fact, we can see that the slope coefficients for Oakland, Sacramento, and San Francisco are not significantly different from the slope coefficient for Fresno, since each of those interaction effects are not significant.<a href="chp8.html#fnref7" class="footnote-back">↩</a></p></li>
-<li id="fn8"><p>The PoEdata package is not housed at CRAN, instead it is house at GitHub, so installing it requires an extra step.<a href="chp8.html#fnref8" class="footnote-back">↩</a></p></li>
-<li id="fn9"><p><span class="math inline">\(nj_i\)</span> takes the value 1 for New Jersey where the minimum wage was increased and the value 0 for Pennsylvania where the minimum wage was not changed<a href="chp8.html#fnref9" class="footnote-back">↩</a></p></li>
-<li id="fn10"><p><span class="math inline">\(d_1\)</span> takes the value 1 after the minimum wage is changed and the value 0 before the change.<a href="chp8.html#fnref10" class="footnote-back">↩</a></p></li>
+<ol start="10">
+<li id="fn10"><p>The base case can be changed from the default with appropriate arguments see the <a href="https://forcats.tidyverse.org/">forcats</a> package for more.<a href="chp8.html#fnref10" class="footnote-back">↩︎</a></p></li>
+<li id="fn11"><p>Please note that not all of the coefficients are significant at the 5% level. This is ignored in the equations derived for expository purposes. In fact, we can see that the slope coefficients for Oakland, Sacramento, and San Francisco are not significantly different from the slope coefficient for Fresno, since each of those interaction effects are not significant.<a href="chp8.html#fnref11" class="footnote-back">↩︎</a></p></li>
+<li id="fn12"><p>The PoEdata package is not housed at CRAN, instead it is house at GitHub, so installing it requires an extra step.<a href="chp8.html#fnref12" class="footnote-back">↩︎</a></p></li>
+<li id="fn13"><p><span class="math inline">\(nj_i\)</span> takes the value 1 for New Jersey where the minimum wage was increased and the value 0 for Pennsylvania where the minimum wage was not changed<a href="chp8.html#fnref13" class="footnote-back">↩︎</a></p></li>
+<li id="fn14"><p><span class="math inline">\(d_1\)</span> takes the value 1 after the minimum wage is changed and the value 0 before the change.<a href="chp8.html#fnref14" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>
@@ -754,11 +769,13 @@ F-statistic: 5.11 on 4 and 789 DF,  p-value: 0.000454</code></pre>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -766,12 +783,11 @@ gitbook.start({
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -783,6 +799,10 @@ gitbook.start({
 "text": null
 },
 "history": {
+"link": null,
+"text": null
+},
+"view": {
 "link": null,
 "text": null
 },

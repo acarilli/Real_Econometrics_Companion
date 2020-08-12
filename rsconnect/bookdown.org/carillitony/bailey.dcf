@@ -5,8 +5,8 @@ account: carillitony
 server: bookdown.org
 hostUrl: https://bookdown.org/__api__
 appId: 3005
-bundleId: 26315
+bundleId: 26423
 url: https://bookdown.org/carillitony/bailey/
-when: 1596820485.81047
+when: 1597088464.8191
 asMultiple: FALSE
 asStatic: FALSE
