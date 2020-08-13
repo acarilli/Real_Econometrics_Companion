@@ -229,7 +229,7 @@ donuts %>%
 ```{r lm-donuts-star, warning=FALSE}
 donuts %>% 
   lm(weight ~ donuts_per_week, .) %>% 
-  stargazer::stargazer(type = "html")
+  stargazer::stargazer(type = "text")
 ```
 
 There are multiple arguments for each of these function calls to change the appearance of any of the tables.  Reading the vignettes for each for guidance.
