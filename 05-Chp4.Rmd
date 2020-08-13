@@ -2,20 +2,24 @@
 # Hypothesis Testing and Interval Estimation; Answering Research Questions {#chp4}
 
 ```{r, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, comment = NA, message = FALSE, warning = FALSE,
+knitr::opts_chunk$set(echo = TRUE, comment = NA, 
+                      message = FALSE, warning = FALSE,
                       options(digits = 3, scipen = 999))
+load("donuts.RData")
+library(tidyverse)
+library(pwr)
 ```
 
 ## Computing Corner
 
-We will learn the basisc for hypothesis testing in R.
+We will learn the basics for hypothesis testing in R.
 
 ### Probability Distributions in R
 
-For every probability distribution there are four commands.  These command for each distribution are prepended by a letter to indicate the functionality.
+Every probability distribution has four functions associate with it.  These command for each distribution is prepended by a letter to indicate the functionality.
 
 - "d" returns the height of the probability "d"ensity function
-- "p" returns the cummulative density function or the "p"robability of being being between two values of the random variable.
+- "p" returns the cumulative density function or the "p"robability of being being between two values of the random variable.
 - "q" returns the inverse density function or the value of the random variable ("q"uantile) given a probability.
 - "r" returns a "r"andomly generated number from the probability distribution
 
@@ -23,72 +27,87 @@ The distributions you are most likely to encounter in econometrics are the norma
 
 ### Critical Values in R
 
-To calculate critical values to perform a hypothesis test use the "q" version of the probability distribution.  This will return the quantile for the given probability.  The probability under the curve will be cummulative from $-\infty$ to the quantile returned.  The "q" version will return the critical value for a one-tail test.  Suppose you'd like to test the following hypothesis about $\mu$:
+To calculate critical values necessary to perform hypothesis tests use the "q" version of the probability distribution.  This will return the critical value of the test-statistic for the given probability.  The probability under the curve will be cumulative from $-\infty$ to the quantile returned.  The "q" version will return the critical value for a one-tail test.  Suppose you'd like to test the following hypothesis about $\mu$:
 
 $$H_0:\mu=0$$
 $$H_1:\mu<0$$
-at the $\alpha=.05$ level of significance.  To calculate the critical t-stastic call `qt(p = .05, df = n-1)`.  You know from `args(qt)` the default value of the argument lower.tail is TRUE.  Suppose, instead, you'd like to test the following hypothesis about $\mu$
+at the $\alpha=.05$ level of significance.  To calculate the critical *t-statistic* call `qt(p = .05, df = n-1)`.  You know from `args(qt)` the default value of the argument lower.tail is TRUE.  Suppose, instead, you'd like to test the following hypothesis about $\mu$
 
 $$H_0:\mu=0$$
 $$H_1:\mu>0$$
-at the $\alpha = .10$ level of significance.  You can call `qt` in two ways:
+at the $\alpha = .10$ level of significance.  We can call `qt` in two ways:
 
 1. `qt(p = .10, df = n-1, lower.tail = FALSE)` or
 2. `qt(p = .90, df = n-1)`
 
-Finally, suppose you'd like to test the following hypothesis about $\mu$
+Finally, suppose we'd like to test the following hypothesis about $\mu$
 
 $$H_0:\mu=0$$
 $$H_1:\mu\ne0$$
-at the $\alpha=.01$ level of significance.  Since the t-distribution is symmetric you can use the lower tail or upper tail value and -1 times it.  You can call `qt` in three ways:
+at the $\alpha=.01$ level of significance.  Since the t-distribution is symmetric, we can use the lower tail or upper tail value and -1 times it.  We can call `qt` in three ways:
 
 1. `qt(p = .005, df = n-1)` or
 2. `qt(p = .005, df = n-1, lower.tail = FALSE)` or
 3. `qt(p = .995, df = n-1)`
 
-You can find crtical values for the normal, F, and $\chi^2$ distributions with similar function calls.
+We can find critical values for the normal, *F*, and $\chi^2$ distributions with similar function calls.
 
 #### *p* values in R
 
-To calculate _p_ values in R, use the "p" version of the distribution call.  So suppose we test the following hypothesis:
+To calculate _p_ values in R, use the "p" version of the distribution call.  Suppose we test the following hypothesis:
 
 $$H_0:\sigma_1^2=\sigma_2^2$$
 $$H_0:\sigma_1^2\ne\sigma_2^2$$
 
-at the $\alpha=.05$ level of significance.  We could use an F test of the form
+at the $\alpha=.05$ level of significance.  We could use an *F* test of the form
 
 $$F=\frac{s_x^2}{s_y^2}$$ 
 
-where $s_x^2$ and $s_y^2$ are the sample variances with n-1 and m-1 degrees of freedom. To calculate the *p* value, call `pf(F, n-1, m-1)` where F is the value calculated above.   
+where $s_x^2$ and $s_y^2$ are the sample variances with n-1 and m-1 degrees of freedom. To calculate the *p* value, call `pf(f, n-1, m-1)` where f is the value calculated above.   
 
 ### Confidence Intervals for OLS estimates
 
-In addition to `confint()`, `confint_tidy()` from the broom package will create a tibble of the low and high values for each estimate.  The default level of confidence is 95%. 
+We can estimate the confidence interval estimates for our parameter estimates by calling `confint` on the `lm` object.
+
+```{r confint-lm}
+donuts %>% 
+  lm(weight ~ donuts_per_week, .) %>% 
+  confint()
+```
+
+We "lose" the parameter estimates though.  We can append the confidence interval onto a "tidied" `lm` object by introducing `confint` as an argument in `broom::tidy()`. 
+
+```{r lm-confint-tidy}
+donuts %>% 
+  lm(weight ~ donuts_per_week, .) %>% 
+  broom::tidy(confint(.))
+```
+
+Note the use of the pronoun `.` in the `confint` call as an argument to `tidy`.  One of the great features of R is the ability to use a function call as an argument in another function call because all function calls return objects.
 
 ### Power Curves
 
-The power curve represents the probability of making Type II error under alternative null hypotheses.  We can generate the power of the test with the `pwr.norm.test(d = NULL, n = NULL, sig.level =.05, power = NULL, alternative = c("two-sided", "less", "greater"))` call from the `pwr` package and plot the power with `ggplot`. To estimate the power we need the effect size $d = \beta_i - \beta$ where $\beta$ is the hypothesised paramater.  We will use 
+The power curve represents the probability of making Type II error under alternative null hypotheses.  We can generate the power of the test with the `pwr.norm.test(d = NULL, n = NULL, sig.level =.05, power = NULL, alternative = c("two-sided", "less", "greater"))` call from the `pwr` package and plot the power with `ggplot`. To estimate the power we need the effect size $d = \beta_i - \beta$ where $\beta$ is the hypothesized parameter value.  We will use 
+
 $$H_0: \beta = 0$$
 $$H_1: \beta > 0$$
  
-The $\beta_i$ represent alternative null hypothseses for $\beta$. Let's let $0 < beta < 7$. Let the significance level be $\alpha=.01$ and $se_{\beta} = 1$.  
+The $\beta_i$ represent alternative null hypotheses for $\beta$. Let's let $0 < beta < 7$. Let the significance level be $\alpha=.01$ and $se_{\beta} = 1$.  
 
 ```{r power}
-library(tidyverse)
-library(pwr)
-
 beta_i <- seq(0, 7, .1)
+# creates a sequence from 0 to 7 by 0.1
+
 se_beta <- 1 # to keep se_beta = 1 we will set n = 1 below.
 
-pwr <- pwr.2p.test(beta_i, n = 1, sig.level = .01, alternative = "greater")
+pwr <- pwr::pwr.2p.test(beta_i, n = 1, sig.level = .01, alternative = "greater") 
 
-#the output is a list we need to extract, h and power from pwr
+#this returns a list we need to extract, h and power from the list into a tibble
 
-data <- tibble(beta = pwr$h, power =  pwr$power)
-
-data %>% 
+# data <- 
+tibble(beta = pwr$h, power =  pwr$power) %>% 
 ggplot(aes(x = beta, y = power)) +
-  geom_line() +
+  geom_line(color = "red", size = 1.2) +
   ylab("Probability of rejecting the null") +
   xlab(expression(beta))
 ```
