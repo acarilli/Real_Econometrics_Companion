@@ -214,6 +214,16 @@ donuts %>%
 ```
 
 
+##### `jtools` package
+
+`jtools` provides an array of ways to summarize and visualize regression model.  `jtools::sum` includes a variety of arguments to add additional statistics and evaluations to any model. 
+
+```{r lm-donuts-jtools}
+donuts %>% 
+  lm(weight ~  donuts_per_week, .) %>% 
+  jtools::summ()
+```
+
 ##### Publication formatted tables
 
 In addition we can also create publication ready tables. Let's look at the `gt` package and the `stargazer` package.
@@ -315,24 +325,37 @@ donuts %>%
 
 ## Heteroscesdasticity-consistent standard errors.  
 
+### `estimatr` package
+
 The `estimatr` package allows you to directly calculate robust standard errors.  
 
 Install the package by calling `install.packages("estimatr")`
 
 R Studio allows you to install packages in the Files/Plots/Packages/Help Pane by clicking on the Install icon on the Packages tab; as you type the name of the package, you will see completion suggestions.  Choose the package you wish to install and R Studio will install it.  
 
-Call `lm_robust()` to estimate an OLS model with robust standard errors with the `se_type = "HC0` argument for the most common method of generating robust standard errors.
+Call `lm_robust()` to estimate an OLS model with robust standard errors with the `se_type = "HC2` argument for the most common method of generating robust standard errors.
 
 ```{r}
 library(estimatr)
 donuts %>% 
-  lm_robust(weight ~ donuts_per_week, ., se_type = "HC0") %>% 
+  lm_robust(weight ~ donuts_per_week, ., se_type = "HC2") %>% 
   summary()
 
 donuts %>% 
-  lm_robust(weight ~ donuts_per_week, ., se_type = "HC0") %>% 
+  lm_robust(weight ~ donuts_per_week, ., se_type = "HC2") %>% 
   tidy()
 ```
+
+### `jtools` package
+
+`summ` includes an argument to produce and display heteroscesdasticity-consistent standard errors.  We can create robust standard errors by adding the argument `robust = "HC0"` to `summ()`
+
+```{r lm-robust-jtools}
+donuts %>% 
+  lm(weight ~ donuts_per_week, .) %>% 
+  jtools::summ(robust = "HC2")
+```
+
 
 ## Generating Random Numbers 
 
