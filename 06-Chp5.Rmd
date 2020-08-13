@@ -2,7 +2,8 @@
 # Multivariate OLS: Where the Action Is {#chp5}
 
 ```{r, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, comment = NA, message = FALSE, warning = FALSE,
+knitr::opts_chunk$set(echo = TRUE, comment = NA, 
+                      message = FALSE, warning = FALSE,
                       options(digits = 3, scipen = 999))
 ```
 
@@ -22,7 +23,9 @@ In this chapter you will learn the basics of estimating multivariate OLS models.
 
 ### Multiple Regression
 
-To estitmate a multiple regression (a regression with more than one independent variable) use the same function `lm` but change the formula argument to include the additional variables.  In a simple regression, the formula argument was of the form `y ~ x`.  In a multiple regression, the formula argument takes the form `y ~ x1 + x2`.  To include additional variables, extend the argument in a similar manner `y ~ x1 + x2 + x3 + ...`.  The remaining arguments are the same as in the simple regression.  You can assign the results to an object just as with a simple regression.  The output will be the list of 12, but the objects in the list will change to reflect the additional variable(s).
+To estimate a multiple regression (a regression with more than one independent variable) use the same function `lm` but change the formula argument to include the additional variables.  In a simple regression, the formula argument was of the form `y ~ x`.  In a multiple regression, the formula argument takes the form `y ~ x1 + x2`.  To include additional variables, extend the argument in a similar manner `y ~ x1 + x2 + x3 + ...`.  The remaining arguments are the same as in the simple regression.  You can assign the results to an object just as with a simple regression.  The object returned will be the list of 12 elements, but the objects in the list will change to reflect the additional variable(s). 
+
+We can use `summary`, `broom::tidy`, etc. to view the output.
 
 To make use of the results, you can use any of the functions described in Chapter 3 of this manual.  You can also make use of any of the subsetting commands as well.  
 
