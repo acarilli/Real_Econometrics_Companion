@@ -24,7 +24,7 @@
 <meta name="author" content="Tony Carilli" />
 
 
-<meta name="date" content="2020-08-10" />
+<meta name="date" content="2020-08-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -51,14 +51,6 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
-<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.15/datatables.js"></script>
-<link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
-<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
-<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
 
 
 <style type="text/css">
@@ -176,9 +168,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="cph3.html"><a href="cph3.html"><i class="fa fa-check"></i><b>5</b> Bivariate OLS: The Foundation of Econometric Analysis</a><ul>
-<li class="chapter" data-level="5.1" data-path="cph3.html"><a href="cph3.html#estimating-a-simple-regression"><i class="fa fa-check"></i><b>5.1</b> Estimating a simple regression</a></li>
-<li class="chapter" data-level="5.2" data-path="cph3.html"><a href="cph3.html#scatter-plot-with-regression-line"><i class="fa fa-check"></i><b>5.2</b> scatter Plot with Regression Line</a></li>
-<li class="chapter" data-level="5.3" data-path="cph3.html"><a href="cph3.html#subsetting-data-for-regressions"><i class="fa fa-check"></i><b>5.3</b> Subsetting Data for Regressions</a></li>
+<li class="chapter" data-level="5.1" data-path="cph3.html"><a href="cph3.html#estimating-a-simple-regression"><i class="fa fa-check"></i><b>5.1</b> Estimating a simple regression</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="cph3.html"><a href="cph3.html#a-short-detour-on-some-r-basics."><i class="fa fa-check"></i><b>5.1.1</b> A short detour on some R basics.</a></li>
+<li class="chapter" data-level="5.1.2" data-path="cph3.html"><a href="cph3.html#estimating-an-ols-model"><i class="fa fa-check"></i><b>5.1.2</b> Estimating an OLS model</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="cph3.html"><a href="cph3.html#scatter-plot-with-regression-line"><i class="fa fa-check"></i><b>5.2</b> Scatter Plot with Regression Line</a></li>
+<li class="chapter" data-level="5.3" data-path="cph3.html"><a href="cph3.html#subsetting-data-for-regressions"><i class="fa fa-check"></i><b>5.3</b> Subsetting Data for Regressions</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="cph3.html"><a href="cph3.html#the-operator"><i class="fa fa-check"></i><b>5.3.1</b> The <code>[</code> operator</a></li>
+<li class="chapter" data-level="5.3.2" data-path="cph3.html"><a href="cph3.html#subset-argument"><i class="fa fa-check"></i><b>5.3.2</b> Subset argument</a></li>
+<li class="chapter" data-level="5.3.3" data-path="cph3.html"><a href="cph3.html#dplyrfilter"><i class="fa fa-check"></i><b>5.3.3</b> <code>dplyr::filter</code></a></li>
+</ul></li>
 <li class="chapter" data-level="5.4" data-path="cph3.html"><a href="cph3.html#heteroscesdasticity-consistent-standard-errors."><i class="fa fa-check"></i><b>5.4</b> Heteroscesdasticity-consistent standard errors.</a></li>
 <li class="chapter" data-level="5.5" data-path="cph3.html"><a href="cph3.html#generating-random-numbers"><i class="fa fa-check"></i><b>5.5</b> Generating Random Numbers</a></li>
 <li class="chapter" data-level="5.6" data-path="cph3.html"><a href="cph3.html#simulations"><i class="fa fa-check"></i><b>5.6</b> Simulations</a></li>
@@ -330,13 +329,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Chapter 6</span> Hypothesis Testing and Interval Estimation; Answering Research Questions</h1>
 <div id="computing-corner" class="section level2">
 <h2><span class="header-section-number">6.1</span> Computing Corner</h2>
-<p>We will learn the basisc for hypothesis testing in R.</p>
+<p>We will learn the basics for hypothesis testing in R.</p>
 <div id="probability-distributions-in-r" class="section level3">
 <h3><span class="header-section-number">6.1.1</span> Probability Distributions in R</h3>
-<p>For every probability distribution there are four commands. These command for each distribution are prepended by a letter to indicate the functionality.</p>
+<p>Every probability distribution has four functions associate with it. These command for each distribution is prepended by a letter to indicate the functionality.</p>
 <ul>
 <li>“d” returns the height of the probability “d”ensity function</li>
-<li>“p” returns the cummulative density function or the “p”robability of being being between two values of the random variable.</li>
+<li>“p” returns the cumulative density function or the “p”robability of being being between two values of the random variable.</li>
 <li>“q” returns the inverse density function or the value of the random variable (“q”uantile) given a probability.</li>
 <li>“r” returns a “r”andomly generated number from the probability distribution</li>
 </ul>
@@ -344,64 +343,78 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="critical-values-in-r" class="section level3">
 <h3><span class="header-section-number">6.1.2</span> Critical Values in R</h3>
-<p>To calculate critical values to perform a hypothesis test use the “q” version of the probability distribution. This will return the quantile for the given probability. The probability under the curve will be cummulative from <span class="math inline">\(-\infty\)</span> to the quantile returned. The “q” version will return the critical value for a one-tail test. Suppose you’d like to test the following hypothesis about <span class="math inline">\(\mu\)</span>:</p>
+<p>To calculate critical values necessary to perform hypothesis tests use the “q” version of the probability distribution. This will return the critical value of the test-statistic for the given probability. The probability under the curve will be cumulative from <span class="math inline">\(-\infty\)</span> to the quantile returned. The “q” version will return the critical value for a one-tail test. Suppose you’d like to test the following hypothesis about <span class="math inline">\(\mu\)</span>:</p>
 <p><span class="math display">\[H_0:\mu=0\]</span>
 <span class="math display">\[H_1:\mu&lt;0\]</span>
-at the <span class="math inline">\(\alpha=.05\)</span> level of significance. To calculate the critical t-stastic call <code>qt(p = .05, df = n-1)</code>. You know from <code>args(qt)</code> the default value of the argument lower.tail is TRUE. Suppose, instead, you’d like to test the following hypothesis about <span class="math inline">\(\mu\)</span></p>
+at the <span class="math inline">\(\alpha=.05\)</span> level of significance. To calculate the critical <em>t-statistic</em> call <code>qt(p = .05, df = n-1)</code>. You know from <code>args(qt)</code> the default value of the argument lower.tail is TRUE. Suppose, instead, you’d like to test the following hypothesis about <span class="math inline">\(\mu\)</span></p>
 <p><span class="math display">\[H_0:\mu=0\]</span>
 <span class="math display">\[H_1:\mu&gt;0\]</span>
-at the <span class="math inline">\(\alpha = .10\)</span> level of significance. You can call <code>qt</code> in two ways:</p>
+at the <span class="math inline">\(\alpha = .10\)</span> level of significance. We can call <code>qt</code> in two ways:</p>
 <ol style="list-style-type: decimal">
 <li><code>qt(p = .10, df = n-1, lower.tail = FALSE)</code> or</li>
 <li><code>qt(p = .90, df = n-1)</code></li>
 </ol>
-<p>Finally, suppose you’d like to test the following hypothesis about <span class="math inline">\(\mu\)</span></p>
+<p>Finally, suppose we’d like to test the following hypothesis about <span class="math inline">\(\mu\)</span></p>
 <p><span class="math display">\[H_0:\mu=0\]</span>
 <span class="math display">\[H_1:\mu\ne0\]</span>
-at the <span class="math inline">\(\alpha=.01\)</span> level of significance. Since the t-distribution is symmetric you can use the lower tail or upper tail value and -1 times it. You can call <code>qt</code> in three ways:</p>
+at the <span class="math inline">\(\alpha=.01\)</span> level of significance. Since the t-distribution is symmetric, we can use the lower tail or upper tail value and -1 times it. We can call <code>qt</code> in three ways:</p>
 <ol style="list-style-type: decimal">
 <li><code>qt(p = .005, df = n-1)</code> or</li>
 <li><code>qt(p = .005, df = n-1, lower.tail = FALSE)</code> or</li>
 <li><code>qt(p = .995, df = n-1)</code></li>
 </ol>
-<p>You can find crtical values for the normal, F, and <span class="math inline">\(\chi^2\)</span> distributions with similar function calls.</p>
+<p>We can find critical values for the normal, <em>F</em>, and <span class="math inline">\(\chi^2\)</span> distributions with similar function calls.</p>
 <div id="p-values-in-r" class="section level4">
 <h4><span class="header-section-number">6.1.2.1</span> <em>p</em> values in R</h4>
-<p>To calculate <em>p</em> values in R, use the “p” version of the distribution call. So suppose we test the following hypothesis:</p>
+<p>To calculate <em>p</em> values in R, use the “p” version of the distribution call. Suppose we test the following hypothesis:</p>
 <p><span class="math display">\[H_0:\sigma_1^2=\sigma_2^2\]</span>
 <span class="math display">\[H_0:\sigma_1^2\ne\sigma_2^2\]</span></p>
-<p>at the <span class="math inline">\(\alpha=.05\)</span> level of significance. We could use an F test of the form</p>
+<p>at the <span class="math inline">\(\alpha=.05\)</span> level of significance. We could use an <em>F</em> test of the form</p>
 <p><span class="math display">\[F=\frac{s_x^2}{s_y^2}\]</span></p>
-<p>where <span class="math inline">\(s_x^2\)</span> and <span class="math inline">\(s_y^2\)</span> are the sample variances with n-1 and m-1 degrees of freedom. To calculate the <em>p</em> value, call <code>pf(F, n-1, m-1)</code> where F is the value calculated above.</p>
+<p>where <span class="math inline">\(s_x^2\)</span> and <span class="math inline">\(s_y^2\)</span> are the sample variances with n-1 and m-1 degrees of freedom. To calculate the <em>p</em> value, call <code>pf(f, n-1, m-1)</code> where f is the value calculated above.</p>
 </div>
 </div>
 <div id="confidence-intervals-for-ols-estimates" class="section level3">
 <h3><span class="header-section-number">6.1.3</span> Confidence Intervals for OLS estimates</h3>
-<p>In addition to <code>confint()</code>, <code>confint_tidy()</code> from the broom package will create a tibble of the low and high values for each estimate. The default level of confidence is 95%.</p>
+<p>We can estimate the confidence interval estimates for our parameter estimates by calling <code>confint</code> on the <code>lm</code> object.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="chp4.html#cb1-1"></a>donuts <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-2"><a href="chp4.html#cb1-2"></a><span class="st">  </span><span class="kw">lm</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week, .) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-3"><a href="chp4.html#cb1-3"></a><span class="st">  </span><span class="kw">confint</span>()</span></code></pre></div>
+<pre><code>                2.5 % 97.5 %
+(Intercept)     85.09  158.1
+donuts_per_week  4.91   13.5</code></pre>
+<p>We “lose” the parameter estimates though. We can append the confidence interval onto a “tidied” <code>lm</code> object by introducing <code>confint</code> as an argument in <code>broom::tidy()</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="chp4.html#cb3-1"></a>donuts <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb3-2"><a href="chp4.html#cb3-2"></a><span class="st">  </span><span class="kw">lm</span>(weight <span class="op">~</span><span class="st"> </span>donuts_per_week, .) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb3-3"><a href="chp4.html#cb3-3"></a><span class="st">  </span>broom<span class="op">::</span><span class="kw">tidy</span>(<span class="kw">confint</span>(.))</span></code></pre></div>
+<pre><code># A tibble: 2 x 7
+  term            estimate std.error statistic   p.value conf.low conf.high
+  &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)       122.       16.6       7.33 0.0000149    85.1      158. 
+2 donuts_per_week     9.22      1.96      4.71 0.000643      4.91      13.5</code></pre>
+<p>Note the use of the pronoun <code>.</code> in the <code>confint</code> call as an argument to <code>tidy</code>. One of the great features of R is the ability to use a function call as an argument in another function call because all function calls return objects.</p>
 </div>
 <div id="power-curves" class="section level3">
 <h3><span class="header-section-number">6.1.4</span> Power Curves</h3>
-<p>The power curve represents the probability of making Type II error under alternative null hypotheses. We can generate the power of the test with the <code>pwr.norm.test(d = NULL, n = NULL, sig.level =.05, power = NULL, alternative = c("two-sided", "less", "greater"))</code> call from the <code>pwr</code> package and plot the power with <code>ggplot</code>. To estimate the power we need the effect size <span class="math inline">\(d = \beta_i - \beta\)</span> where <span class="math inline">\(\beta\)</span> is the hypothesised paramater. We will use
-<span class="math display">\[H_0: \beta = 0\]</span>
+<p>The power curve represents the probability of making Type II error under alternative null hypotheses. We can generate the power of the test with the <code>pwr.norm.test(d = NULL, n = NULL, sig.level =.05, power = NULL, alternative = c("two-sided", "less", "greater"))</code> call from the <code>pwr</code> package and plot the power with <code>ggplot</code>. To estimate the power we need the effect size <span class="math inline">\(d = \beta_i - \beta\)</span> where <span class="math inline">\(\beta\)</span> is the hypothesized parameter value. We will use</p>
+<p><span class="math display">\[H_0: \beta = 0\]</span>
 <span class="math display">\[H_1: \beta &gt; 0\]</span></p>
-<p>The <span class="math inline">\(\beta_i\)</span> represent alternative null hypothseses for <span class="math inline">\(\beta\)</span>. Let’s let <span class="math inline">\(0 &lt; beta &lt; 7\)</span>. Let the significance level be <span class="math inline">\(\alpha=.01\)</span> and <span class="math inline">\(se_{\beta} = 1\)</span>.</p>
-<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb149-1"><a href="chp4.html#cb149-1"></a><span class="kw">library</span>(tidyverse)</span>
-<span id="cb149-2"><a href="chp4.html#cb149-2"></a><span class="kw">library</span>(pwr)</span>
-<span id="cb149-3"><a href="chp4.html#cb149-3"></a></span>
-<span id="cb149-4"><a href="chp4.html#cb149-4"></a>beta_i &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">7</span>, <span class="fl">.1</span>)</span>
-<span id="cb149-5"><a href="chp4.html#cb149-5"></a>se_beta &lt;-<span class="st"> </span><span class="dv">1</span> <span class="co"># to keep se_beta = 1 we will set n = 1 below.</span></span>
-<span id="cb149-6"><a href="chp4.html#cb149-6"></a></span>
-<span id="cb149-7"><a href="chp4.html#cb149-7"></a>pwr &lt;-<span class="st"> </span><span class="kw">pwr.2p.test</span>(beta_i, <span class="dt">n =</span> <span class="dv">1</span>, <span class="dt">sig.level =</span> <span class="fl">.01</span>, <span class="dt">alternative =</span> <span class="st">&quot;greater&quot;</span>)</span>
-<span id="cb149-8"><a href="chp4.html#cb149-8"></a></span>
-<span id="cb149-9"><a href="chp4.html#cb149-9"></a><span class="co">#the output is a list we need to extract, h and power from pwr</span></span>
-<span id="cb149-10"><a href="chp4.html#cb149-10"></a></span>
-<span id="cb149-11"><a href="chp4.html#cb149-11"></a>data &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">beta =</span> pwr<span class="op">$</span>h, <span class="dt">power =</span>  pwr<span class="op">$</span>power)</span>
-<span id="cb149-12"><a href="chp4.html#cb149-12"></a></span>
-<span id="cb149-13"><a href="chp4.html#cb149-13"></a>data <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb149-14"><a href="chp4.html#cb149-14"></a><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> beta, <span class="dt">y =</span> power)) <span class="op">+</span></span>
-<span id="cb149-15"><a href="chp4.html#cb149-15"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></span>
-<span id="cb149-16"><a href="chp4.html#cb149-16"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Probability of rejecting the null&quot;</span>) <span class="op">+</span></span>
-<span id="cb149-17"><a href="chp4.html#cb149-17"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="kw">expression</span>(beta))</span></code></pre></div>
+<p>The <span class="math inline">\(\beta_i\)</span> represent alternative null hypotheses for <span class="math inline">\(\beta\)</span>. Let’s let <span class="math inline">\(0 &lt; beta &lt; 7\)</span>. Let the significance level be <span class="math inline">\(\alpha=.01\)</span> and <span class="math inline">\(se_{\beta} = 1\)</span>.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="chp4.html#cb5-1"></a>beta_i &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">7</span>, <span class="fl">.1</span>)</span>
+<span id="cb5-2"><a href="chp4.html#cb5-2"></a><span class="co"># creates a sequence from 0 to 7 by 0.1</span></span>
+<span id="cb5-3"><a href="chp4.html#cb5-3"></a></span>
+<span id="cb5-4"><a href="chp4.html#cb5-4"></a>se_beta &lt;-<span class="st"> </span><span class="dv">1</span> <span class="co"># to keep se_beta = 1 we will set n = 1 below.</span></span>
+<span id="cb5-5"><a href="chp4.html#cb5-5"></a></span>
+<span id="cb5-6"><a href="chp4.html#cb5-6"></a>pwr &lt;-<span class="st"> </span>pwr<span class="op">::</span><span class="kw">pwr.2p.test</span>(beta_i, <span class="dt">n =</span> <span class="dv">1</span>, <span class="dt">sig.level =</span> <span class="fl">.01</span>, <span class="dt">alternative =</span> <span class="st">&quot;greater&quot;</span>) </span>
+<span id="cb5-7"><a href="chp4.html#cb5-7"></a></span>
+<span id="cb5-8"><a href="chp4.html#cb5-8"></a><span class="co">#this returns a list we need to extract, h and power from the list into a tibble</span></span>
+<span id="cb5-9"><a href="chp4.html#cb5-9"></a></span>
+<span id="cb5-10"><a href="chp4.html#cb5-10"></a><span class="co"># data &lt;- </span></span>
+<span id="cb5-11"><a href="chp4.html#cb5-11"></a><span class="kw">tibble</span>(<span class="dt">beta =</span> pwr<span class="op">$</span>h, <span class="dt">power =</span>  pwr<span class="op">$</span>power) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-12"><a href="chp4.html#cb5-12"></a><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> beta, <span class="dt">y =</span> power)) <span class="op">+</span></span>
+<span id="cb5-13"><a href="chp4.html#cb5-13"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="fl">1.2</span>) <span class="op">+</span></span>
+<span id="cb5-14"><a href="chp4.html#cb5-14"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Probability of rejecting the null&quot;</span>) <span class="op">+</span></span>
+<span id="cb5-15"><a href="chp4.html#cb5-15"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="kw">expression</span>(beta))</span></code></pre></div>
 <p><img src="bailey_files/figure-html/power-1.png" width="672" /></p>
 
 </div>
