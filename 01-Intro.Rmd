@@ -16,6 +16,28 @@ An R Notebook makes it easy to test and iterate when writing code.  R Notebooks 
 
 RStudio also includes a code editor which allows you to maintain a file of your 'scripts' as you complete your code.  This script file also allows for relatively easy editing and debugging of your code as you write it.  
 
+### Suggested Global Option Settings
+
+We strongly encourage the following options be set in *Tools > Global Options...* drop down menu.
+
+(@)  **Workspace**
+    a. uncheck *Restore .RData into workspace at startup.*^[This will ensure that you start with a clean session when you start RStudio.]
+    a. Choose *Never* from the drop down menu in *Save workspace to .RData on exit:*
+    
+![Workspace settings](figs\global_ops_work_space.png)
+    
+(@) Default working directory
+
+We suggest that you create a folder to keep all your work for this course with a name that makes sense to you given your institution.^[For example, at Hamdpen-Sydney College you might name it *econ306*.] Set the directory in *Tools > Global Options...* as below:^[We suggest that browse the directory and chose it unless you are confident with path names.]  Each time you start RStudio it will start in the directory for this course. 
+
+![Default working directory](figs/global_ops_start_directory.png)
+
+(@) Code Display options
+
+In the *Tools > Global Options...* dialog box chose *Code* then chose the *Display* tab. Check the boxes to *Allow scroll past th end of document* and *Highlight R function calls*.
+
+![Code options](figs/global_ops_code_display.png)
+
 ## Using RStudio
 
 RStudio contains 4 panes that make elements of R easier to work with than they would be working in R GUI. 

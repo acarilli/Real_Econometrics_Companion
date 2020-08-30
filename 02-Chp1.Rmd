@@ -12,7 +12,7 @@ In order to familiarize you with the R code necessary to complete the assignment
 
 In subsequent chapters, I will take you through examples of the relevant code necessary to complete the exercises in R.
 
-### Table 1.1
+## Table 1.1
 
 Table 1.1 contains the necessary information to produce Figures 1.2 and 1.3.  Creating Table 1.1 will give you an opportunity to create a data frame from four vectors.  A data frame is used for storing data tables.  A data frame is one of the many data structures in R.  The others include vector, list, matrix, factors, and tables.  A data frame is collection of vectors of the same length. 
 
@@ -52,7 +52,7 @@ A tibble is an update to the traditional data frame.  For most of what we will d
 
 The `tidyverse` is an opinionated collection of R packages that share an underlying philosophy, grammar, and data structures.^[Tidyverse](https://www.tidyverse.org/). 
 
-#### Packages
+## Packages
 
 An R  package is shareable bundle of code, data, documentation, tests, etc. To use a package, it must first be installed and then be loaded.  To install a package, call `install.packages("package_name")`^[You need install a package only once].  To make use of a package, load it by calling `library(packagename)`^[You must load the package during each R session to make use of it.].  Currently there are more than 16,000 packages available, to see the packages visit [Contributed Packages](https://cran.r-project.org/web/packages/). [CRAN Task Views](https://cran.r-project.org/web/views/) shows relevant packages by task.  You may want to visit [CRAN Task View: Econometrics](https://cran.r-project.org/web/views/Econometrics.html) to see the extensive array of packages for use in econometrics.
 
@@ -87,7 +87,7 @@ donuts %>%
   DT::datatable(caption = 'Table 1.1 Donut Consumption and Weight')
 ```
 
-### Figure 1.2
+## Figure 1.2
 
 To create Figure 1.2 we will use the [ggplot2](https://ggplot2.tidyverse.org/) package.  `ggplot2`, also part of the `tidyverse`, is a system for declarative creating graphics, based on [The Grammar of Graphics](https://www.springer.com/in/book/9780387245447). The Grammar of Graphics is built on two principles.  First, graphics are built with distinct layers of grammatical elements.  Second, meaningful plots are formed through aesthetic mappings.  
 
@@ -209,7 +209,7 @@ p <-
 p 
 ```
 
-### Figure 1.3
+## Figure 1.3
 
 To create Figure 1.3, we start with the plot above we saved as an object, p.  We add an additional geometry, geom_smooth to add the regression line.
 
@@ -232,3 +232,40 @@ p +
   annotate("text", label = expression(beta[0]*" = 121.613"),
            y = 115, x = 1.75, size = 3.5, color = "blue")
 ```
+
+## Reading Data into R
+
+The data we worked with in the above examples we manually entered into *vectors* and then combined those vectors into a rectangular data form called a *data frame.*  Data is rarely, if ever, manually entered into R.  Instead it comes to us in a file.  One of the most common types of files is a *csv* file.^[**c**omma **s**eparated **v**alues. A *csv* file is a *flat file* (text only) where each row is an observation and the variables are separated by commas.] Let's see how we read a *csv* file into R.^[Other types of files *xlsx*, *JSON*, etc are ready similarly.] We will use `readr::read_csv` to read the data.  
+
+## A detour on projects
+
+Before we read the a csv file let's take a brief tour on great way to organize your work using *projects*.  RStudio projects make it straightforward to divide your work into multiple contexts, each with their own working directory, workspace, history, and source documents. For a more detailed introduction to RStudio projects see [Using Projects](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects). We suggest that you create a project for each new chapter within your default directory. To start a new project follow *File > New Project...* or click the Project drop down above the environmnet pane.
+
+(@) Choose **New Directory**
+
+![Create Project](figs/project_new_directory.png)
+
+(@) Choose **New Project**
+
+![New Project](figs/project_new_directory_2.png)
+
+
+(@) Create the directory name.
+
+Ensure that you are in the directory you created for this course, name the new directory *chapter-x* where *chapter-x* is the chapter you are working on.
+
+![Directory Name](figs/project_new_directory_3.png)
+
+Outside of RStudio in your operating system (Windows, macOS) make copies of your data files in the directory you just created.  While you working within the project everything you save will be saved in the directory.
+
+## Back to reading data
+
+Let's suppose you have a *csv* file in your project named *my_data.csv*. Let's read the data and assign it to the object *my_data*.  The data will be read into a *tibble* named my_data.  
+
+```{r read-csv-file, eval=FALSE}
+
+my_data <- readr::read_csv("my_data.csv")
+
+```
+
+The data frame is now available for you to use.  
