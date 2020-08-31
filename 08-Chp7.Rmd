@@ -1,7 +1,8 @@
 # Specifying Models {#chp7}
 
-```{r, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, comment = NA, message = FALSE, warning = FALSE,
+```{r ch7-setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA, 
+                      message = FALSE, warning = FALSE,
                       options(digits = 3, scipen = 999))
 ```
 
@@ -9,12 +10,10 @@ In addition to its role in limiting endogeneity, model specification plays an im
 
 We will use the following libraries.
 
-```{r}
+```{r ch7-libraries}
 library(tidyverse)
-library(magrittr)
 library(broom)
 library(estimatr)
-library(forcats)
 ```
 
 ## Polynomial Models
@@ -23,7 +22,7 @@ Estimating a model of the form $y=\beta_0+\beta_1x+\beta_2x^2+\beta_3x^3+\cdots+
 
 Create a scatter diagram of miles per gallon vs horse power from the mtcars built in data set.
 
-```{r}
+```{r ch7-scatter}
 p <- 
 mtcars %>% 
   ggplot(aes(x= hp, y = mpg)) +
@@ -35,14 +34,14 @@ p
 
 It appears as if mpg falls at a diminishing rate as horse power increases.  There are a number of functional forms that will gives us that basic shape.  One such form is quadratic.  Let's estimate a quadratic form of the model $mpg = \beta_0+\beta_1hp+\beta_2hp+\epsilon$
 
-```{r}
+```{r ch7-quadratic-lm}
 mtcars %$% 
   lm(mpg ~ hp + I(hp^2)) # uses the AsIs function I() to create hp squared
 ```
 
 Add the quadratic fit to the scatter diagram
 
-```{r}
+```{r ch7-quadratic-plot}
 p + 
   geom_smooth(method = "lm", formula = y ~  x + I(x^2), se = F)
 ```
@@ -65,7 +64,7 @@ Constant elasticity demand functions are estimated using log-log models.  Let, $
 
 Cobb-Douglas production functions are also estimated as log-log models.  Let's estimate a Cobb-Douglas model for horsepower as a function of number of cylinders and displacement in cubic inches from the mtcars data.  The production function is: $$hp=\beta_0cyl^{\beta_1}disp^{\beta_2}\epsilon$$  The estimable form of the model is $$\ln hp=\alpha_0+\beta_1\ln cyl+\beta_2\ln disp+\gamma$$
 
-```{r}
+```{r chp7-log-log}
 mtcars %$%
   lm(log(hp) ~ log(cyl) + log(disp))
 ```

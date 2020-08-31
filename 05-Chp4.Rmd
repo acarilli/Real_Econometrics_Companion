@@ -1,7 +1,7 @@
 
 # Hypothesis Testing and Interval Estimation; Answering Research Questions {#chp4}
 
-```{r, include=FALSE}
+```{r chp4-setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, comment = NA, 
                       message = FALSE, warning = FALSE,
                       options(digits = 3, scipen = 999))
@@ -69,7 +69,7 @@ where $s_x^2$ and $s_y^2$ are the sample variances with n-1 and m-1 degrees of f
 
 We can estimate the confidence interval estimates for our parameter estimates by calling `confint` on the `lm` object.
 
-```{r confint-lm}
+```{r chp4-confint-lm}
 donuts %>% 
   lm(weight ~ donuts_per_week, .) %>% 
   confint()
@@ -94,7 +94,7 @@ $$H_1: \beta > 0$$
  
 The $\beta_i$ represent alternative null hypotheses for $\beta$. Let's let $0 < beta < 7$. Let the significance level be $\alpha=.01$ and $se_{\beta} = 1$.  
 
-```{r power}
+```{r chp4-power}
 beta_i <- seq(0, 7, .1)
 # creates a sequence from 0 to 7 by 0.1
 

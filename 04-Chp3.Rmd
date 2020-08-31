@@ -1,7 +1,7 @@
 
 # Bivariate OLS: The Foundation of Econometric Analysis {#cph3}
 
-```{r, include=FALSE}
+```{r chp3-setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, comment = NA, message = FALSE, warning = FALSE,
                       options(digits = 3, scipen = 999))
 library(tidyverse)
@@ -72,13 +72,13 @@ sqrt(mean(y, na.rm = TRUE))
 
 We could do this repeatedly. Let's take the log of that.
 
-```{r}
+```{r chp3-sqrt-mean-nest}
 log(sqrt(mean(y, na.rm = TRUE)))
 ```
 
 As you might imagine, after a while this "nesting" process get's ugly and difficult to follow fast.   This is where the pipe operator ` %>% ` (keyboard short-cut `Ctrl-Shift-M`) shines.  The pipe operator ` %>% ` works by making the object preceding it the first argument in the function call following it.  Let the `bar` be the firs argument in the function call `foo`, we could call the function like this `foo(bar)` or using the pipe operator like this `bar %>%  foo()`.  In simple cases like this there isn't much to gained from the pipe operator.^[Possibly it is clear to say take `bar` and do `foo` to it than to say do `foo` on `bar`.]  The pipe operator shines when multiple function calls are performed in a sequence.  It prevents ugly nesting or having to create assign intermediate objects to call functions on later. Below is the code from above using the ` %>% ` operator.
 
-```{r}
+```{r chp3-sqrt-mean-pipe}
 y %>% 
   mean(na.rm = TRUE) %>% 
   sqrt() %>% 
@@ -146,7 +146,7 @@ There are advantages to using ` %>% `. It allows auto-completion of variable nam
 
 Since `lm` is a function call it must return an object...it does.  The object returned by `lm` is a special kind of vector called a list.  This is where the fitted values, ect. "live".  Let's look at the list.
 
-```{r}
+```{r chp3-ols-donuts-per-week}
 donuts %>% 
   lm(weight ~ donuts_per_week, .) %>% 
   glimpse()
@@ -170,7 +170,7 @@ donuts %>%
 
 We can extract any of the elements of the list with one of three operators `$` `[` `[[` and the name of the element or its position in the list.  Each of these operators returns an object `$` and `[[` return vectors while `[` returns a list.  Let's extract the residuals from `lm_donuts`
 
-```{r}
+```{r chp3-ols-residuals}
 lm_donuts$residuals
 lm_donuts[[2]]
 lm_donuts[2]
@@ -299,7 +299,7 @@ donuts[donuts$name != "Homer",] %>%
 
 Subsetting can be directly done with the `subset` argument in the `lm` call.  To run a regression that excludes the Homer observation, use the option `subset = (name != "Homer")`^[We will use ` %>% ` to avoid having to assign the `lm` object as an intermediate step.]
 
-```{r}
+```{r ols-homer-subset}
 donuts %>% 
   lm(weight ~ donuts_per_week, data = ., 
      subset = (name != "Homer")) 
@@ -309,7 +309,7 @@ donuts %>%
 
 Alternatively we can make use of `filter` from the `dplyr` package.  Recall, `filter` is the data manipulation verb that chooses observations in a data frame. `filter` is easier for human reading and auditing.   
 
-```{r}
+```{r ols-homer-filter}
 donuts %>%
   filter(name != "Homer")  %>% 
   lm(weight ~ donuts_per_week, .) 
@@ -317,7 +317,7 @@ donuts %>%
 
 To include those observations where weight is greater than 100:
 
-```{r}
+```{r ols-weight}
 donuts %>%
   filter(weight > 100) %>%
   lm(weight ~ donuts_per_week, .)
@@ -335,7 +335,7 @@ R Studio allows you to install packages in the Files/Plots/Packages/Help Pane by
 
 Call `lm_robust()` to estimate an OLS model with robust standard errors with the `se_type = "HC2` argument for the most common method of generating robust standard errors.
 
-```{r}
+```{r ols-robust}
 library(estimatr)
 donuts %>% 
   lm_robust(weight ~ donuts_per_week, ., se_type = "HC2") %>% 
@@ -383,7 +383,7 @@ Perform a Monte Carlo simulation by generating many samples, find the value of t
 
 There are two types of loops in R, for loops and while loops.  A for loop runs the code a specific number of times; a while loop runs the code until a logical condition is met.  We will use a for loop to run our simulation.  First, instruct R on the number of times to run through the loop.  The loop itself is contained between the braces {}. 
 
-```{r}
+```{r chp3-xbar}
 xbar <- numeric() # initialize the vector to store the observations of x bar
 for(i in 1:1000) {
   x <- 1:6 %>% sample(100, replace = T)
@@ -404,7 +404,7 @@ For $\hat\beta_j$ to be an unbiased estimator of $\beta_j$, $E(\hat\beta_j) = \b
 
 Suppose we perform a Monte Carlo simulation with know values of $\beta_0$ and $\beta_1$ where the error term $\epsilon_i$ is drawn from a normal distribution with a mean of zero and a constant variance, i.e., $\epsilon_i ~ N(0, \sigma^2)$, will the estimates be statistically the same as the known parameters.  Let's find out.  Suppose the population regression function is $y_i = 10 + 3x_i$,
 
-```{r betas-monte-carlo}
+```{r chp3-betas-monte-carlo}
 n <- 50 # sample size
 N <- 1000 # of simulations
 beta_0 <- 10 # assign the value of the intercept parameter
@@ -427,7 +427,7 @@ beta_hats <- tibble(beta_hat_0, beta_hat_1)
 
 Let's look at the mean values of the estimators, using `dplyr::summarize`
 
-```{r beta-hats-means}
+```{r chp3-beta-hats-means}
 beta_hats %>% 
   summarize(mean_beta_hat_0 = mean(beta_hat_0),
             mean_beta_hat_1 = mean(beta_hat_1))
@@ -435,7 +435,7 @@ beta_hats %>%
 
 Let's look at the histograms.
 
-```{r histograms}
+```{r chp3-histograms}
 beta_hats %>% 
 ggplot(aes(x = beta_hat_0)) +
 geom_histogram(binwidth = .5) +

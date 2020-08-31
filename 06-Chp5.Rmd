@@ -1,7 +1,7 @@
 
 # Multivariate OLS: Where the Action Is {#chp5}
 
-```{r setup, include=FALSE}
+```{r chp5-setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, comment = NA, 
                       message = FALSE, warning = FALSE,
                       options(digits = 3, scipen = 999))
@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE, comment = NA,
 
 Packages needed for this chapter.
 
-```{r packages}
+```{r chp5-packages}
 library(car)
 library(broom)
 library(estimatr)
@@ -85,7 +85,7 @@ Let the unrestricted model be $$y=\beta_0+\beta_1x_1+\beta_2x_2+\beta_3x_3+\epsi
 
 Let's test the hypothesis $\beta_2=\beta_3=0$ versus at that one of the $\beta\text{'s}\ne0$ by including an argument for the null hypothesis as:
 
-```{r f-test-linear-restrictions, eval = FALSE}
+```{r chp5-f-test-linear-restrictions, eval = FALSE}
 df %>% 
   lm(y ~ x1 + x2 + x3, .) %>% 
   car::linearHypothesis(hypothesis.matrix = c("x2 = 0", "x3 = 0"))
@@ -95,7 +95,7 @@ The result will be an *F*-test on the restrictions.  The *F*-statistic, its degr
 
 Let's test the linear restriction for the Cobb-Douglas model above.^[There can be no values *<= 0*.]
 
-```{r f-test-cobb-douglas, eval=FALSE}
+```{r chp-5-f-test-cobb-douglas, eval=FALSE}
 df %>% 
   lm(log(q) ~ log(l) + log(k), .) %>% 
   car::linearHypothesis(c("log(l) = log(k)"))
@@ -114,7 +114,7 @@ Suppose we want to estimate the mpg as a function of the number of cylinders, th
 
 Let's estimate the unrestricted model both with and without robust errors.
 
-```{r robust-errors-2ways}
+```{r chp5-robust-errors-2ways}
 # estimate model without robust standard errors
 mtcars %>% 
   lm(mpg ~ cyl + disp + hp, .) %>% 
@@ -140,7 +140,7 @@ Using the model above $$mpg=\beta_0+\beta_1cyl+\beta_2disp+\beta_3hp+\epsilon$$.
 
 We can calculate the VIF's as follows:
 
-```{r vifs-2ways}
+```{r chp5-vifs-2ways}
 mtcars %>% 
   lm(mpg ~ cyl + disp + hp, .) %>% 
   vif()
@@ -154,7 +154,7 @@ mtcars %>%
 
 Using the model $$mpg=\beta_0+\beta_1cyl+\beta_2disp+\beta_3hp+\epsilon$$, estimate standardized regression coefficients as follows:
 
-```{r standardized-betas}
+```{r chp5-standardized-betas}
 mtcars %>% 
   lm(mpg ~ cyl + disp + hp, .) %>% 
   jtools::summ(scale = TRUE)
@@ -166,7 +166,7 @@ Suppose we want to estimate the mpg as a function of the number of cylinders, th
 
 Let's estimate the unrestricted model 
 
-```{r unrestricted_model, comment=NA, warning=F, message=F}
+```{r chp5-unrestricted_model, comment=NA, warning=F, message=F}
 mtcars %>% 
   lm(mpg ~ cyl + disp + hp, .) %>% 
   jtools::summ()
@@ -179,9 +179,12 @@ H_1&: \text{@ least one }\beta_j\ne0\end{align}$$
 
 Recall that *the* *F*-test is reported as a matter of course in `summary` from base R and `glance` from the broom package.
 
-```{r overall-sig}
-mtcars %>% 
-  lm(mpg ~ cyl + disp + hp, .) %>%  
+```{r chp5-overall-sig}
+ols_u <- 
+  mtcars %>% 
+  lm(mpg ~ cyl + disp + hp, .)
+
+ols_u %>% 
   summary()
 
 mtcars %>% 
@@ -207,7 +210,7 @@ H_1&:\text{@ least one }\beta_j\ne0
 
 We can retrieve $ssr$ and a degrees of freedom with `broom::glance`. `broom::glance` reports information about the entire model including sum of squared residuals and degrees of freedom, *etc.*, and returns a tibble.  We can use `dplyr::select` to get the values we want in a tibble.  The sum of squared residuals, $\sum\hat{e}^{2}_{i}$, is named *deviance* while the degrees of freedom we want is named *df.residual*. 
 
-```{r wald-test-tidy, message=FALSE}
+```{r chp5-wald-test-tidy, message=FALSE}
 # estimate the unrestricted model and retrieve ssr and df
 unrestricted <- 
 mtcars %>% 
@@ -242,7 +245,7 @@ Since `r wald$F_calc` is greater than `r wald$F_crit` we can reject $H_0$ in fav
 
 #### Perform the test with `linearHypothesis`
 
-```{r wald-test-linearHypothesis}
+```{r chp5-wald-test-linearHypothesis}
 mtcars %>% 
   lm(mpg ~ cyl + disp + hp + wt + gear + carb, .) %>% 
   linearHypothesis(c("wt", "gear", "carb"))
@@ -258,7 +261,7 @@ Let the model be $$\ln(mpg)=\beta_0+\beta_1\ln(cyl)+\beta_2\ln(wt)+\epsilon$$.  
 
 Form the restricted model under $H_0$. If $H_0$ holds, $\beta_2=-1-\beta_1$.  Substituting into the unrestricted model yields the restricted model: $$\text{R: }\ln(mpg)+\ln(wt)=\beta_0+\beta_1(\ln(cyl)-\ln(wt))+\eta$$
 
-```{r wald-cobb-manual}
+```{r chp5-wald-cobb-manual}
 unrestricted <- 
 mtcars %>% 
   lm(log(mpg) ~ log(cyl) + log(wt), .) %>% 
@@ -294,7 +297,7 @@ Since `r wald$F_calc` is less than `r wald$F_crit` we can fail to reject $H_0$ a
 
 #### Perform the test with `linearHypothesis`
 
-```{r wald-cobb-linearHypothesis}
+```{r chp5-wald-cobb-linearHypothesis}
 mtcars %>% 
   lm(log(mpg) ~ log(cyl) + log(wt), .) %>%
   linearHypothesis(c("log(cyl) + log(wt) = -1"))
