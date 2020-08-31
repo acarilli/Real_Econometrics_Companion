@@ -1,6 +1,6 @@
 # Introduction {#intro}
 
-In this chapter we will offer description of R, RStudio, and R Markdown. These are the software/progams you will need throughout the manual. 
+In this chapter we will offer description of R, RStudio, and R Markdown. These are the software/programs you will need throughout the manual. 
 
 ## Install R and RStudio
 
@@ -12,7 +12,7 @@ RStudio is also available in a cloud based version at [RStudio Cloud](https://rs
 
 In addition, since you will need to write reports, [R Markdown](https://rmarkdown.rstudio.com/index.html) gives you the ability to integrate documents with your code to produce outputs in a variety of formats.  R Markdown is an integrated part of RStudio.  This companion was written using R Markdown.
 
-An R Notebook makes it easy to test and iterate when writing code.  R Notebooks can be shared as `html` documents with individuals who don't have RStudio.  And for those who do have RStudio, the R Notebook's `html` file has the code imbedded in it so that it can be opened in RStudio.
+An R Notebook makes it easy to test and iterate when writing code.  R Notebooks can be shared as `html` documents with individuals who don't have RStudio.  And for those who do have RStudio, the R Notebook's `html` file has the code embedded in it so that it can be opened in RStudio.
 
 RStudio also includes a code editor which allows you to maintain a file of your 'scripts' as you complete your code.  This script file also allows for relatively easy editing and debugging of your code as you write it.  
 
@@ -34,7 +34,7 @@ We suggest that you create a folder to keep all your work for this course with a
 
 (@) Code Display options
 
-In the *Tools > Global Options...* dialog box chose *Code* then chose the *Display* tab. Check the boxes to *Allow scroll past th end of document* and *Highlight R function calls*.
+In the *Tools > Global Options...* dialog box chose *Code* then chose the *Display* tab. Check the boxes to *Allow scroll past the end of document* and *Highlight R function calls*.
 
 ![Code options](figs/global_ops_code_display.png)
 
