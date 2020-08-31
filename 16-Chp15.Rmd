@@ -1,11 +1,11 @@
 # Advanced Panel Data {#chp15}
 
-```{r, include=FALSE}
+```{r chp15-setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, comment = NA, message = FALSE, warning = TRUE, error = FALSE,
                       options(digits = 3, scipen = 999))
 ```
 
-In this chapter we will learn techinques in R for panel data where there might be serially correlated errors, temporal dependence with a lagged dependent variable, and random effects models.
+In this chapter we will learn techniques in R for panel data where there might be serially correlated errors, temporal dependence with a lagged dependent variable, and random effects models.
 
 ## The Data
 
@@ -21,7 +21,7 @@ We will make use of the `Cigar` dataset from the `plm` package for this chapter.
 * sales - cigarette sales per capita in packs
 * pimin - minimum price in adjoining states per pack of cigarettes in cents
 
-```{r}
+```{r chp15-1}
 library(plm)
 data("Cigar")
 ```
@@ -33,7 +33,7 @@ The `plm` packages offers many functions to simplify the handling of advanced pa
 
 `dplyr` verbs make checking for variation within units across multiple variables relatively simple. First we use `group-by` so that any functions will be applied to each state individually.  `summarize_all` will apply a function to each variable. 
 
-```{r}
+```{r chp15-libs-data}
 library(tidyverse)
 library(broom)
 library(magrittr)
@@ -53,7 +53,7 @@ CPI is the only variable with a standard deviation of 0 for all units.  As would
 
 `pvar` from the `plm` package will perform the task of checking for variation.
 
-```{r}
+```{r chp15-2}
 pvar(Cigar)
 ```
 
@@ -63,7 +63,7 @@ Let's estimate cigarette demand as: $$sales_{it}=\beta_0+\beta_1price_{it}+\beta
 
 We would expect $\beta_1<0$, $\beta_2>0$, and $\beta_3<0$ if cigarettes are an inferior good^[If cigarettes are a normal good we'd expect $\beta_3>0$]. 
 
-```{r}
+```{r chp15-3}
 cigar_plm <- plm(sales ~ price + pop16 + ndi, 
                  data = Cigar, # recall plm does not play nice with the expose pipe, %$%
                  index = c("state", "year"), 
@@ -79,14 +79,14 @@ Each of the coefficients has the expected sign and is significant at the 5% leve
 
 Testing for autocorrelation is done by testing the following hypothesis: $$H_0:\rho=0$$ $$H_1:\rho\ne0$$
 
-```{r}
+```{r chp15-4}
 Cigar %>% 
   glimpse()
 ```
 
 Our data are organized by unit by year, so we can estimate $\hat\rho$ directly.  First, obtain the residuals, *e*, from the estimated equation.  Estimate the equation $e=\rho e_{i,t-1}+\eta_{it}$.
 
-```{r}
+```{r chp15-5}
 # Obtain the residuals
 Cigar$e <- cigar_plm$residuals
 # test of rho hat
@@ -101,7 +101,7 @@ We can reject the null hypothesis at the 1% level.
 
 We can also check for autocorrelation with the LM test by estimating the model $$\hat\epsilon_{it}=\rho\hat\epsilon_{i,t-1}+\gamma_1price_{it}+\gamma_2pop16_{it}+\gamma_3ndi_{it}+\eta_{it}$$ where $nR^2\sim\chi^2_{df=1}$.
 
-```{r}
+```{r chp15-6}
 aux_2 <- 
 plm(e ~ lag(e) + price + pop16 + ndi,  
     data = Cigar,
@@ -120,7 +120,7 @@ Again, we can reject the null hypothesis of no autocorrelation.
 
 `pwartest` from the `lpm` package allows us to test for autocorrelation (`?pwartest` for relevant arguments).  
 
-```{r}
+```{r Chp15-7}
 pwartest(cigar_plm)
 ```
 
@@ -130,14 +130,14 @@ We reject the null hpothesis of no autocorrelation.
 
 To correct for autocorrelation we need an estimate of $\hat\rho$. We can estimate $\hat\rho$ using either auxiliary regression from above.
 
-```{r}
+```{r chp15-8}
 aux_1 %>%  
    tidy()
 ```
 
 Our estimate of $\hat\rho$ is `0.888` is `r aux_1$coef[1]`.  
 
-```{r}
+```{r Chp15-9}
 aux_2 %>% 
   tidy()
 ```
@@ -148,7 +148,7 @@ Our estimate of $\hat\rho$ is `r aux_2$coef[1]`.
 
 We can manually transform the data and compare the transformed model to the non-transformed model.
 
-```{r}
+```{r chp15-10}
 rho_hat <- aux_2$coefficients[1] # set rho_hat to the coef of lagged e in aux_2
 plm(I(sales - rho_hat*lag(sales)) ~ 
       I(price - rho_hat*lag(price)) + 
@@ -167,7 +167,7 @@ Now only $\hat\beta_1$ is significantly different than zero.
 
 We can use the `panelAR` package to directly estimate a corrected model^[Note the slight differences, because `panelAR` also corrects for heteroscedasticity.]. `?panelAR` for arguments necessary to estimate the corrected model.
 
-```{r}
+```{r chp15-11}
 library(panelAR)
 panelAR(sales ~ price + pop +ndi, 
         data = Cigar, 
@@ -182,7 +182,7 @@ panelAR(sales ~ price + pop +ndi,
 
 Let's estimate the lagged-depdendent variable model $$sales_{it} = \gamma sales_{i,t-1}+\beta_0+\beta_1price_{it}+\beta_2pop16_{it}+\beta_3ndi_{it}+\epsilon_{it}$$
 
-```{r}
+```{r chp15-12}
 cigar_lag_plm <- plm(sales ~ lag(sales) + price + pop16 + ndi, 
                  data = Cigar, # recall plm does not play nice with the expose pipe, %$%
                  index = c("state", "year"), 
@@ -194,7 +194,7 @@ cigar_lag_plm %>%
 
 ## Random Effects Model
 
-```{r}
+```{r chp15-13}
 plm(sales ~ price + pop16 + ndi,
     data = Cigar,
     index = c("state", "year"),
