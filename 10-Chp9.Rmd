@@ -4,15 +4,10 @@
 ```{r, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, comment = NA, message = FALSE, warning = FALSE,
                       options(digits = 3, scipen = 999))
-```
-
-In this chapter we will learn to use R to instrumental variables and two--stage least squares models.  We will use the libraries below.
-
-```{r}
 library(tidyverse)
-library(magrittr)
-library(broom)
 ```
+
+In this chapter we will learn to use R to instrumental variables and two--stage least squares models.  
 
 
 ## 2 Stage Least Squares
@@ -35,7 +30,7 @@ What we want, however, are estimates of the structural parameters $\beta_0$, $\b
 Suppose the supply is now given by $$q_s=\alpha_0+\alpha_1p+\alpha_2r+v$$ 
 where *r* is an exogenous variable.  Solving for *p* and *q* yields the *reduced form* equations $$p=\lambda_0+\lambda_1r+\epsilon_1$$ and $$q=\mu_0+\mu_1r+\epsilon_2$$ where $\lambda_0=\frac{\alpha_0-\beta_0}{\beta_1-\alpha_1}$,  $\lambda_1=\frac{\alpha_2}{\beta_1-\alpha_1}$, $\mu_0=\beta_0+\beta_1\lambda_0$, and $\mu_1=\beta_1\lambda_1$.  We can solve for unique values of $\hat\beta_0=\hat\mu_0-\frac{\hat\mu_1}{\hat\lambda_1}\hat\lambda_0$ and $\hat\beta_1=\frac{\hat\mu_1}{\hat\lambda_1}$. So the demand equation is identified.  We can not obtain unique parameter estimates for the supply equation, however, so because $\hat\mu_0=\frac{\hat\beta_1\alpha_1-\hat\beta_0\alpha_1}{\hat\beta_1-\alpha_1}$ and $\hat\mu_1=\frac{\hat\beta_1\alpha_2}{\hat\beta_1-\alpha_1}$ are only two equations with three unknowns. If we add an exogenous variable to the demand equation, both equations would be identified.^[The reader can verify that be saying adding the exogenous variable *y* to the demand equation to yield $q_d=\beta_0+\beta_1p+\beta_2y+u$ and solving for the reduced form equations.] 
 
-This method for obtaining parameter estimates is called indirect least squares (ILS).  Let's use the truffles data set from the `PoEdata` package.^[Install the `PoEdata` package as follows: Install the `remotes` package with `install.packages("remotes")`. The remotes package allows you to install R packages from remote repositories such as GitHub.  Install the `PoEdata` package by calling `remotes::install_github("ccolonescu/PoEdata")`. Finally, load the truffles data by calling `data("truffles")`.] Truffles is a data frame with 30 observations on 5 variables. p is the price per ounce of premium truffles in \$, q is the quantity of truffles traded in ounces, ps is the price per ounce of choice truffles in \$, di is monthly per capita disposable income in \$1000 per month, and pf is the hourly rental fee in \$ of a truffle pig.
+This method for obtaining parameter estimates is called indirect least squares (ILS).  Let's use the truffles data set from the `PoEdata` package.^[Install the `PoEdata` package as follows: Install the `remotes` package with `install.packages("remotes")`. The remotes package allows you to install R packages from remote repositories such as GitHub.  Install the `PoEdata` package by calling `remotes::install_github("ccolonescu/PoEdata")`. Finally, load the truffles data by calling `data("truffles")`.] Truffles is a data frame with 30 observations on 5 variables. p is the price per ounce of premium truffles in \$, q is the quantity of truffles traded in ounces, ps is the price per ounce of choice truffles in \$, di is monthly *per capita* disposable income in \$1000 per month, and pf is the hourly rental fee in \$ of a truffle pig.
 
 ```{r}
 library(PoEdata)
@@ -48,10 +43,10 @@ Let the demand function be $$q=\beta_0+\beta_1p+u$$ and the supply function be $
 Estimate the two reduced form equations as follows:
 
 ```{r}
-truffles %$%
-  lm(p ~ pf)
-truffles %$%
-  lm(q ~ pf)
+truffles %>%
+  lm(p ~ pf, .)
+truffles %>%
+  lm(q ~ pf, .)
 ```
 
 The reduced form parameter estimates are $\hat\lambda_0=3.343$, $\hat\lambda_1=2.566$, $\hat\mu_0=21.5006$, and $\hat\mu_1=-0.1337$.  The structural from parameter estimates for the demand equation are $\hat\beta_1=\frac{-0.1337}{2.566}=-0.0521$ and $\hat\beta_0=21.5006-(-0.0521)*4.343=21.7269$.  So are demand equation is $q_d=21.7269-0.0521p$.
@@ -61,7 +56,7 @@ Below we see the two stage least square estimates are the same.
 
 ```{r}
 truffles %$%
-  ivreg(q ~ p | pf) %>% 
+  AER::ivreg(q ~ p | pf) %>% 
   summary()
 ```
 
@@ -70,9 +65,9 @@ truffles %$%
 Now, let the demand for premium truffles be a function of the price premium truffles, disposable income, and the price of choice truffles.  Let the supply of premium truffles be a function the price of premium truffles and the rental rate of a truffle pig.  Suppose we'd like to estimate the demand equation.  In this case, *pf* is the lone instrument for *p*.  Assess the explanatory power of *pf* as an instrument as follows:
 
 ```{r}
-truffles %$%
-  lm(p ~ pf + di + ps) %>% 
-  tidy()
+truffles %>%
+  lm(p ~ pf + di + ps, .) %>% 
+  jtools::summ()
 ```
 
 The *t* statistic exceeds 3, so *pf* is a good instrument for *p*.
@@ -80,9 +75,9 @@ The *t* statistic exceeds 3, so *pf* is a good instrument for *p*.
 Similarly we can estimate the supply of premium truffles as a function of the price of premium truffles and the rental rate of a truffle pig.  Using the demand function from above, we now have two instruments for *p* in the supply equation, *ps* and *di*.  Since there is only one exogenous variable in the supply equation, the *F* test for the instruments is simply the *F* test for overall significance for the regression $pf = \beta_0+\beta_1ps+\beta_2di+\epsilon$.
 
 ```{r}
-truffles %$%
-  lm(pf ~ ps + di) %>% 
-  glance()
+truffles %>%
+  lm(pf ~ ps + di, .) %>% 
+  broom::glance()
 ```
 
 The *F* statistic is 9.27 which is slightly below the rule of thumb of 10 for multiple instruments.
@@ -92,11 +87,11 @@ The *F* statistic is 9.27 which is slightly below the rule of thumb of 10 for mu
 We can estimate the model posed above by estimating each equation as follows:
 
 ```{r}
-truffles %$%
-  ivreg(q ~ p + ps + di | p + ps + di + pf) %>% 
+truffles %>%
+  AER::ivreg(q ~ p + ps + di | p + ps + di + pf, data = .) %>% 
   summary()
-truffles %$%
-  ivreg(q ~ p + pf | p + ps + di + pf) %>% 
+truffles %>%
+  AER::ivreg(q ~ p + pf | p + ps + di + pf, data = .) %>% 
   summary()
 ```
 

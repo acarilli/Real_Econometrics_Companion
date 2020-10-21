@@ -121,7 +121,7 @@ We see that State is a character vector and Violent Crime Rate is a numeric vect
 
 To bring the names into stylistic guidelines we can use `clean_names` from the `janitor` package, `snake case` is the default conversion.  Note, the versatility of the ` %>% ` operator.  If we did not use the ` %>% ` operator, the code would have been written as `glimpse(crime_one_year_of_data <- clean_names(crime_one_year_of_data))`  
 
-```{r, message=F, warning=F}
+```{r chp2-clean-names, message=F, warning=F}
 library(janitor)
 crime_one_year_of_data <- 
   crime_one_year_of_data %>% 
@@ -134,7 +134,7 @@ The names of the variables follow good practice.
 
 We will read the other data in a similar fashion. 
 
-```{r, chp2-acs-data, message=F, warning=F}
+```{r chp2-acs-data, message=F, warning=F}
 # Source: U.S. Census Bureau, 2009 American Community Survey, Table C23008
 acs_09_1yr_c23008_with_ann <- read_csv("Data/ACS_09_1YR_C23008_with_ann.csv", 
     skip = 1,

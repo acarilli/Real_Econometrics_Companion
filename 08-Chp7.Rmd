@@ -14,6 +14,7 @@ We will use the following libraries.
 library(tidyverse)
 library(broom)
 library(estimatr)
+data(mtcars)
 ```
 
 ## Polynomial Models
@@ -35,8 +36,8 @@ p
 It appears as if mpg falls at a diminishing rate as horse power increases.  There are a number of functional forms that will gives us that basic shape.  One such form is quadratic.  Let's estimate a quadratic form of the model $mpg = \beta_0+\beta_1hp+\beta_2hp+\epsilon$
 
 ```{r ch7-quadratic-lm}
-mtcars %$% 
-  lm(mpg ~ hp + I(hp^2)) # uses the AsIs function I() to create hp squared
+mtcars %>% 
+  lm(mpg ~ hp + I(hp^2), .) # uses the AsIs function I() to create hp squared
 ```
 
 Add the quadratic fit to the scatter diagram
@@ -65,8 +66,8 @@ Constant elasticity demand functions are estimated using log-log models.  Let, $
 Cobb-Douglas production functions are also estimated as log-log models.  Let's estimate a Cobb-Douglas model for horsepower as a function of number of cylinders and displacement in cubic inches from the mtcars data.  The production function is: $$hp=\beta_0cyl^{\beta_1}disp^{\beta_2}\epsilon$$  The estimable form of the model is $$\ln hp=\alpha_0+\beta_1\ln cyl+\beta_2\ln disp+\gamma$$
 
 ```{r chp7-log-log}
-mtcars %$%
-  lm(log(hp) ~ log(cyl) + log(disp))
+mtcars %>%
+  lm(log(hp) ~ log(cyl) + log(disp), .)
 ```
 
 $\hat\beta_1$ indicates that a 1% increase in the number of cylinders, *ceteris paribus*, increases horsepower by 0.8170%.  $\hat\beta_2$ indicates that a 1% increase in the displacement, *ceteris paribus* increases horsepower by 0.2986%.   
@@ -75,13 +76,13 @@ $\hat\beta_1$ indicates that a 1% increase in the number of cylinders, *ceteris 
 
 The log-lin model has the form $\ln y = \beta_0 + \beta_1x$. $\beta_1 = \frac{d\ln y}{dx}$ or the percent change in y resultant from a 1 unit change in x.  Or, a *unit* change in x will induce a $100*\beta_1$ *percent* change in y.
 
-Suppose we have a variable P that is growing at a constant rate of g per period t such that $P_t=(1+g)P_{t-1}$.  By repeated substitution we get $P_t=P_0(1+g)^t$ where $P_0$ is the initial value of Y. ^[Note the relationship to the time value of money. Let $FV=PV(1+r)^t$. Suppose we'd like to calculate the average annual rate of return, r, on $\$PV$, given a future value of $\$FV$. After appropriate algebraic gymnastics, $$r = \sqrt[t] { \frac{FV}{PV} } - 1$$.  We could calculate g without regression as $$g=\sqrt[t]{ \frac{P_t}{P_0} }-1$$.  We could calculate g with a regression with the aid of logarithms.  Let the model be $P_t=P_0(1+g)^t\epsilon$.  Taking the logarithm of both sides yields $$\ln(P_t)=\ln(P_0)+t\ln(1+g)+\ln(\epsilon)$$ Which we can estimate as $$Y_t=\beta_0+\beta_1t+u_t$$  Where $\beta_0=\ln(P_0)$, $u_t = \ln(\epsilon_t)$, and, most importantly, $\beta_1=\ln(1+g)$. We can get our estimate of $g$ from $\hat\beta_1=\widehat{\ln(1+g)}$ by exponentiating both sides and solving for $g$.  $$e^{\hat\beta_1}=e^{\widehat{\ln(1+g)}}$$ $$\hat{g}=e^{\hat\beta_1}-1$$ ^[We know that $\beta_1=\frac{d(\ln P_t)}{dt}$. Since $d(\ln P_t)=\frac{dP_t}{P_t}$ or the percent change in $P_t$, $\beta_1$ is known as the **instantaneous rate of growth**.]  
+Suppose we have a variable P that is growing at a constant rate of g per period t such that $P_t=(1+g)P_{t-1}$.  By repeated substitution we get $P_t=P_0(1+g)^t$ where $P_0$ is the initial value of Y.^[Note the relationship to the time value of money. Let $FV=PV(1+r)^t$. Suppose we'd like to calculate the average annual rate of return, r, on $\$PV$, given a future value of $\$FV$. After appropriate algebraic gymnastics, $$r = \sqrt[t] { \frac{FV}{PV} } - 1$$.  We could calculate g without regression as $$g=\sqrt[t]{ \frac{P_t}{P_0} }-1$$.  We could calculate g with a regression with the aid of logarithms.  Let the model be $P_t=P_0(1+g)^t\epsilon$.  Taking the logarithm of both sides yields $$\ln(P_t)=\ln(P_0)+t\ln(1+g)+\ln(\epsilon)$$ Which we can estimate as $$Y_t=\beta_0+\beta_1t+u_t$$  Where $\beta_0=\ln(P_0)$, $u_t = \ln(\epsilon_t)$, and, most importantly, $\beta_1=\ln(1+g)$. We can get our estimate of $g$ from $\hat\beta_1=\widehat{\ln(1+g)}$ by exponentiating both sides and solving for $g$.  $$e^{\hat\beta_1}=e^{\widehat{\ln(1+g)}}$$ $$\hat{g}=e^{\hat\beta_1}-1$$ ^[We know that $\beta_1=\frac{d(\ln P_t)}{dt}$. Since $d(\ln P_t)=\frac{dP_t}{P_t}$ or the percent change in $P_t$, $\beta_1$ is known as the **instantaneous rate of growth**.]  
 
 Suppose we'd like to know the percent change in fuel mileage resultant from adding a cylinder to the car using the mtcars data.  Estimate the model $\ln mpg=\beta_0+\beta_1cyl+\epsilon$
 
-```{r}
-mtcars %$% 
-  lm(log(mpg) ~ cyl)
+```{r chp7-log-lin}
+mtcars %>% 
+  lm(log(mpg) ~ cyl, .)
 ```
 
 $\hat\beta_1$ indicates that adding one cylinder reduces fuel mileage by 14.25%.
@@ -92,9 +93,9 @@ The lin-log model has the form $y=\beta_0+\beta_1\ln x$.  $\beta_1 = \frac{dy}{d
 
 Suppose we'd like to know the change in the number of miles per gallon as a function of the percent change in displacement.  Estimate the model $mpg=\beta_0+beta_1\ln disp+\epsilon$
 
-```{r}
-mtcars %$%
-  lm(mpg ~ log(disp))
+```{r chp7-lin-log}
+mtcars %>%
+  lm(mpg ~ log(disp), .)
 ```
 
 $\hat\beta_1$ indicates that a one percent change in displacement will decrease fuel mileage by .093 mpg. 
@@ -107,14 +108,14 @@ There are other functional forms that will yield diminishing marginal functions.
 
 The plot of miles per gallon vs. horsepower above suggests a negative diminishing relationship between the variables.  Suppose we postulate that miles per gallon is a function of the inverse of horsepower $mpg = \beta_0 + \frac{\beta_1}{hp}+\epsilon$.  
 
-```{r}
+```{r chp7-inverse}
 mtcars %$%
   lm(mpg ~ I(1/hp))
 ```
 
 Add the fitted model to scatter diagram.
 
-```{r}
+```{r chp7-inverse-plot}
 p + 
   geom_smooth(method = lm, formula = y ~ I(1/x), se = F)
 ```

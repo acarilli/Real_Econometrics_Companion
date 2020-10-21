@@ -105,7 +105,7 @@ donuts %>%
 
 We introduced ` %>% ` in the above chunk (it is loaded as part of the `tidyverse`). `%>%`, the pipe operator inserts the argument before the pipe as the first argument into the subsequent function call.  We can parse the above line of code in English as "Use the `donuts` data and then create a ggplot with the aesthetics..."  Since the first argument in most function calls in R is data, this will make writing code easier and more readable because it avoids excessive nesting in function calls.  For example, suppose we have a vector `y` that we would like to call the functions `f`, `g` and `h` on in turn.  We could write the code in two ways: 
 
-```{r nest-vs-pipe eval = FALSE}
+```{r nest-vs-pipe, eval = FALSE}
 # nested
 g(h(f(y)))
 # or with  %>% 

@@ -8,7 +8,7 @@ knitr::opts_chunk$set(echo = TRUE, comment = NA, message = FALSE, warning = FALS
 
 In this chapter we will learn to deal with panel data in R.  Panel data are data that include observations in and through time.  Panel data combine aspects of cross--sectional data with time--series data.  The libraries necessary for this chapter are:
 
-```{r}
+```{r eval=FALSE}
 library(tidyverse)
 library(magrittr)
 library(broom)
@@ -28,7 +28,7 @@ UCBAdmissions
 
 To calculate admission rates, we need to create a new variable, apps, that is the sum of admitted and rejected apps for both men and women.   
 
-```{r}
+```{r message=FALSE}
 UCBAdmissions %>% 
   as_tibble() %>% # convert the table to a data frame
   group_by(Dept, Gender) %>%  # allows us to sum admitted and rejected by department
@@ -56,10 +56,12 @@ We now see that females are admitted at higher rates to four of the six departme
 
 ## Figures 8.1-8.3
 
-We see a similar effect in Figures 8.1-8.3 in the text.  We can reproduce those graphs with the code below.  The crime data set contains observations on 19 variables from 58 cities over the period 1972 to 1993.  First choose observations for only the California cities of Fresno, Los Angeles, Oakland, Sacramento, and San Francisco. Next convert the robbery and police to numbers per 1000 persons.  The data frame crime contains the data.# the %in% operator means match the elements in one vector with elements in another.  
+We see a similar effect in Figures 8.1-8.3 in the text.  We can reproduce those graphs with the code below.  The crime data set contains observations on 19 variables from 58 cities over the period 1972 to 1993.  First choose observations for only the California cities of Fresno, Los Angeles, Oakland, Sacramento, and San Francisco. Next convert the robbery and police to numbers per 1000 persons.  The data frame crime contains the data. # the %in% operator means match the elements in one vector with elements in another.  
 
 ```{r include=FALSE}
-crime <- read_csv("Data/CrimedataEdited.csv")
+crime <- 
+  here::here("Data", "CrimedataEdited.csv") %>% 
+  read_csv()
 ```
 
 ```{r figure8.1}
