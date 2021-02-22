@@ -10,7 +10,7 @@ link-citations: yes
 description: "R, RStudio IDE, and the tidyverse companion to Bailey's Real Econometrics"
 ---
 
-# Preface
+# Preface {-}
 
 The intended audience for this book is anyone making using of *Real Econometrics: The Right Tools to Answer Important Questions* 2nd ed. by Michael Bailey who would like to learn to use R, RStudio, and the `tidyverse` to complete empirical examples from the text.  
 

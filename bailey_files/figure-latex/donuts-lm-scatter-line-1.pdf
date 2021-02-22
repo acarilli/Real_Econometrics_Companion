@@ -1,0 +1,49 @@
+%PDF-1.4
+ 0 obj
+<<
+/Type /Encoding /BaseEncoding /WinAnsiEncoding
+/Differences [ 45/minus ]
+>>
+endobj
+10 0 obj
+<< /Type /Font /Subtype /Type1 /Name /F2 /BaseFont /Helvetica
+/Encoding 9 0 R >>
+endobj
+11 0 obj
+<<
+/Type /ExtGState
+/CA 1.000 >>
+endobj
+12 0 obj
+<<
+/Type /ExtGState
+/ca 0.400
+>>
+endobj
+13 0 obj
+<<
+/Type /ExtGState
+/ca 1.000
+>>
+endobj
+xref
+0 14
+0000000000 65535 f 
+0000000021 00000 n 
+0000000163 00000 n 
+0000003277 00000 n 
+0000003360 00000 n 
+0000003512 00000 n 
+0000003545 00000 n 
+0000000212 00000 n 
+0000000292 00000 n 
+0000000008 00000 n 
+0000000102 00000 n 
+0000000199 00000 n 
+0000000248 00000 n 
+0000000297 00000 n 
+trailer
+<< /Size 14 /Info 1 0 R /Root 2 0 R >>
+startxref
+346
+%%EOF
