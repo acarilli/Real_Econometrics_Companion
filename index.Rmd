@@ -14,7 +14,7 @@ description: "R, RStudio IDE, and the tidyverse companion to Bailey's Real Econo
 
 The intended audience for this book is anyone making using of *Real Econometrics: The Right Tools to Answer Important Questions* 2nd ed. by Michael Bailey who would like to learn to use R, RStudio, and the `tidyverse` to complete empirical examples from the text.  
 
-This book will be useful to anyone wishing to intergrate R and the Tidyverse into an econometrics course. 
+This book will be useful to anyone wishing to integrate R and the Tidyverse into an econometrics course. 
 
 RStudio is an integrated development environment that includes a console, syntax-highlighting editor, and tools to integrate report writing with empirical work, etc. [RStudio IDE Features](https://rstudio.com/products/rstudio/features/) for more.    
 
