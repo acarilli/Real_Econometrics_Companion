@@ -21,7 +21,7 @@ RStudio also includes a code editor which allows you to maintain a file of your 
 We strongly encourage the following options be set in *Tools > Global Options...* drop down menu.
 
 (@)  **Workspace**
-    a. uncheck *Restore .RData into workspace at startup.*^[This will ensure that you start with a clean session when you start RStudio.]
+    a. un-check *Restore .RData into workspace at startup.*^[This will ensure that you start with a clean session when you start RStudio.]
     a. Choose *Never* from the drop down menu in *Save workspace to .RData on exit:*
     
 ![Workspace settings](figs\global_ops_work_space.png)
@@ -34,9 +34,11 @@ We suggest that you create a folder to keep all your work for this course with a
 
 (@) Code Display options
 
-In the *Tools > Global Options...* dialog box chose *Code* then chose the *Display* tab. Check the boxes to *Allow scroll past the end of document* and *Highlight R function calls*.
+In the *Tools > Global Options...* dialog box chose *Code* then chose the *Display* tab. Check the boxes to *Allow scroll past the end of document*, *Highlight R function calls*, and *Rainbow Parenthesis*.
 
 ![Code options](figs/global_ops_code_display.png)
+
+
 
 ## Using RStudio
 
@@ -82,3 +84,220 @@ When you click the **Knit** button a document will be generated that includes bo
 Scroll down to the **Overview** at <https://github.com/rstudio/rmarkdown> for more on markdown.  I strongly suggest you work through the [Markdown formatting](https://www.markdowntutorial.com/) tutorial for an introduction to basic formatting in Markdown.
 
 For more help getting started in R Markdown, please see the [R Markdown website](https://rmarkdown.rstudio.com/lesson-1.html).
+
+### Create R Markdown Templates
+
+Create your own R Markdown templates to prevent having to delete the boilerplate in the default R Markdown file.  
+
+#### Introduction
+
+We will learn to make our own R Markdown template(s). You will create and install a package that includes one or more templates that you wish to use. You can use a user defined template by choosing **File \> New File \> R Markdown...**, choosing **From Template**, and choosing your custom template from the list in the dialog box.
+
+Follow the steps below to create and install your custom template.
+
+#### Required Packages
+
+We will use the devtools and usethis packages to create and load the template(s). Check for installation with:
+
+```{r installed, eval = FALSE}
+(installed.packages()[,1] == "devtools") %>% sum()
+(installed.packages()[,1] == "usethis") %>% sum()
+```
+
+If a 1 is returned, we have the package installed. If a 0 is returned we don't have the package. If you haven't installed these packages you will need to install them with:
+
+```{r install-packages, eval = FALSE}
+install.packages("usethis")
+install.packages("devtools")
+```
+
+#### Create a project
+
+Before you begin these steps, find or create a directory for your templates.[^1]
+
+[^1]: I strongly suggest that you create a directory (folder) to keep all your R work in and make that your default working directory in **Tools \> Global Options**. Each time you open R it will default to that directory. I also suggest creating a directory (folder) named **data** and a directory (folder) named **images** inside your default R directory (folder).
+
+1.  Create a project to house your template go **File -\> New Project**
+
+![New Project](figs/Screenshot 2021-02-15 144513.png)
+
+2.  Choose **New Directory**
+
+![New Directory](figs/Screenshot 2021-02-15 145029.png)
+
+3.  Choose **R Package**
+
+![R Package](figs/Screenshot 2021-02-15 145710.png)
+
+4.  Name the package and choose the directory in which to place it. Choose **Open in new session**.
+
+![Create R Package](figs/Screenshot 2021-02-15 150122.png)
+
+5.  Click **Create Project**
+
+You can close the `hello.R` file. We won't be using it.
+
+#### Create template folders & files
+
+Create a new script file with **File -\> R Script**.
+
+![New Script File](figs/Screenshot 2021-02-15 151951.png)
+
+To create the files necessary to create the template call
+
+```{r eval = FALSE}
+usethis::use_rmarkdown_template(
+  # give your template a name that will be shown in the template menu
+  template_name = "Template Name", 
+  # describe the template - this will help you identify the template when
+  # you are creating a markdown file.
+  template_description = "My Template's Description"
+)
+
+```
+
+![use_rmarkdown_template](figs/Screenshot 2021-02-15 152910.png)
+
+Execute the code in the script by clicking the Source button in the Source Pane.
+
+![Source Button](figs/Screenshot 2021-02-15 154428.png)
+
+Your files pane should look similar to this:
+
+![Files Pane](figs/Screenshot 2021-02-15 154908.png)
+
+#### Edit `skeleton.Rmd` {.tabset .tabset-pills .tabset-fade}
+
+Find and edit **skeleton.Rmd**. This edited copy will be your basic R Markdown document each time you choose to open from your template.
+
+In the files pane click **inst -\> rmarkdown -\> templates -\> my-markdown-template -\> skeleton -\> skeleton.Rmd**[^2]
+
+[^2]: If you did not call the template **my-markdown-template** click whatever you called it. Keep clicking until you get to **skeleton.Rmd**.
+
+Your skeleton.Rmd file should look like this.
+
+![skeleton.Rmd](figs/Screenshot 2021-02-17 140247.png)
+
+Edit it to suit your needs.
+
+R Markdown can create the following types of documents - html\
+- pdf\
+- Microsoft Word\
+- OpenDocument text\
+- Rich Text Format - Markdown\
+- Github compatible markdown\
+- ioslides HTML slides\
+- slidy HTML slides\
+- Beamer pdf slides
+
+Below are examples with some description of the reason for each change. You need do only one of these.  In the next section you will learn how to have multiple templates in a single package.  
+
+##### HTML Document
+
+![HTML Template](figs/Screenshot 2021-02-17 121442.png)
+
+This is a simple template with a blank title, your name, a date that will update each time you knit your file that will create an html document with a floating table of contents, and print tables that can be paged (only ten rows will show at a time.)
+
+I have also edited the setup R chunk. I have set the following defaults for the document:
+
+1.  `echo = TRUE` causes all the R chunks to be included in the final document.\
+2.  `comment = NA` removes the \`\#\`\`s at the beginning of each line of output.\
+3.  `options(digits = 3)` sets the number of significant figures to 3.\
+4.  `options(scipen = 999)` suppresses scientific notation.
+5.  `library(tidyverse)` loads the tidyverse.
+
+I have also deleted the boiler-plate text.
+
+##### Microsoft Word Document
+
+To create a template that creates a Microsoft Word document, change the output line in the YAML header to `word_document`[^3] The template would look like this:
+
+[^3]: While `toc` can be used as a sub-option for `word_document`, `toc_float` and `df_print` can not be used as sub-options.
+
+![Microsoft Word Template](figs/Screenshot 2021-02-18 115200.png)
+
+##### PDF Document
+
+To create a template that creates PDF file, change the output line in the YAML header to `pdf_document`.^[You will need to have a Tex app on your computer, *e.g.*, MikeTex] 
+![PDF Template](figs/Screenshot 2021-02-18 120548.png)
+
+#### Multiple Templates
+
+To have multiple templates in one package you will need to duplicate and rename the sub-directories (folders) in the templates folder created by `usethis::use_rmarkdown_template()`. 
+
+Let's create a package that has an HTML template, a Word template, and a PDF template. You can do this from RStudio in the files pane. Open the Files Pane by clicking on the tab in the southeast quadrant of RStudio, or use `Ctrl+5`. Since you have a project open you will see something like this:
+
+![Files Pane](figs/Screenshot 2021-02-18 122942.png)
+
+Click **inst -\> rmarkdown -\> templates**
+
+![templates directory](figs/Screenshot 2021-02-18 124007.png)
+
+I created a template named `html-template`. Let's add a template to create a word document.  We need to copy this folder and its contents, change the name of the folder, and edit the contents to reflect the changes in the YAML header in particular. Create a new folder by clicking the New Folder Button in the files plane.  Let's call it `word-template`.
+
+![New Template Folder](figs/Screenshot 2021-02-18 125601.png)
+
+![word-template](figs/Screenshot 2021-02-18 125753.png)
+
+Next we have to copy the files and folders from `html-template` to `word-template`.  Click on `html-template`. 
+
+![click on html-template](figs/Screenshot 2021-02-18 125953.png)
+
+We see the contents of the `html-template` folder.  
+
+![Contents of html-template](figs/Screenshot 2021-02-18 130119.png)
+
+Check the box next to the skeleton folder
+
+![Check skeleton](figs/Screenshot 2021-02-18 130540.png)
+
+Now click
+
+![more button](figs/Screenshot 2021-02-18 130308.png)
+
+Chose **Copy To...**
+
+You will be taken out of RStudio to the final manager in your system.  Navigate to the `word-template` folder you created and chose it. 
+
+![word-template folder](figs/Screenshot 2021-02-18 130834.png)
+
+Type skeleton in the File Name box.  Make sure you are in the word-template folder.  You will now have the skeleton folder and its contents in the word-template folder.
+
+![save skeleton folder](figs/Screenshot 2021-02-18 131309.png)
+
+Repeat the process for `template.yaml` to put a copy in the `word-template` folder.
+
+Navigate back to the templates directory.  
+
+![templates directory](figs/Screenshot 2021-02-18 131749.png)
+
+We need to edit `template.yaml` and `skeleton.Rmd`. Click **word-template -/> template.yaml** to open the `template.yaml` in RStudio Editor. Edit the name and description fields to reflect the new template.  
+
+![edit template.yaml](figs/Screenshot 2021-02-18 132148.png)
+
+Save your edits.  Click **skeleton -/> skeleton.Rmd** to edit the `skeleton.Rmd` file.
+
+![edit skeleton.Rmd](figs/Screenshot 2021-02-18 152310.png)
+
+Save your edits.  
+
+Repeat this process for a PDF template, etc.  You can create as many templates as you'd like here. Save and close all of your documents.  Close the project.
+
+#### Install package (templates)
+
+Now that you have created the package you have to install it to make available to RStudio.^[Please note: if you wish to make changes in any of your templates, you will have to install the package again after making and saving the changes.]  Change your working directory to the folder that contains your project with **Ctrl + Shift + H**. Chose the appropriate folder.  It should appear similar to this in the Console Pane:  
+![project directory in console pane](figs/Screenshot 2021-02-18 154843.png) 
+
+Your Files Pane should appear similar to this:
+
+![File Pane working directory](figs/Screenshot 2021-02-18 155008.png)
+
+Use **Ctrl + 2** to navigate to the console.  In the console call the function `devtools::install_local("MyRMarkdownTemplates")`.  The message in your console will be similar to this:
+
+![console message](figs/Screenshot 2021-02-18 155552.png)
+
+#### Confirm Installation
+
+Create a new R Markdown file.  Be sure to choose the option From Template.  You should see each of your templates.
+
+![custom templates](figs/Screenshot 2021-02-18 155329.png)
